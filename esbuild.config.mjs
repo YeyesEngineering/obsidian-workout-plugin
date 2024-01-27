@@ -37,7 +37,8 @@ const context = await esbuild.context({
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	outfile: "main.js",
+	// outfile: "main.js",
+	outdir: "C:/Users/fgfg8/Desktop/obsidian/Temp/.obsidian/plugins/obsidian-workout-plugin",
 });
 
 if (prod) {

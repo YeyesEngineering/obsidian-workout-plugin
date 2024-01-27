@@ -1,0 +1,66 @@
+{
+    "NAME": "TSA 2.0 Intermediate",
+    "ALL WEEK": 9,
+    "GENDER" : "Male", 
+    "SESSION NUMBER": 7,
+    "TEMPWORKOUT": {
+        "SQUAT": 100,
+        "BENCHPRESS": 100,
+        "CLOSEGRIP BENCHPRESS": 80,
+        "CHESTSUPPORTEDROW": 100,
+        "ANIMAL FLOW": "NONE"
+    },
+
+    "SESSION_1": {
+        "WORKOUTNAME": ["SQUAT", "BENCHPRESS", "CLOSEGRIP BENCHPRESS", "CHESTSUPPORTEDROW", "ANIMAL FLOW"],
+        "REPS": [3, 8, 8, 6, [10, 12], 30],
+        "SET": [1, 3, 3, 3, 4, 3],
+        "WEIGHT": ["1rm X 80%", "1rm X 80%", "1rm X 80%", "1rm X 80%", "NONE"]
+    },
+    "SESSION_2": {
+        "WORKOUTNAME": ["DEADLIFT", "BENCHPRESS", "PENDLAY ROW", "Weighted Back Extension", "Pull-ups"],
+        "REPS": [3, 8, 8, 6, [10, 12], 30],
+        "SET": [1, 3, 3, 3, 4, 3],
+        "WEIGHT": ["1rm X 80%", "1rm X 80%", "1rm X 80%", "1rm X 80%", "NONE"]
+    },
+    "SESSION_3": {
+        "WORKOUTNAME": [
+            "SQUAT",
+            "Barbell Overhead Press",
+            "Leg Press or Hack Squat",
+            "CHESTSUPPORTEDROW",
+            "Athlete Movement of Choice"
+        ],
+        "REPS": [3, 8, 8, 6, [10, 12], 30],
+        "SET": [1, 3, 3, 3, 4, 3],
+        "WEIGHT": ["1rm X 80%", "1rm X 80%", "1rm X 80%", "1rm X 80%", "NONE"]
+    },
+    "SESSION_4": {
+        "WORKOUTNAME": [
+            "Bench Press",
+            "Feet-up Bench Press",
+            "Paused Deadlift",
+            "Barbell Row",
+            "Neutral/Underhand Lat Pulldown"
+        ],
+        "REPS": [3, 8, 8, 6, [10, 12], 30],
+        "SET": [1, 3, 3, 3, 4, 3],
+        "WEIGHT": ["1rm X 80%", "1rm X 80%", "1rm X 80%", "1rm X 80%", "NONE"]
+    },
+    "SESSION_5": {
+        "WORKOUTNAME": ["SQUAT", "BENCHPRESS", "CLOSEGRIP BENCHPRESS", "CHESTSUPPORTEDROW", "ANIMAL FLOW"],
+        "REPS": [3, 8, 8, 6, [10, 12], 30],
+        "SET": [1, 3, 3, 3, 4, 3],
+        "WEIGHT": ["1rm X 80%", "1rm X 80%", "1rm X 80%", "1rm X 80%", "NONE"]
+    },
+
+    "WEEK": {
+        "MONDAY": ["SESSION_1", "SESSION_1", "SESSION_1", "SESSION_1", "SESSION_1", "SESSION_1", "SESSION_4"],
+        "TUESDAY": ["SESSION_2", "SESSION_2", "SESSION_2", "SESSION_2", "SESSION_2", "SESSION_2", "SESSION_5"],
+        "WEDNESDAY": [],
+        "THURSDAY": ["SESSION_1", "SESSION_1", "SESSION_1", "SESSION_1", "SESSION_1", "SESSION_1", "SESSION_4"],
+        "FRIDAY": ["SESSION_2", "SESSION_2", "SESSION_2", "SESSION_2", "SESSION_2", "SESSION_2", "SESSION_5"],
+        "SATURDAY": [],
+        "SUNDAY": []
+    }
+}
