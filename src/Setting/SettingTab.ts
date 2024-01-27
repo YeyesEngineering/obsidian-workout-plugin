@@ -1,17 +1,42 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
 import WorkoutPlugin from 'main';
 
 export type gender = 'Male' | 'Female' | 'None';
 
+export interface workoutsession {
+    sessionname: string;
+    workoutname: string[];
+    reps: (number | number[] | string)[];
+    set: number[];
+    weight: string[];
+}
+
+export interface workoutweek {
+    first: string[];
+    second: string[];
+    third: string[];
+    fourth: string[];
+    fifth: string[];
+    sixth: string[];
+    seventh: string[];
+}
+
+export interface routineTemplate {
+    name: string;
+    gender: string;
+    session: workoutsession[];
+    week: workoutweek;
+}
+
 export interface WorkoutPluginSettings {
     bodyWeight: string;
-
+    startday: string;
     gender: gender;
     bigThree: number[];
     wilks2point: number;
     dotspoint: number;
     workoutFolder: string;
-    routineTemplate: string;
+    routineTemplate: routineTemplate;
     mySquatWeight: string;
     mySquatReps: string;
     myBenchpressWeight: string;
@@ -22,12 +47,36 @@ export interface WorkoutPluginSettings {
 
 export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     bodyWeight: '',
+    startday: 'None',
     gender: 'None',
     bigThree: [0, 0, 0, 0],
     wilks2point: 0,
     dotspoint: 0,
     workoutFolder: 'Workout/',
-    routineTemplate: '',
+
+    routineTemplate: {
+        name: 'None',
+        gender: 'None',
+        session: [
+            {
+                sessionname: 'First Session',
+                workoutname: ['SQUAT', 'BENCHPRESS'],
+                reps: [3, [10, 20]],
+                set: [1, 2],
+                weight: ['none', 'none'],
+            },
+        ],
+
+        week: {
+            first: ['SESSION_1'],
+            second: ['SESSION_2'],
+            third: [],
+            fourth: ['SESSION_1'],
+            fifth: ['SESSION_2'],
+            sixth: [],
+            seventh: [],
+        },
+    },
     mySquatWeight: '',
     mySquatReps: '',
     myBenchpressWeight: '',
@@ -82,25 +131,52 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
             .addText((text) =>
                 text
                     .setPlaceholder(DEFAULT_SETTINGS.workoutFolder)
-                    .setValue(this.plugin.settings.routineTemplate)
+                    .setValue(this.plugin.settings.workoutFolder)
                     .onChange(async (value) => {
                         this.plugin.settings.workoutFolder = value;
                         await this.plugin.saveSettings();
                     }),
             );
 
-        // new Setting(containerEl)
-        //     .setName('RoutineTemplate')
-        //     .setDesc('Please enter your RoutineTemplate directory')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder('')
-        //             .setValue(this.plugin.settings.routineTemplate)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.routineTemplate = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
+            // 설정을 변경하면 바로 적용이 되도록 설정
+            //Select from list of suggestions제안 모드 적용
+        const routineInput = new Setting(containerEl)
+            .setName('RoutineTemplate')
+            // .setDesc('Please enter your RoutineTemplate')
+            .setDesc(`now your Template is ${this.plugin.settings.routineTemplate.name}`);
+
+        const inputDataFile = routineInput.controlEl.createEl('input', {
+            attr: {
+                type: 'file',
+                multiple: false,
+                accept: '.json',
+            },
+        });
+        routineInput.addButton((button) => {
+            //모바일도 체크 해봐야 할듯
+            button
+                .setWarning()
+                .setButtonText('Import')
+                .onClick(async () => {
+                    const file = inputDataFile.files ? inputDataFile.files[0] : null;
+                    //extension Checker
+                    const fileExtension = file?.name.slice(-4);
+                    if (file && fileExtension === 'json') {
+                        const reader = new FileReader();
+                        reader.onload = async (e) => {
+                            if (e.target) {
+                                const fileContent = e.target.result;
+                                const jsonParseFile = JSON.parse(String(fileContent));
+                                this.plugin.settings.routineTemplate = await jsonParseFile;
+                                await this.plugin.saveSettings();
+                            }
+                        };
+                        reader.readAsText(file);
+                    } else {
+                        new Notice('Add a JSON file.');
+                    }
+                });
+        });
 
         new Setting(containerEl)
             .setName('SquatWeight')
