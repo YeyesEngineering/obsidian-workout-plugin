@@ -6,26 +6,27 @@ export type gender = 'Male' | 'Female' | 'None';
 export interface workoutsession {
     sessionname: string;
     workoutname: string[];
-    reps: (number | number[] | string)[];
-    set: number[];
+    reps: (number | number[])[];
+    sets: number[];
     weight: string[];
-}
-
-export interface workoutweek {
-    first: string[];
-    second: string[];
-    third: string[];
-    fourth: string[];
-    fifth: string[];
-    sixth: string[];
-    seventh: string[];
 }
 
 export interface routineTemplate {
     name: string;
     gender: string;
     session: workoutsession[];
-    week: workoutweek;
+    week: string[][];
+}
+
+export interface todayRoutine {
+    date: string;
+    sessionname: string;
+    progress: number[];
+    workout: string[];
+    weight: string[];
+    //reps 스트링으로 변경 예정
+    reps: (number | number[])[];
+    sets: number[];
 }
 
 export interface WorkoutPluginSettings {
@@ -37,6 +38,8 @@ export interface WorkoutPluginSettings {
     dotspoint: number;
     workoutFolder: string;
     routineTemplate: routineTemplate;
+    todayRoutine: todayRoutine; // Routine
+    routinePlan: todayRoutine[];
     mySquatWeight: string;
     mySquatReps: string;
     myBenchpressWeight: string;
@@ -52,7 +55,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     bigThree: [0, 0, 0, 0],
     wilks2point: 0,
     dotspoint: 0,
-    workoutFolder: 'Workout/',
+    workoutFolder: 'Workout',
 
     routineTemplate: {
         name: 'None',
@@ -62,21 +65,23 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
                 sessionname: 'First Session',
                 workoutname: ['SQUAT', 'BENCHPRESS'],
                 reps: [3, [10, 20]],
-                set: [1, 2],
+                sets: [1, 2],
                 weight: ['none', 'none'],
             },
         ],
 
-        week: {
-            first: ['SESSION_1'],
-            second: ['SESSION_2'],
-            third: [],
-            fourth: ['SESSION_1'],
-            fifth: ['SESSION_2'],
-            sixth: [],
-            seventh: [],
-        },
+        week: [['SESSION_1', 'SESSION_2'], ['SESSION_2'], [], ['SESSION_1'], ['SESSION_2'], [], []],
     },
+    todayRoutine: {
+        date: 'None',
+        sessionname: 'None',
+        progress: [0, 0],
+        workout: ['', '', '', ''],
+        weight: ['', '', '', ''],
+        reps: [0, 0, 0, 0],
+        sets: [0, 0, 0, 0],
+    },
+    routinePlan: [],
     mySquatWeight: '',
     mySquatReps: '',
     myBenchpressWeight: '',
@@ -138,8 +143,8 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     }),
             );
 
-            // 설정을 변경하면 바로 적용이 되도록 설정
-            //Select from list of suggestions제안 모드 적용
+        // 설정을 변경하면 바로 적용이 되도록 설정
+        //Select from list of suggestions제안 모드 적용
         const routineInput = new Setting(containerEl)
             .setName('RoutineTemplate')
             // .setDesc('Please enter your RoutineTemplate')
@@ -175,6 +180,9 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     } else {
                         new Notice('Add a JSON file.');
                     }
+                    //날짜 및 루틴 데이터 초기화 코드 추가 예정
+
+                    new Notice('Import Complete');
                 });
         });
 

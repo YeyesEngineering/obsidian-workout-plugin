@@ -16,10 +16,10 @@ export class Markdown {
         const filePath = `${this.plugin.settings.workoutFolder}/${fileName}.md`;
 
         // find and delete file with the same name
-        const file = this.app.vault.getAbstractFileByPath(filePath);
-        if (file) {
-            await this.app.vault.delete(file);
-        }
+        // const file = this.app.vault.getAbstractFileByPath(filePath);
+        // if (file) {
+        //     await this.app.vault.delete(file);
+        // }
 
         const targetFile = await this.app.vault.create(filePath, fileContent);
         // await this.app.vault.create(filePath, fileContent);

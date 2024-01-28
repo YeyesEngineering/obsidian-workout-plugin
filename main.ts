@@ -5,32 +5,32 @@ import {
     WorkoutPluginSettingTab,
 } from '../obsidian-workout-main/src/Setting/SettingTab';
 import { Calculator } from 'src/Workout/Calculator';
+import { WorkoutButtonModal } from 'src/Modal/ButtonModal';
+import { FirstWorkoutButtonModal } from 'src/Modal/FirstButtonModal';
 
 export default class WorkoutPlugin extends Plugin {
     settings: WorkoutPluginSettings;
 
     async onload() {
         await this.loadSettings();
-        
 
         // This creates an icon in the left ribbon.
         const ribbonIconEl = this.addRibbonIcon('dice', 'Workout Plugin', (evt: MouseEvent) => {
-            // Called when the user clicks the icon.
             new Notice('This is a notice!');
             new Calculator(this).oneRmCalculator();
-            new Calculator(this).wilks2Caculator();
-            new Calculator(this).dotsCaculator();
-            
+            // new Calculator(this).wilks2Caculator();
+            // new Calculator(this).dotsCaculator();
+            // TEMP PART
+            // new FirstWorkoutButtonModal(this.app, this).open();
+            if (this.settings.startday === 'None') {
+                //이부분에 파일도 확인하는 절차를 거치는 것이 좋아보인다.
+                //또한 startday 부분 타입도 확인
+                new FirstWorkoutButtonModal(this.app, this).open();
+            } else {
+                new WorkoutButtonModal(this.app, this).open();
+            }
         });
         // Perform additional things with the ribbon
-
-
-        // 음 시간과 날짜를 계속 갱신하면서 계속 md 파일을 생성한다?
-
-        // 일단은 Dataview를 이용해서 제작하는 방식으로 만들어 봅시다.
-
-        // 기본적인 기능부터 구현 하는 것을 목표
-
 
         ribbonIconEl.addClass('my-plugin-ribbon-class');
 
@@ -77,11 +77,11 @@ export default class WorkoutPlugin extends Plugin {
         // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
         // Using this function will automatically remove the event listener when this plugin is disabled.
         this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-            console.log('click', evt);
+            // console.log('click', evt);
         });
 
         // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-        this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+        // this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
     }
 
     onunload() {}
