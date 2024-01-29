@@ -29,6 +29,7 @@ export class RoutineUpdate {
         console.log(todaydata);
         if (todaydata) {
             this.settings.todayRoutine.date = today;
+            this.settings.todayRoutine.progress = todaydata.progress;
             this.settings.todayRoutine.sessionname = todaydata.sessionname;
             this.settings.todayRoutine.workout = todaydata.workout;
             this.settings.todayRoutine.weight = todaydata.weight;
@@ -43,18 +44,28 @@ export class RoutineUpdate {
         return [];
     }
 
-    async workoutContextMaker(): Promise<string> {
-        const todayRoutine = this.plugin.settings.todayRoutine;
+    async workoutContextMaker(boolean:boolean): Promise<string> {
+
         let contextdata = '# Today Workout  List\n\n';
-        // console.log(contextdata);
+        if (boolean){
+            const todayRoutine = this.plugin.settings.todayRoutine;
         for (let i = 0; i < todayRoutine.workout.length; i++) {
             for (let j = 0; j < todayRoutine.sets[i]; j++) {
                 //실제 무게를 가져오는 부분 추가
-                contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${todayRoutine.weight[i]} X ${todayRoutine.reps[i]} ${(j+1)}Set \n`;
+                //NOTE 부분 추가
+                contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${todayRoutine.weight[i]} X ${
+                    todayRoutine.reps[i]
+                } ${j + 1}Set \n`;
             }
         }
-        console.log('istensentsnet', contextdata);
         return contextdata;
+        }
+        else{
+            for(let i = 0; i < 6; i++){
+                contextdata += ` - [ ] \n`;
+            }
+            return contextdata;
+        }
     }
 
     async routinePlanner(): Promise<void> {
@@ -69,7 +80,7 @@ export class RoutineUpdate {
                         .add(j * 7, 'days')
                         .format('YYYY-MM-DD'),
                     sessionname: this.Routine.session[sessionNumber].sessionname,
-                    progress: [0, 0],
+                    progress: '0',
                     workout: this.Routine.session[sessionNumber].workoutname,
                     weight: this.Routine.session[sessionNumber].weight,
                     reps: this.Routine.session[sessionNumber].reps,
@@ -79,6 +90,21 @@ export class RoutineUpdate {
                 routinePlanArray.push(plan);
             }
         }
+        //Data Sort
+        routinePlanArray.sort(
+            (a, b) =>
+                parseInt(a['date'].replace('-', '').replace('-', '')) -
+                parseInt(b['date'].replace('-', '').replace('-', '')),
+        );
+        const allSession = routinePlanArray.length;
+        let sessionCount = 1;
+        for (let i = 0; i < allSession; i++) {
+            const percent = ((sessionCount/allSession)*100).toFixed(1);
+            routinePlanArray[i].progress = `${percent}%`;
+            sessionCount++
+        }
+
+
         this.plugin.settings.routinePlan = routinePlanArray;
         await this.plugin.saveSettings();
     }

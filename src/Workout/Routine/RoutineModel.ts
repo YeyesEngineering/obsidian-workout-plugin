@@ -3,6 +3,7 @@ export interface RoutineModel {
     Workout: boolean;
     Program: string;
     Session: string;
+    Progress: string;
     Workoutvolumn: number;
     Bodyweight: number;
     Bigthree: number;
@@ -10,5 +11,3 @@ export interface RoutineModel {
     Benchpress1rm: number;
     Deadlift1rm: number;
 }
-
-

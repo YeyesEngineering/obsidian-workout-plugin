@@ -6,7 +6,7 @@ export type gender = 'Male' | 'Female' | 'None';
 export interface workoutsession {
     sessionname: string;
     workoutname: string[];
-    reps: (number | number[])[];
+    reps: (number | number[] | string)[];
     sets: number[];
     weight: string[];
 }
@@ -21,11 +21,11 @@ export interface routineTemplate {
 export interface todayRoutine {
     date: string;
     sessionname: string;
-    progress: number[];
+    progress: string;
     workout: string[];
     weight: string[];
     //reps 스트링으로 변경 예정
-    reps: (number | number[])[];
+    reps: (number | number[] | string)[];
     sets: number[];
 }
 
@@ -37,6 +37,7 @@ export interface WorkoutPluginSettings {
     wilks2point: number;
     dotspoint: number;
     workoutFolder: string;
+    mainPageName: string;
     routineTemplate: routineTemplate;
     todayRoutine: todayRoutine; // Routine
     routinePlan: todayRoutine[];
@@ -55,7 +56,8 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     bigThree: [0, 0, 0, 0],
     wilks2point: 0,
     dotspoint: 0,
-    workoutFolder: 'Workout',
+    workoutFolder: '/Workout',
+    mainPageName: 'Workout Main',
 
     routineTemplate: {
         name: 'None',
@@ -63,10 +65,10 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         session: [
             {
                 sessionname: 'First Session',
-                workoutname: ['SQUAT', 'BENCHPRESS'],
-                reps: [3, [10, 20]],
+                workoutname: ['SQUAT', 'BENCHPRESS', 'DEADLIFT'],
+                reps: [3, [10, 20], 'MAX'],
                 sets: [1, 2],
-                weight: ['none', 'none'],
+                weight: ['none', 'none', '100%'],
             },
         ],
 
@@ -75,7 +77,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     todayRoutine: {
         date: 'None',
         sessionname: 'None',
-        progress: [0, 0],
+        progress: '0',
         workout: ['', '', '', ''],
         weight: ['', '', '', ''],
         reps: [0, 0, 0, 0],
@@ -139,6 +141,19 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.workoutFolder)
                     .onChange(async (value) => {
                         this.plugin.settings.workoutFolder = value;
+                        await this.plugin.saveSettings();
+                    }),
+            );
+
+        new Setting(containerEl)
+            .setName('Mainpage name')
+            .setDesc('Enter a name for your page')
+            .addText((text) =>
+                text
+                    .setPlaceholder('Workout Main')
+                    .setValue(this.plugin.settings.mainPageName)
+                    .onChange(async (value) => {
+                        this.plugin.settings.mainPageName = value;
                         await this.plugin.saveSettings();
                     }),
             );

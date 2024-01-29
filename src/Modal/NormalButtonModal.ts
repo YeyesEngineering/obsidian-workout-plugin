@@ -1,5 +1,8 @@
-import { Modal, App, Setting } from 'obsidian';
+import { Modal, App, Setting, moment, Notice, stringifyYaml } from 'obsidian';
 import WorkoutPlugin from 'main';
+import { Markdown } from 'src/Markdown/Markdown';
+import { RoutineModel } from 'src/Workout/Routine/RoutineModel';
+import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
 
 export class NotworkoutButtonModal extends Modal {
     plugin: WorkoutPlugin;
@@ -18,11 +21,40 @@ export class NotworkoutButtonModal extends Modal {
         new Setting(contentEl)
             .addButton((btn) =>
                 btn.setButtonText('OK').onClick(async () => {
+                    const today = moment().format('YYYY-MM-DD');
+
+                    //Propreties make
+                    const workoutProperites: RoutineModel = {
+                        Today: moment().format(),
+                        Workout: true,
+                        Program: '',
+                        Progress:'',
+                        Session: 'Training',
+                        Workoutvolumn: 2000,
+                        Bodyweight: parseFloat(this.plugin.settings.bodyWeight),
+                        Bigthree: this.plugin.settings.bigThree[3],
+                        Squat1rm: this.plugin.settings.bigThree[0],
+                        Benchpress1rm: this.plugin.settings.bigThree[1],
+                        Deadlift1rm: this.plugin.settings.bigThree[2],
+                    };
+                    //오늘 할 워크아웃 목록 가져오기
+                    const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(false);
+                    console.log(contextData);
+
+                    const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
+                    try {
+                        //제목 형식도 변경 할수 있도록 수정 예정
+                        new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, tempdata);
+                    } catch (error) {
+                        new Notice(error);
+                    }
+
                     this.close();
                 }),
             )
             .addButton((btn) =>
                 btn.setButtonText('Cancel').onClick(async () => {
+                    console.log('tt');
                     this.close();
                 }),
             );

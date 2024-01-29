@@ -1,4 +1,5 @@
 import WorkoutPlugin from 'main';
+import { Notice } from 'obsidian';
 import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 
 export class Calculator {
@@ -25,7 +26,7 @@ export class Calculator {
         this.DeadReps = this.plugin.settings.myDeadliftReps;
     }
 
-    async oneRmCalculator(): Promise<number[]> {
+    async oneRmCalculator(): Promise<void> {
         const squatonerm = Math.round(parseInt(this.SquatWeight) / (1.0278 - 0.0278 * parseInt(this.SquatReps)));
         const benchonerm = Math.round(parseInt(this.BenchWeight) / (1.0278 - 0.0278 * parseInt(this.BenchReps)));
         const deadliftonerm = Math.round(parseInt(this.DeadWeight) / (1.0278 - 0.0278 * parseInt(this.DeadReps)));
@@ -33,6 +34,7 @@ export class Calculator {
         console.log([squatonerm, benchonerm, deadliftonerm, squatonerm + benchonerm + deadliftonerm]);
 
         //전 무게와 비교하는 코드 작성 (갱신한 기록이 더 크다면 갱신)
+        //현재 페이지 조작하면서 함께 디자인 예정
 
         this.plugin.settings.bigThree = [
             squatonerm,
@@ -40,14 +42,10 @@ export class Calculator {
             deadliftonerm,
             squatonerm + benchonerm + deadliftonerm,
         ];
-        // const maidata = this.plugin.loadData();
-        // console.log(maidata);
-        // await this.plugin.saveSettings();
-
-        return [];
+        await this.plugin.saveSettings();
     }
 
-    async wilks2Caculator(): Promise<number[]> {
+    async wilks2Caculator(): Promise<void> {
         const bd = parseFloat(this.BodyWeight);
         if (this.Gender === 'Male') {
             const wilkspoint =
@@ -61,6 +59,7 @@ export class Calculator {
                         47.4617885411949));
             console.log('wilkspoint', parseFloat(wilkspoint.toFixed(2)));
             this.plugin.settings.wilks2point = parseFloat(wilkspoint.toFixed(2));
+            await this.plugin.saveSettings();
         } else if (this.Gender === 'Female') {
             const wilkspoint =
                 (this.plugin.settings.bigThree[3] * 600) /
@@ -72,13 +71,13 @@ export class Calculator {
                     125.425539779509);
             console.log('wilkspoint', parseFloat(wilkspoint.toFixed(2)));
             this.plugin.settings.wilks2point = parseFloat(wilkspoint.toFixed(2));
+            await this.plugin.saveSettings();
         } else {
-            console.log('Please Choose Your Gender!');
+            new Notice('Please Choose Your Gender!');
         }
-        return [];
     }
 
-    async dotsCaculator(): Promise<number[]> {
+    async dotsCaculator(): Promise<void> {
         const bd = parseFloat(this.BodyWeight);
         if (this.Gender === 'Male') {
             const dotspoint =
@@ -90,6 +89,7 @@ export class Calculator {
                     -307.75076);
             console.log('dotspoint', parseFloat(dotspoint.toFixed(2)));
             this.plugin.settings.dotspoint = parseFloat(dotspoint.toFixed(2));
+            await this.plugin.saveSettings();
         } else if (this.Gender === 'Female') {
             const dotspoint =
                 (this.plugin.settings.bigThree[3] * 500) /
@@ -100,9 +100,15 @@ export class Calculator {
                     57.96288);
             console.log('dotspoint', parseFloat(dotspoint.toFixed(2)));
             this.plugin.settings.dotspoint = parseFloat(dotspoint.toFixed(2));
+            await this.plugin.saveSettings();
         } else {
-            console.log('Please Choose Your Gender!');
+            new Notice('Please Choose Your Gender!');
         }
-        return [];
+    }
+
+    async basicSetup(){
+        this.oneRmCalculator();
+        this.wilks2Caculator();
+        this.dotsCaculator();
     }
 }

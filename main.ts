@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Plugin, moment } from 'obsidian';
 import {
     WorkoutPluginSettings,
     DEFAULT_SETTINGS,
@@ -7,6 +7,7 @@ import {
 import { Calculator } from 'src/Workout/Calculator';
 import { WorkoutButtonModal } from 'src/Modal/ButtonModal';
 import { FirstWorkoutButtonModal } from 'src/Modal/FirstButtonModal';
+import { NotworkoutButtonModal } from 'src/Modal/NormalButtonModal';
 
 export default class WorkoutPlugin extends Plugin {
     settings: WorkoutPluginSettings;
@@ -14,25 +15,26 @@ export default class WorkoutPlugin extends Plugin {
     async onload() {
         await this.loadSettings();
 
-        // This creates an icon in the left ribbon.
-        const ribbonIconEl = this.addRibbonIcon('dice', 'Workout Plugin', (evt: MouseEvent) => {
-            new Notice('This is a notice!');
-            new Calculator(this).oneRmCalculator();
-            // new Calculator(this).wilks2Caculator();
-            // new Calculator(this).dotsCaculator();
-            // TEMP PART
-            // new FirstWorkoutButtonModal(this.app, this).open();
+        const ribbonIconEl = this.addRibbonIcon('dumbbell', 'Workout Plugin', (evt: MouseEvent) => {
+            //언제 데이터를 적용시킬지 고민해보기
+            new Calculator(this).basicSetup();
+
             if (this.settings.startday === 'None') {
                 //이부분에 파일도 확인하는 절차를 거치는 것이 좋아보인다.
                 //또한 startday 부분 타입도 확인
                 new FirstWorkoutButtonModal(this.app, this).open();
             } else {
-                new WorkoutButtonModal(this.app, this).open();
+                const today = moment().format('YYYY-MM-DD');
+                if (this.settings.routinePlan.some((value) => value.date === today)) {
+                    new WorkoutButtonModal(this.app, this).open();
+                } else {
+                    new NotworkoutButtonModal(this.app, this).open();
+                }
             }
         });
         // Perform additional things with the ribbon
 
-        ribbonIconEl.addClass('my-plugin-ribbon-class');
+        ribbonIconEl.addClass('obsidian-workout-ribbon-class');
 
         // This adds a simple command that can be triggered anywhere
         this.addCommand({
