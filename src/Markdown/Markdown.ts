@@ -1,4 +1,4 @@
-import { App } from 'obsidian';
+import { App,Notice } from 'obsidian';
 import WorkoutPlugin from 'main';
 
 export class Markdown {
@@ -20,10 +20,12 @@ export class Markdown {
         // if (file) {
         //     await this.app.vault.delete(file);
         // }
-
-        const targetFile = await this.app.vault.create(filePath, fileContent);
-        // await this.app.vault.create(filePath, fileContent);
-        await this.app.workspace.getUnpinnedLeaf().openFile(targetFile, { state: { mode: 'source' } });
+        try {
+            const targetFile = await this.app.vault.create(filePath, fileContent);
+            await this.app.workspace.getUnpinnedLeaf().openFile(targetFile, { state: { mode: 'source' } });
+        } catch (error) {
+            new Notice ('File Exist');
+        }
 
         // if (options.openNote) {
         //     const activeLeaf = this.app.workspace.getUnpinnedLeaf();
