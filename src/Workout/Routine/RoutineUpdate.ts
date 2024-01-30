@@ -1,6 +1,7 @@
 import WorkoutPlugin from 'main';
 import { Notice, moment } from 'obsidian';
-import { WorkoutPluginSettings, routineTemplate } from 'src/Setting/SettingTab';
+import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
+import { routineTemplate } from './RoutineModel';
 
 export class RoutineUpdate {
     plugin: WorkoutPlugin;

@@ -1,33 +1,7 @@
 import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
 import WorkoutPlugin from 'main';
-
-export type gender = 'Male' | 'Female' | 'None';
-
-export interface workoutsession {
-    sessionname: string;
-    workoutname: string[];
-    reps: (number | number[] | string)[];
-    sets: number[];
-    weight: string[];
-}
-
-export interface routineTemplate {
-    name: string;
-    gender: string;
-    session: workoutsession[];
-    week: string[][];
-}
-
-export interface todayRoutine {
-    date: string;
-    sessionname: string;
-    progress: string;
-    workout: string[];
-    weight: string[];
-    //reps 스트링으로 변경 예정
-    reps: (number | number[] | string)[];
-    sets: number[];
-}
+import { gender, routineTemplate, todayRoutine } from 'src/Workout/Routine/RoutineModel';
+import { workout, workoutTarget } from 'src/Workout/Workout';
 
 export interface WorkoutPluginSettings {
     bodyWeight: string;
@@ -41,6 +15,8 @@ export interface WorkoutPluginSettings {
     routineTemplate: routineTemplate;
     todayRoutine: todayRoutine; // Routine
     routinePlan: todayRoutine[];
+    tempWorkoutLists: workout;
+    workoutLists: workout[];
     mySquatWeight: string;
     mySquatReps: string;
     myBenchpressWeight: string;
@@ -65,7 +41,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         session: [
             {
                 sessionname: 'First Session',
-                workoutname: ['SQUAT', 'BENCHPRESS', 'DEADLIFT'],
+                workoutname: ['SQUAT', 'BENCH PRESS', 'DEADLIFT'],
                 reps: [3, [10, 20], 'MAX'],
                 sets: [1, 2],
                 weight: ['none', 'none', '100%'],
@@ -84,6 +60,22 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         sets: [0, 0, 0, 0],
     },
     routinePlan: [],
+    tempWorkoutLists: {
+        workoutName: '',
+        weight: 0,
+        reps: 0,
+        workoutTarget: ['Back'],
+    },
+    workoutLists: [
+        { workoutName: 'SQUAT', weight: 0, reps: 0, workoutTarget: ['Hamstrings', 'Quadriceps', 'Glutes'] },
+        {
+            workoutName: 'BENCH PRESS',
+            weight: 0,
+            reps: 0,
+            workoutTarget: ['Chest', 'Triceps'],
+        },
+        { workoutName: 'DEADLIFT', weight: 0, reps: 0, workoutTarget: ['Hamstrings', 'Quadriceps', 'Back', 'Glutes'] },
+    ],
     mySquatWeight: '',
     mySquatReps: '',
     myBenchpressWeight: '',
@@ -100,6 +92,13 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         this.plugin = plugin;
     }
 
+    // public async saveSettings(update?: boolean): Promise<void> {
+    //     await this.plugin.saveSettings();
+
+    //     if (update) {
+    //         this.display();
+    //     }
+    // }
     display(): void {
         const { containerEl } = this;
 
@@ -158,7 +157,78 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     }),
             );
 
-        // 설정을 변경하면 바로 적용이 되도록 설정
+
+        const workoutAdd = new Setting(containerEl)
+            .setName('Workout add')
+            .setDesc('You can add a exercise')
+            //기존에 들어있던 운동목록과 겹치지 않도록 코드 추가 예정
+            .addText((text) =>
+                text
+                    .setPlaceholder('Workout Name')
+                    // .setValue(this.plugin.settings.tempWorkoutLists.workoutName)
+                    .onChange(async (value) => {
+                        this.plugin.settings.tempWorkoutLists.workoutName = value;
+                        await this.plugin.saveSettings();
+                    }),
+            )
+            .addText((text) =>
+                text
+                    .setPlaceholder('Weight')
+                    // .setValue(String(this.plugin.settings.tempWorkoutLists.weight))
+                    .onChange(async (value) => {
+                        this.plugin.settings.tempWorkoutLists.weight = parseInt(value);
+                        await this.plugin.saveSettings();
+                    }),
+            )
+            .addText((text) =>
+                text
+                    .setPlaceholder('Reps')
+                    // .setValue(String(this.plugin.settings.tempWorkoutLists.reps))
+                    .onChange(async (value) => {
+                        this.plugin.settings.tempWorkoutLists.reps = value;
+                        await this.plugin.saveSettings();
+                    }),
+            )
+            .addDropdown((target) =>
+                target
+                    .addOptions({
+                        Chest: 'Chest',
+                        Back: 'Back',
+                        Shoulders: 'Shoulders',
+                        Biceps: 'Biceps',
+                        Tricep: 'Triceps',
+                        Quadriceps: 'Quadriceps',
+                        Hamstrings: 'Hamstrings',
+                        Glutes: 'Glutes',
+                        Calves: 'Calves',
+                    })
+                    // .setValue(String(this.plugin.settings.tempWorkoutLists.workoutTarget))
+                    .onChange(async (value: workoutTarget) => {
+                        const tempContainer: workoutTarget[] = [];
+                        //멀티플로  선택 할 수 있도록 설정
+                        tempContainer.push(value);
+                        this.plugin.settings.tempWorkoutLists.workoutTarget = [...tempContainer];
+                        await this.plugin.saveSettings();
+                    }),
+            )
+            .addButton((bt) => {
+                bt.setButtonText('Apply').onClick(async () => {
+                    this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
+                    this.plugin.settings.tempWorkoutLists = {
+                        workoutName: 'SQUAT',
+                        weight: 0,
+                        reps: 0,
+                        workoutTarget: ['Hamstrings', 'Quadriceps', 'Glutes'],
+                    };
+                    console.log(workoutAdd);
+                    // this.saveSettings(true);
+                    //다른방법으로 모달을 띄워서 설정하는 방법
+                    // console.log(this.plugin.settings.tempWorkoutLists);
+                    await this.plugin.saveSettings();
+                    this.display();
+                });
+            });
+
         //Select from list of suggestions제안 모드 적용
         const routineInput = new Setting(containerEl)
             .setName('RoutineTemplate')
@@ -287,6 +357,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     .onClick(async () => {
                         this.plugin.settings = Object.assign({}, DEFAULT_SETTINGS, DEFAULT_SETTINGS);
                         await this.plugin.saveSettings();
+                        this.display();
                     }),
             );
 
