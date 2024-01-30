@@ -57,6 +57,7 @@ export class WorkoutButtonModal extends Modal {
 
                     const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
                     try {
+                        //main폴더가 존재하는지 확인후 생성하도록 수정 예정
                         new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, tempdata);
                     } catch (error) {
                         new Notice(error);
