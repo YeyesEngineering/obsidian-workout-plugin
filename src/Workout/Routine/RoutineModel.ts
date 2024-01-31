@@ -1,3 +1,5 @@
+import { workout } from "../Workout";
+
 export interface RoutineModel {
     Today: string;
     Workout: boolean;
@@ -17,13 +19,19 @@ export type gender = 'Male' | 'Female' | 'None';
 export interface workoutsession {
     sessionname: string;
     workoutname: string[];
-    reps: (number | number[] | string)[];
+    //REPS 최적화 예정 
+    // 만약에 max를 표기하고 싶으면 10000을 입력
+    //만약에 범위를 지정하고 싶으면 숫자를 붙여서 입력 예를들어 10 ~ 12 이면 1012 이런형식으로 구현
+
+    // reps: (number | number[] | string)[];
+    reps: number[];
     sets: number[];
     weight: string[];
 }
 
 export interface routineTemplate {
     name: string;
+    workoutList : workout[];
     gender: string;
     session: workoutsession[];
     week: string[][];
@@ -35,7 +43,10 @@ export interface todayRoutine {
     progress: string;
     workout: string[];
     weight: string[];
-    //reps 스트링으로 변경 예정
-    reps: (number | number[] | string)[];
+    //REPS 최적화 예정 
+    // 만약에 max를 표기하고 싶으면 10000을 입력
+    //만약에 범위를 지정하고 싶으면 숫자를 붙여서 입력 예를들어 10 ~ 12 이면 1012 이런형식으로 구현
+    // reps: (number | number[] | string)[];
+    reps: number[];
     sets: number[];
 }
