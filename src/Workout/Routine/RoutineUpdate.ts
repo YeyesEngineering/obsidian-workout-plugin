@@ -2,6 +2,7 @@ import WorkoutPlugin from 'main';
 import { Notice, moment } from 'obsidian';
 import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 import { routineTemplate } from './RoutineModel';
+import { Calculator } from '../Calculator';
 
 export class RoutineUpdate {
     plugin: WorkoutPlugin;
@@ -45,28 +46,49 @@ export class RoutineUpdate {
         return [];
     }
 
-    async workoutContextMaker(boolean:boolean): Promise<string> {
-
+    async workoutContextMaker(boolean: boolean): Promise<string> {
         let contextdata = '# Today Workout  List\n\n';
-        if (boolean){
+        if (boolean) {
             const todayRoutine = this.plugin.settings.todayRoutine;
-        for (let i = 0; i < todayRoutine.workout.length; i++) {
-            for (let j = 0; j < todayRoutine.sets[i]; j++) {
-                //실제 무게를 가져오는 부분 추가
-                //NOTE 부분 추가
-                contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${todayRoutine.weight[i]} X ${
-                    todayRoutine.reps[i]
-                } ${j + 1}Set \n`;
+            for (let i = 0; i < todayRoutine.workout.length; i++) {
+                for (let j = 0; j < todayRoutine.sets[i]; j++) {
+                    //실제 무게를 가져오는 부분 추가
+                    //NOTE 부분 추가
+                    contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await this.weightCaculator(todayRoutine.workout[i],todayRoutine.weight[i])} X ${
+                        todayRoutine.reps[i]
+                    } ${j + 1}Set \n`;
+                }
             }
-        }
-        return contextdata;
-        }
-        else{
-            for(let i = 0; i < 6; i++){
+            return contextdata;
+        } else {
+            for (let i = 0; i < 6; i++) {
                 contextdata += ` - [ ] \n`;
             }
             return contextdata;
         }
+    }
+
+    //이부분은 수정 예정
+    async weightCaculator(workout: string, percent: string): Promise<number|string> {
+        //조금 더 수정이 필요해 보임.
+        let wvalue = 0;
+        let pvalue = 0;
+        if (percent === undefined || percent === 'bodyweight') {
+            console.log('percent',percent);
+            pvalue = parseFloat(this.settings.bodyWeight);
+            return 'body weight';
+        } else {
+            pvalue = (parseInt(percent.replace('%', '')) / 100);
+        }
+
+        for (const value of this.settings.workoutLists) {
+            if (value.workoutName === workout){
+                wvalue = await Calculator.onerm(value.weight,value.reps);
+                break;
+            }   
+        }
+        console.log(wvalue,pvalue);
+        return parseFloat((wvalue * pvalue).toFixed(1));
     }
 
     async routinePlanner(): Promise<void> {
@@ -100,11 +122,10 @@ export class RoutineUpdate {
         const allSession = routinePlanArray.length;
         let sessionCount = 1;
         for (let i = 0; i < allSession; i++) {
-            const percent = ((sessionCount/allSession)*100).toFixed(1);
+            const percent = ((sessionCount / allSession) * 100).toFixed(1);
             routinePlanArray[i].progress = `${percent}%`;
-            sessionCount++
+            sessionCount++;
         }
-
 
         this.plugin.settings.routinePlan = routinePlanArray;
         await this.plugin.saveSettings();

@@ -1,7 +1,8 @@
 import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
 import WorkoutPlugin from 'main';
 import { gender, routineTemplate, todayRoutine } from 'src/Workout/Routine/RoutineModel';
-import { workout, workoutTarget } from 'src/Workout/Workout';
+import { workout } from 'src/Workout/Workout';
+// import { RoutineMakeModal } from 'src/Modal/RoutineMakeModal';
 
 export interface WorkoutPluginSettings {
     bodyWeight: string;
@@ -38,11 +39,13 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     routineTemplate: {
         name: 'None',
         gender: 'None',
+        workoutList: [],
         session: [
             {
                 sessionname: 'First Session',
                 workoutname: ['SQUAT', 'BENCH PRESS', 'DEADLIFT'],
-                reps: [3, [10, 20], 'MAX'],
+                //[10,20] -> 1020  ,  'MAX' -> 1000000
+                reps: [3, 1020, 1000000],
                 sets: [1, 2],
                 weight: ['none', 'none', '100%'],
             },
@@ -64,7 +67,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         workoutName: '',
         weight: 0,
         reps: 0,
-        workoutTarget: ['Back'],
+        workoutTarget: [''],
     },
     workoutLists: [
         { workoutName: 'SQUAT', weight: 0, reps: 0, workoutTarget: ['Hamstrings', 'Quadriceps', 'Glutes'] },
@@ -156,12 +159,20 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     }),
             );
-
+        //미완성 Template Maker
+        // new Setting(containerEl)
+        //     .setName('Routine Templater maker')
+        //     .setDesc('YOU can make your routine')
+        //     .addButton((button) =>
+        //         button.setButtonText('Make my Routine').onClick(() => {
+        //             new RoutineMakeModal(this.app, this.plugin).open();
+        //         }),
+        //     );
 
         const workoutAdd = new Setting(containerEl)
             .setName('Workout add')
             .setDesc('You can add a exercise')
-            //기존에 들어있던 운동목록과 겹치지 않도록 코드 추가 예정
+            //삭제 기능 추가
             .addText((text) =>
                 text
                     .setPlaceholder('Workout Name')
@@ -176,7 +187,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     .setPlaceholder('Weight')
                     // .setValue(String(this.plugin.settings.tempWorkoutLists.weight))
                     .onChange(async (value) => {
-                        this.plugin.settings.tempWorkoutLists.weight = parseInt(value);
+                        this.plugin.settings.tempWorkoutLists.weight = parseFloat(value);
                         await this.plugin.saveSettings();
                     }),
             )
@@ -185,47 +196,53 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     .setPlaceholder('Reps')
                     // .setValue(String(this.plugin.settings.tempWorkoutLists.reps))
                     .onChange(async (value) => {
-                        this.plugin.settings.tempWorkoutLists.reps = value;
+                        this.plugin.settings.tempWorkoutLists.reps = parseInt(value);
                         await this.plugin.saveSettings();
                     }),
             )
-            .addDropdown((target) =>
-                target
-                    .addOptions({
-                        Chest: 'Chest',
-                        Back: 'Back',
-                        Shoulders: 'Shoulders',
-                        Biceps: 'Biceps',
-                        Tricep: 'Triceps',
-                        Quadriceps: 'Quadriceps',
-                        Hamstrings: 'Hamstrings',
-                        Glutes: 'Glutes',
-                        Calves: 'Calves',
-                    })
-                    // .setValue(String(this.plugin.settings.tempWorkoutLists.workoutTarget))
-                    .onChange(async (value: workoutTarget) => {
-                        const tempContainer: workoutTarget[] = [];
-                        //멀티플로  선택 할 수 있도록 설정
-                        tempContainer.push(value);
-                        this.plugin.settings.tempWorkoutLists.workoutTarget = [...tempContainer];
-                        await this.plugin.saveSettings();
-                    }),
-            )
+            // .addDropdown((target) =>
+            //     target
+            //         .addOptions({
+            //             Chest: 'Chest',
+            //             Back: 'Back',
+            //             Shoulders: 'Shoulders',
+            //             Biceps: 'Biceps',
+            //             Tricep: 'Triceps',
+            //             Quadriceps: 'Quadriceps',
+            //             Hamstrings: 'Hamstrings',
+            //             Glutes: 'Glutes',
+            //             Calves: 'Calves',
+            //         })
+            //         // .setValue(String(this.plugin.settings.tempWorkoutLists.workoutTarget))
+            //         .onChange(async (value: workoutTarget) => {
+            //             const tempContainer: workoutTarget[] = [];
+            //             //멀티플로  선택 할 수 있도록 설정
+            //             tempContainer.push(value);
+            //             this.plugin.settings.tempWorkoutLists.workoutTarget = [...tempContainer];
+            //             await this.plugin.saveSettings();
+            //         }),
+            // )
             .addButton((bt) => {
                 bt.setButtonText('Apply').onClick(async () => {
-                    this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
-                    this.plugin.settings.tempWorkoutLists = {
-                        workoutName: 'SQUAT',
-                        weight: 0,
-                        reps: 0,
-                        workoutTarget: ['Hamstrings', 'Quadriceps', 'Glutes'],
-                    };
-                    console.log(workoutAdd);
-                    // this.saveSettings(true);
-                    //다른방법으로 모달을 띄워서 설정하는 방법
-                    // console.log(this.plugin.settings.tempWorkoutLists);
-                    await this.plugin.saveSettings();
-                    this.display();
+                    if (
+                        !this.plugin.settings.workoutLists.some(
+                            (value) => value.workoutName === this.plugin.settings.tempWorkoutLists.workoutName,
+                        )
+                    ) {
+                        this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
+                        this.plugin.settings.tempWorkoutLists = {
+                            workoutName: '',
+                            weight: 0,
+                            reps: 0,
+                            workoutTarget: [''],
+                        };
+                        console.log(workoutAdd);
+
+                        await this.plugin.saveSettings();
+                        this.display();
+                    } else {
+                        new Notice('Exist Workout');
+                    }
                 });
             });
 
@@ -258,96 +275,150 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                 const fileContent = e.target.result;
                                 const jsonParseFile = JSON.parse(String(fileContent));
                                 this.plugin.settings.routineTemplate = await jsonParseFile;
+                                //Workoutlist를 등록하는 부분
+                                for (const val of this.plugin.settings.routineTemplate.workoutList) {
+                                    if (
+                                        !this.plugin.settings.workoutLists.some(
+                                            (value) => value.workoutName === val.workoutName,
+                                        )
+                                    ) {
+                                        this.plugin.settings.workoutLists.push(val);
+                                        await this.plugin.saveSettings();
+                                    }
+                                }
                                 await this.plugin.saveSettings();
                             }
                         };
                         reader.readAsText(file);
+                        new Notice('Import Complete');
+                        // this.display();
                     } else {
                         new Notice('Add a JSON file.');
                     }
                     //날짜 및 루틴 데이터 초기화 코드 추가 예정
-
-                    new Notice('Import Complete');
                 });
         });
 
-        new Setting(containerEl)
-            .setName('SquatWeight')
-            .setDesc('Please enter your maximum Squat weight')
-            .addText((text) =>
-                text
-                    .setPlaceholder('Squat Weight')
-                    .setValue(this.plugin.settings.mySquatWeight)
-                    .onChange(async (value) => {
-                        this.plugin.settings.mySquatWeight = value;
-                        await this.plugin.saveSettings();
-                    }),
-            );
-        new Setting(containerEl)
-            .setName('SquatReps')
-            .setDesc('Enter the maximum number of times you can lift the weight entered above. (Squat)')
-            .addText((text) =>
-                text
-                    .setPlaceholder('Squat Reps')
-                    .setValue(this.plugin.settings.mySquatReps)
-                    .onChange(async (value) => {
-                        this.plugin.settings.mySquatReps = value;
-                        await this.plugin.saveSettings();
-                    }),
-            );
-        new Setting(containerEl)
-            .setName('Benchpress Weight')
-            .setDesc('Please enter your maximum Benchpress Weight')
-            .addText((text) =>
-                text
-                    .setPlaceholder('Benchpress Weight')
-                    .setValue(this.plugin.settings.myBenchpressWeight)
-                    .onChange(async (value) => {
-                        this.plugin.settings.myBenchpressWeight = value;
-                        await this.plugin.saveSettings();
-                    }),
-            );
-        new Setting(containerEl)
-            .setName('Benchpress Reps')
-            .setDesc('Enter the maximum number of times you can lift the weight entered above. (Benchpress)')
-            .addText((text) =>
-                text
-                    .setPlaceholder('Benchpress Reps')
-                    .setValue(this.plugin.settings.myBenchpressReps)
-                    .onChange(async (value) => {
-                        this.plugin.settings.myBenchpressReps = value;
-                        await this.plugin.saveSettings();
-                    }),
-            );
+        // const TemplateWeightandreps = new Setting(containerEl).setName('name');
+        // for (const totalvalue of this.plugin.settings.workoutLists) {
+        //     TemplateWeightandreps.setName(totalvalue.workoutName).addText((text) =>
+        //         text
+        //             .setPlaceholder(`${totalvalue.workoutName} weight`)
+        //             // .setValue(this.plugin.settings.tempWorkoutLists.workoutName)
+        //             .onChange(async (val) => {
+        //                 totalvalue.weight = parseInt(val);
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
+        //     TemplateWeightandreps.setName(totalvalue.workoutName);
+        // }
+        for (const workout of this.plugin.settings.workoutLists) {
+            //실시간으로 추가 될 수 있도록 조정
 
-        new Setting(containerEl)
-            .setName('Deadlift Weight')
-            .setDesc('Please enter your maximum Deadlift Weight')
-            .addText((text) =>
-                text
-                    .setPlaceholder('Deadlift Weight')
-                    .setValue(this.plugin.settings.myDeadliftWeight)
-                    .onChange(async (value) => {
-                        this.plugin.settings.myDeadliftWeight = value;
-                        await this.plugin.saveSettings();
-                    }),
-            );
-        new Setting(containerEl)
-            .setName('Deadlift Reps')
-            .setDesc('Enter the maximum number of times you can lift the weight entered above. (Deadlift)')
-            .addText((text) =>
-                text
-                    .setPlaceholder('Deadlift Reps')
-                    .setValue(this.plugin.settings.myDeadliftReps)
-                    .onChange(async (value) => {
-                        this.plugin.settings.myDeadliftReps = value;
-                        await this.plugin.saveSettings();
-                    }),
-            );
+            new Setting(containerEl)
+                .setName(`${workout.workoutName} Weight`)
+                .setDesc(`Please enter your maximum ${workout.workoutName} Weight`)
+                .addText((text) =>
+                    text
+                        .setPlaceholder(`${workout.workoutName} Weight`)
+                        .setValue(String(workout.weight))
+                        .onChange(async (val) => {
+                            workout.weight = parseInt(val);
+                            await this.plugin.saveSettings();
+                        }),
+                );
+            new Setting(containerEl)
+                .setName(`${workout.workoutName} Reps`)
+                .setDesc(
+                    `Enter the maximum number of times you can lift the weight entered above ${workout.workoutName}`,
+                )
+                .addText((text) =>
+                    text
+                        .setPlaceholder(`${workout.workoutName} Reps`)
+                        .setValue(String(workout.reps))
+                        .onChange(async (val) => {
+                            workout.reps = parseInt(val);
+                            await this.plugin.saveSettings();
+                        }),
+                );
+        }
+        // new Setting(containerEl)
+        //     .setName('SquatWeight')
+        //     .setDesc('Please enter your maximum Squat weight')
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Squat Weight')
+        //             .setValue(this.plugin.settings.mySquatWeight)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.mySquatWeight = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
+        // new Setting(containerEl)
+        //     .setName('SquatReps')
+        //     .setDesc('Enter the maximum number of times you can lift the weight entered above. (Squat)')
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Squat Reps')
+        //             .setValue(this.plugin.settings.mySquatReps)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.mySquatReps = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
+        // new Setting(containerEl)
+        //     .setName('Benchpress Weight')
+        //     .setDesc('Please enter your maximum Benchpress Weight')
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Benchpress Weight')
+        //             .setValue(this.plugin.settings.myBenchpressWeight)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.myBenchpressWeight = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
+        // new Setting(containerEl)
+        //     .setName('Benchpress Reps')
+        //     .setDesc('Enter the maximum number of times you can lift the weight entered above. (Benchpress)')
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Benchpress Reps')
+        //             .setValue(this.plugin.settings.myBenchpressReps)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.myBenchpressReps = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
+
+        // new Setting(containerEl)
+        //     .setName('Deadlift Weight')
+        //     .setDesc('Please enter your maximum Deadlift Weight')
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Deadlift Weight')
+        //             .setValue(this.plugin.settings.myDeadliftWeight)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.myDeadliftWeight = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
+        // new Setting(containerEl)
+        //     .setName('Deadlift Reps')
+        //     .setDesc('Enter the maximum number of times you can lift the weight entered above. (Deadlift)')
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Deadlift Reps')
+        //             .setValue(this.plugin.settings.myDeadliftReps)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.myDeadliftReps = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
 
         //설정값 초기화 버튼
         new Setting(containerEl)
-            .setName('Deadlift Reps')
+            .setName('RESET Setting')
             .setDesc('This will initialize the data entered in your Workout.')
             .addButton((button) =>
                 button

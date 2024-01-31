@@ -1,8 +1,9 @@
 export interface workout {
     workoutName: string;
     weight: number;
-    reps: (number | number[] | string);
+    // reps: (number | number[] | string);
+    reps: number;
     workoutTarget: workoutTarget[];
 }
 
-export type workoutTarget = 'Chest'|'Back'|'Shoulders'|'Biceps'| 'Triceps'|'Quadriceps'|'Hamstrings'|'Glutes'|'Calves';
+export type workoutTarget = ''|'Chest'|'Back'|'Shoulders'|'Biceps'| 'Triceps'|'Quadriceps'|'Hamstrings'|'Glutes'|'Calves';

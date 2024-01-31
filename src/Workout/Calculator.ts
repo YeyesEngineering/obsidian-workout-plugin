@@ -7,29 +7,29 @@ export class Calculator {
     settings: WorkoutPluginSettings;
     BodyWeight: string;
     Gender: string;
-    SquatWeight: string;
-    SquatReps: string;
-    BenchWeight: string;
-    BenchReps: string;
-    DeadWeight: string;
-    DeadReps: string;
+    SquatWeight: number;
+    SquatReps: number;
+    BenchWeight: number;
+    BenchReps: number;
+    DeadWeight: number;
+    DeadReps: number;
 
     constructor(plugin: WorkoutPlugin) {
         this.plugin = plugin;
         this.BodyWeight = this.plugin.settings.bodyWeight;
         this.Gender = this.plugin.settings.gender;
-        this.SquatWeight = this.plugin.settings.mySquatWeight;
-        this.SquatReps = this.plugin.settings.mySquatReps;
-        this.BenchWeight = this.plugin.settings.myBenchpressWeight;
-        this.BenchReps = this.plugin.settings.myBenchpressReps;
-        this.DeadWeight = this.plugin.settings.myDeadliftWeight;
-        this.DeadReps = this.plugin.settings.myDeadliftReps;
+        this.SquatWeight = this.plugin.settings.workoutLists[0].weight;
+        this.SquatReps = this.plugin.settings.workoutLists[0].reps;
+        this.BenchWeight = this.plugin.settings.workoutLists[1].weight;
+        this.BenchReps = this.plugin.settings.workoutLists[1].reps;
+        this.DeadWeight = this.plugin.settings.workoutLists[2].weight;
+        this.DeadReps = this.plugin.settings.workoutLists[2].reps;
     }
 
     async oneRmCalculator(): Promise<void> {
-        const squatonerm = Math.round(parseInt(this.SquatWeight) / (1.0278 - 0.0278 * parseInt(this.SquatReps)));
-        const benchonerm = Math.round(parseInt(this.BenchWeight) / (1.0278 - 0.0278 * parseInt(this.BenchReps)));
-        const deadliftonerm = Math.round(parseInt(this.DeadWeight) / (1.0278 - 0.0278 * parseInt(this.DeadReps)));
+        const squatonerm = Math.round((this.SquatWeight) / (1.0278 - 0.0278 * this.SquatReps));
+        const benchonerm = Math.round((this.BenchWeight) / (1.0278 - 0.0278 * this.BenchReps));
+        const deadliftonerm = Math.round((this.DeadWeight) / (1.0278 - 0.0278 * this.DeadReps));
 
         console.log([squatonerm, benchonerm, deadliftonerm, squatonerm + benchonerm + deadliftonerm]);
 
@@ -44,6 +44,7 @@ export class Calculator {
         ];
         await this.plugin.saveSettings();
     }
+
 
     async wilks2Caculator(): Promise<void> {
         const bd = parseFloat(this.BodyWeight);
@@ -110,5 +111,10 @@ export class Calculator {
         this.oneRmCalculator();
         this.wilks2Caculator();
         this.dotsCaculator();
+    }
+
+    static async onerm(weight: number, reps : number): Promise<number>{
+            const onerm = Math.round((weight) / (1.0278 - 0.0278 * reps))
+            return onerm;
     }
 }
