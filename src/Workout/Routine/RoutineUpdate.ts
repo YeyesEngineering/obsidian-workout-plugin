@@ -52,11 +52,12 @@ export class RoutineUpdate {
             const todayRoutine = this.plugin.settings.todayRoutine;
             for (let i = 0; i < todayRoutine.workout.length; i++) {
                 for (let j = 0; j < todayRoutine.sets[i]; j++) {
-                    //실제 무게를 가져오는 부분 추가
                     //NOTE 부분 추가
-                    contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await this.weightCaculator(todayRoutine.workout[i],todayRoutine.weight[i])} X ${
-                        todayRoutine.reps[i]
-                    } ${j + 1}Set \n`;
+                    contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
+                        this.plugin,
+                    ).weightCaculator(todayRoutine.workout[i], todayRoutine.weight[i])} X ${todayRoutine.reps[i]} ${
+                        j + 1
+                    }Set \n`;
                 }
             }
             return contextdata;
@@ -68,31 +69,13 @@ export class RoutineUpdate {
         }
     }
 
-    //이부분은 수정 예정
-    async weightCaculator(workout: string, percent: string): Promise<number|string> {
-        //조금 더 수정이 필요해 보임.
-        let wvalue = 0;
-        let pvalue = 0;
-        if (percent === undefined || percent === 'bodyweight') {
-            console.log('percent',percent);
-            pvalue = parseFloat(this.settings.bodyWeight);
-            return 'body weight';
-        } else {
-            pvalue = (parseInt(percent.replace('%', '')) / 100);
-        }
-
-        for (const value of this.settings.workoutLists) {
-            if (value.workoutName === workout){
-                wvalue = await Calculator.onerm(value.weight,value.reps);
-                break;
-            }   
-        }
-        console.log(wvalue,pvalue);
-        return parseFloat((wvalue * pvalue).toFixed(1));
-    }
-
     async routinePlanner(): Promise<void> {
+        //아까 이부분에서 왜 에러가 났을까?
+
+        //에러 체크 해보기
         this.plugin.settings.routinePlan = [];
+        await this.plugin.saveSettings();
+
         const routinePlanArray = [];
         for (let i = 0; i < this.Routine.week.length; i++) {
             const basedate = moment(this.settings.startday).add(i, 'days').format('YYYY-MM-DD');

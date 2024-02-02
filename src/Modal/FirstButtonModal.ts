@@ -38,8 +38,9 @@ export class FirstWorkoutButtonModal extends Modal {
                         this.plugin.settings.startday = 'None';
                         await this.plugin.saveSettings();
                     }
-                    const dataviewData = '```dataview\n    TASK\n    FROM "' + filePath + '"\n```';
+                    const dataviewData = '```dataview\n    TASK\n    FROM "' + filePath + '"\n    WHERE today \n ```';
                     const StringData = `# Today Workout\n\n${dataviewData}\n\n## Workout Trend\n\n## Your Score\n\n### Big Three : \n### Wilks Score : \n### Dots Point :`;
+                    //폴더를 옮길 수 도 있으니까 현재 위치를 가져오는게 안전할듯
 
                     new Markdown(this.plugin, this.app).createNote(this.plugin.settings.mainPageName, StringData);
 

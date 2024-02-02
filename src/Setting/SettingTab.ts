@@ -45,6 +45,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
                 sessionname: 'First Session',
                 workoutname: ['SQUAT', 'BENCH PRESS', 'DEADLIFT'],
                 //[10,20] -> 1020  ,  'MAX' -> 1000000
+                //100 같은 3자리수 케이스 확인 및 1RM 10개 미만으로 입력하는 것으로 세팅
                 reps: [3, 1020, 1000000],
                 sets: [1, 2],
                 weight: ['none', 'none', '100%'],
@@ -252,6 +253,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
             // .setDesc('Please enter your RoutineTemplate')
             .setDesc(`now your Template is ${this.plugin.settings.routineTemplate.name}`);
 
+            //세션이 json이 잘 작성된 json인지 확인하는 코드 추가
         const inputDataFile = routineInput.controlEl.createEl('input', {
             attr: {
                 type: 'file',

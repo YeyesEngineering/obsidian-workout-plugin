@@ -16,6 +16,7 @@ export class Calculator {
 
     constructor(plugin: WorkoutPlugin) {
         this.plugin = plugin;
+        this.settings = this.plugin.settings;
         this.BodyWeight = this.plugin.settings.bodyWeight;
         this.Gender = this.plugin.settings.gender;
         this.SquatWeight = this.plugin.settings.workoutLists[0].weight;
@@ -106,6 +107,29 @@ export class Calculator {
             new Notice('Please Choose Your Gender!');
         }
     }
+
+    async weightCaculator(workout: string, percent: string): Promise<number|string> {
+        //조금 더 수정이 필요해 보임.
+        let wvalue = 0;
+        let pvalue = 0;
+        if (percent === undefined || percent === 'bodyweight') {
+            console.log('percent',percent);
+            pvalue = parseFloat(this.settings.bodyWeight);
+            return 'body weight';
+        } else {
+            pvalue = (parseInt(percent.replace('%', '')) / 100);
+        }
+
+        for (const value of this.settings.workoutLists) {
+            if (value.workoutName === workout){
+                wvalue = await Calculator.onerm(value.weight,value.reps);
+                break;
+            }   
+        }
+        console.log(wvalue,pvalue);
+        return parseFloat((wvalue * pvalue).toFixed(1));
+    }
+
 
     async basicSetup(){
         this.oneRmCalculator();
