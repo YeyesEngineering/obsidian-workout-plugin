@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Plugin, moment } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, TFile, TFolder, moment } from 'obsidian';
 import {
     WorkoutPluginSettings,
     DEFAULT_SETTINGS,
@@ -7,7 +7,10 @@ import {
 import { Calculator } from 'src/Workout/Calculator';
 import { WorkoutButtonModal } from 'src/Modal/ButtonModal';
 import { FirstWorkoutButtonModal } from 'src/Modal/FirstButtonModal';
+import { SecondWorkoutButtonModal } from 'src/Modal/SecondButtonModal';
 import { NotworkoutButtonModal } from 'src/Modal/NormalButtonModal';
+import { ThirdWorkoutButtonModal } from 'src/Modal/ThirdButtonModal';
+//타입 체크
 
 export default class WorkoutPlugin extends Plugin {
     settings: WorkoutPluginSettings;
@@ -16,19 +19,40 @@ export default class WorkoutPlugin extends Plugin {
         await this.loadSettings();
 
         const ribbonIconEl = this.addRibbonIcon('dumbbell', 'Workout Plugin', (evt: MouseEvent) => {
-            //언제 데이터를 적용시킬지 고민해보기
-            new Calculator(this).basicSetup();
-
             if (this.settings.startday === 'None') {
-                //이부분에 파일도 확인하는 절차를 거치는 것이 좋아보인다.
-                //또한 startday 부분 타입도 확인
-                new FirstWorkoutButtonModal(this.app, this).open();
-            } else {
-                const today = moment().format('YYYY-MM-DD');
-                if (this.settings.routinePlan.some((value) => value.date === today)) {
-                    new WorkoutButtonModal(this.app, this).open();
+                if (
+                    this.settings.gender === 'None' &&
+                    this.settings.bodyWeight === '' &&
+                    this.settings.workoutLists[0].weight === 0
+                ) {
+                    new Notice('Please Settings First');
                 } else {
-                    new NotworkoutButtonModal(this.app, this).open();
+                    new Calculator(this).basicSetup();
+                    const workoutFolder = this.app.vault.getAbstractFileByPath(this.settings.workoutFolder);
+                    const workoutInnerFile = this.app.vault.getAbstractFileByPath(
+                        `${this.settings.workoutFolder}/${this.settings.mainPageName}.md`,
+                    );
+                    if (workoutFolder instanceof TFolder && workoutInnerFile instanceof TFile) {
+                        new ThirdWorkoutButtonModal(this.app, this).open();
+                    } else if (workoutFolder instanceof TFolder && !(workoutInnerFile instanceof TFile)) {
+                        new SecondWorkoutButtonModal(this.app, this).open();
+                    } else if (!(workoutFolder instanceof TFolder) && !(workoutInnerFile instanceof TFile)) {
+                        new FirstWorkoutButtonModal(this.app, this).open();
+                    }
+                }
+            } else {
+                //폴더를 옮겼을 경우를 대비하는 코드 작성
+                const workoutFolder = this.app.vault.getAbstractFileByPath(this.settings.workoutFolder);
+                if (!(workoutFolder instanceof TFolder)) {
+                    new Notice('Check Directory');
+                    //
+                } else {
+                    const today = moment().format('YYYY-MM-DD');
+                    if (this.settings.routinePlan.some((value) => value.date === today)) {
+                        new WorkoutButtonModal(this.app, this).open();
+                    } else {
+                        new NotworkoutButtonModal(this.app, this).open();
+                    }
                 }
             }
         });

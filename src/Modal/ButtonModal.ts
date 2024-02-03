@@ -1,8 +1,8 @@
-import { Modal, App, Setting, Notice, moment, stringifyYaml } from 'obsidian';
+import { Modal, App, Setting, moment, Notice, TFile } from 'obsidian';
 import WorkoutPlugin from 'main';
-import { Markdown } from 'src/Markdown/Markdown';
-import { RoutineModel } from 'src/Workout/Routine/RoutineModel';
-import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
+// import { Markdown } from 'src/Markdown/Markdown';
+// import { RoutineModel } from 'src/Workout/Routine/RoutineModel';
+import { RoutineModelApp } from 'src/Workout/Routine/RoutineUpdate';
 
 //this is workout day using modal
 
@@ -22,46 +22,43 @@ export class WorkoutButtonModal extends Modal {
         new Setting(contentEl)
             .addButton((btn) =>
                 btn.setButtonText('OK').onClick(async () => {
-                    //이부분에 데이터 파싱후 오늘의 계획 표 생성
-                    // this.close();
-                    // await new RoutineUpdate(this.plugin).todayRoutineMaker();
-
-                    // 스타팅 데이와 일치하는 부분이 있는지 확인
-                    // 아니라면 며칠 뒤 운동이 시작되는지 가져오는 기능
-
-                    //아직 루틴이 설정되지 않았습니다.
-                    // 수정
-                    // if (this.plugin.settings.startday !== today){
-                    //     new Notice('아직 루틴이 설정되지 않았습니다');
-                    // }
                     const today = moment().format('YYYY-MM-DD');
-                    await new RoutineUpdate(this.plugin).todayRoutineUpdater();
-
-                    //Propreties make
-                    const workoutProperites: RoutineModel = {
-                        Today: moment().format(),
-                        Workout: true,
-                        Program: this.plugin.settings.routineTemplate.name,
-                        Session: this.plugin.settings.todayRoutine.sessionname,
-                        Progress: this.plugin.settings.todayRoutine.progress,
-                        Workoutvolumn: 2000,
-                        Bodyweight: parseFloat(this.plugin.settings.bodyWeight),
-                        Bigthree: this.plugin.settings.bigThree[3],
-                        Squat1rm: this.plugin.settings.bigThree[0],
-                        Benchpress1rm: this.plugin.settings.bigThree[1],
-                        Deadlift1rm: this.plugin.settings.bigThree[2],
-                    };
-                    //오늘 할 워크아웃 목록 가져오기
-                    const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(true);
-                    console.log(contextData);
-
-                    const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
-                    try {
-                        //main폴더가 존재하는지 확인후 생성하도록 수정 예정
-                        new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, tempdata);
-                    } catch (error) {
-                        new Notice(error);
+                    const workoutInnerFile = this.app.vault.getAbstractFileByPath(
+                        `${this.plugin.settings.workoutFolder}/Workout ${today}.md`,
+                    );
+                    //for문이 아니라 최적화로 값을 저장하는 방법이 좋을듯.
+                    for (let i = 0; i < this.plugin.settings.routinePlan.length; i++) {
+                        if (today === this.plugin.settings.routinePlan[i].date) {
+                            if (!(workoutInnerFile instanceof TFile)) {
+                                new RoutineModelApp(this.plugin, this.app).workoutNoteMaker(today);
+                                console.log('plannum', i, this.plugin.settings.routinePlan.length);
+                            } else {
+                                await this.app.workspace
+                                    .getUnpinnedLeaf()
+                                    .openFile(workoutInnerFile, { state: { mode: 'source' } });
+                            }
+                            if (i + 1 < this.plugin.settings.routinePlan.length) {
+                                const nextday = this.plugin.settings.routinePlan[i + 1].date;
+                                if (
+                                    !(
+                                        this.app.vault.getAbstractFileByPath(
+                                            `${this.plugin.settings.workoutFolder}/Workout ${nextday}.md`,
+                                        ) instanceof TFile
+                                    )
+                                ) {
+                                    new RoutineModelApp(this.plugin, this.app).workoutNoteMaker(nextday, true);
+                                }
+                            } else {
+                                new Notice('today is endding template going to new template?');
+                                //템플릿 초기화 코드
+                                this.plugin.settings.startday = 'None';
+                                // this.close();
+                            }
+                            break;
+                        }
                     }
+
+                    //만약 파일이 존재하면 존재하는 파일로 이동시키기
 
                     this.close();
                 }),

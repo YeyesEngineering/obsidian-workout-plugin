@@ -75,7 +75,7 @@ export class Calculator {
             this.plugin.settings.wilks2point = parseFloat(wilkspoint.toFixed(2));
             await this.plugin.saveSettings();
         } else {
-            new Notice('Please Choose Your Gender!');
+            new Notice('Please Setting First');
         }
     }
 
@@ -104,12 +104,13 @@ export class Calculator {
             this.plugin.settings.dotspoint = parseFloat(dotspoint.toFixed(2));
             await this.plugin.saveSettings();
         } else {
-            new Notice('Please Choose Your Gender!');
+            // new Notice('Please Choose Your Gender!');
         }
     }
 
     async weightCaculator(workout: string, percent: string): Promise<number|string> {
         //조금 더 수정이 필요해 보임.
+        //만약 데이터가 0이라면 퍼센트로 표기해주는 것이 좋아보인다.
         let wvalue = 0;
         let pvalue = 0;
         if (percent === undefined || percent === 'bodyweight') {
