@@ -14,6 +14,13 @@ export interface RoutineModel {
     Deadlift1rm: number;
 }
 
+export interface mainModel{
+    Bigthree : number;
+    Wilks_Point : number;
+    DOTS_Score: number;
+
+}
+
 export type gender = 'Male' | 'Female' | 'None';
 
 export interface workoutsession {

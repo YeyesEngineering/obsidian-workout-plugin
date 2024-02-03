@@ -30,7 +30,7 @@ export class NotworkoutButtonModal extends Modal {
                         Program: '',
                         Progress:'',
                         Session: 'Training',
-                        Workoutvolumn: 2000,
+                        Workoutvolumn: 0,
                         Bodyweight: parseFloat(this.plugin.settings.bodyWeight),
                         Bigthree: this.plugin.settings.bigThree[3],
                         Squat1rm: this.plugin.settings.bigThree[0],

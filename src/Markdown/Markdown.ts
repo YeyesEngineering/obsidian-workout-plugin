@@ -24,7 +24,7 @@ export class Markdown {
             const targetFile = await this.app.vault.create(filePath, fileContent);
             await this.app.workspace.getUnpinnedLeaf().openFile(targetFile, { state: { mode: 'source' } });
         } catch (error) {
-            new Notice ('File Exist');
+            new Notice (error);
         }
 
         // if (options.openNote) {

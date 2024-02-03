@@ -2,6 +2,7 @@ import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
 import WorkoutPlugin from 'main';
 import { gender, routineTemplate, todayRoutine } from 'src/Workout/Routine/RoutineModel';
 import { workout } from 'src/Workout/Workout';
+import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
 // import { RoutineMakeModal } from 'src/Modal/RoutineMakeModal';
 
 export interface WorkoutPluginSettings {
@@ -15,15 +16,16 @@ export interface WorkoutPluginSettings {
     mainPageName: string;
     routineTemplate: routineTemplate;
     todayRoutine: todayRoutine; // Routine
+    nextdayRoutine: todayRoutine;
     routinePlan: todayRoutine[];
     tempWorkoutLists: workout;
     workoutLists: workout[];
-    mySquatWeight: string;
-    mySquatReps: string;
-    myBenchpressWeight: string;
-    myBenchpressReps: string;
-    myDeadliftWeight: string;
-    myDeadliftReps: string;
+    // mySquatWeight: string;
+    // mySquatReps: string;
+    // myBenchpressWeight: string;
+    // myBenchpressReps: string;
+    // myDeadliftWeight: string;
+    // myDeadliftReps: string;
 }
 
 export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
@@ -63,6 +65,15 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         reps: [0, 0, 0, 0],
         sets: [0, 0, 0, 0],
     },
+    nextdayRoutine: {
+        date: 'None',
+        sessionname: 'None',
+        progress: '0',
+        workout: ['', '', '', ''],
+        weight: ['', '', '', ''],
+        reps: [0, 0, 0, 0],
+        sets: [0, 0, 0, 0],
+    },
     routinePlan: [],
     tempWorkoutLists: {
         workoutName: '',
@@ -80,12 +91,12 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         },
         { workoutName: 'DEADLIFT', weight: 0, reps: 0, workoutTarget: ['Hamstrings', 'Quadriceps', 'Back', 'Glutes'] },
     ],
-    mySquatWeight: '',
-    mySquatReps: '',
-    myBenchpressWeight: '',
-    myBenchpressReps: '',
-    myDeadliftWeight: '',
-    myDeadliftReps: '',
+    // mySquatWeight: '',
+    // mySquatReps: '',
+    // myBenchpressWeight: '',
+    // myBenchpressReps: '',
+    // myDeadliftWeight: '',
+    // myDeadliftReps: '',
 };
 
 export class WorkoutPluginSettingTab extends PluginSettingTab {
@@ -247,13 +258,27 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                 });
             });
 
+        new Setting(containerEl)
+            .setName('Day Changer')
+            .setDesc('You can change your Workout Startday')
+            .addText((text) =>
+                text
+                    .setPlaceholder(this.plugin.settings.startday)
+                    .setValue(this.plugin.settings.startday)
+                    .onChange(async (val) => {
+                        this.plugin.settings.startday = val;
+                        //ROutine Planner 동작
+                        await this.plugin.saveSettings();
+                        new RoutineUpdate(this.plugin).routinePlanner();
+                    }),
+            );
         //Select from list of suggestions제안 모드 적용
         const routineInput = new Setting(containerEl)
             .setName('RoutineTemplate')
             // .setDesc('Please enter your RoutineTemplate')
             .setDesc(`now your Template is ${this.plugin.settings.routineTemplate.name}`);
 
-            //세션이 json이 잘 작성된 json인지 확인하는 코드 추가
+        //세션이 json이 잘 작성된 json인지 확인하는 코드 추가
         const inputDataFile = routineInput.controlEl.createEl('input', {
             attr: {
                 type: 'file',
