@@ -28,7 +28,7 @@ export class NotworkoutButtonModal extends Modal {
                         Today: moment().format(),
                         Workout: true,
                         Program: '',
-                        Progress:'',
+                        Progress: '',
                         Session: 'Training',
                         Workoutvolumn: 0,
                         Bodyweight: parseFloat(this.plugin.settings.bodyWeight),
@@ -44,7 +44,7 @@ export class NotworkoutButtonModal extends Modal {
                     const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
                     try {
                         //제목 형식도 변경 할수 있도록 수정 예정
-                        new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, tempdata);
+                        new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, tempdata, true);
                     } catch (error) {
                         new Notice(error);
                     }
