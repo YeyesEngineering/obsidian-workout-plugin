@@ -51,6 +51,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
                 reps: [3, 1020, 1000000],
                 sets: [1, 2],
                 weight: ['none', 'none', '100%'],
+                add: [],
             },
         ],
 
@@ -64,6 +65,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         weight: ['', '', '', ''],
         reps: [0, 0, 0, 0],
         sets: [0, 0, 0, 0],
+        add: [],
     },
     nextdayRoutine: {
         date: 'None',
@@ -73,6 +75,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         weight: ['', '', '', ''],
         reps: [0, 0, 0, 0],
         sets: [0, 0, 0, 0],
+        add: [],
     },
     routinePlan: [],
     tempWorkoutLists: {

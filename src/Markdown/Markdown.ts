@@ -10,7 +10,7 @@ export class Markdown {
         this.app = app;
     }
 
-    async createNote(fileName: string, fileContent: string): Promise<void> {
+    async createNote(fileName: string, fileContent: string, open?: boolean): Promise<void> {
         // find and possibly create the folder set in settings or passed in folder
         // const folder = options.folder ?? this.app.vault.getAbstractFileByPath('/');
         const filePath = `${this.plugin.settings.workoutFolder}/${fileName}.md`;
@@ -20,11 +20,23 @@ export class Markdown {
         // if (file) {
         //     await this.app.vault.delete(file);
         // }
-        try {
-            const targetFile = await this.app.vault.create(filePath, fileContent);
-            await this.app.workspace.getUnpinnedLeaf().openFile(targetFile, { state: { mode: 'source' } });
-        } catch (error) {
-            new Notice (error);
+
+        if (open){
+            try {
+                const targetFile = await this.app.vault.create(filePath, fileContent);
+                console.log(targetFile);
+                await this.app.workspace.getUnpinnedLeaf().openFile(targetFile, { state: { mode: 'source' } });
+            } catch (error) {
+                new Notice (error);
+            }
+        }
+        else{
+            try {
+                const targetFile = await this.app.vault.create(filePath, fileContent);
+                console.log(targetFile);
+            } catch (error) {
+                new Notice (error);
+            }
         }
 
         // if (options.openNote) {

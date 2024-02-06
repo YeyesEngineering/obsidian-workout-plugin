@@ -46,7 +46,7 @@ export class SecondWorkoutButtonModal extends Modal {
                     )}---\n# Today Workout\n\n${dataviewData}\n\n## Next Workout Day\n\n${nextWorkoutDay}\n\n## Workout Trend`;
                     //폴더를 옮길 수 도 있으니까 현재 위치를 가져오는게 안전할듯
 
-                    new Markdown(this.plugin, this.app).createNote(this.plugin.settings.mainPageName, StringData);
+                    new Markdown(this.plugin, this.app).createNote(this.plugin.settings.mainPageName, StringData, true);
 
                     //Routine Planner
                     new RoutineUpdate(this.plugin).routinePlanner();

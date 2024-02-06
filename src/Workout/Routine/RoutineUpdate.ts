@@ -27,6 +27,8 @@ export class RoutineUpdate {
         this.settings.todayRoutine.weight = [];
         this.settings.todayRoutine.reps = [];
         this.settings.todayRoutine.sets = [];
+        this.settings.todayRoutine.add = [];
+        await this.plugin.saveSettings();
         //데이터 설정
         const todaydata = this.settings.routinePlan.find((value) => value.date === today);
         console.log(todaydata);
@@ -38,6 +40,7 @@ export class RoutineUpdate {
             this.settings.todayRoutine.weight = todaydata.weight;
             this.settings.todayRoutine.reps = todaydata.reps;
             this.settings.todayRoutine.sets = todaydata.sets;
+            this.settings.todayRoutine.add = todaydata.add;
             await this.plugin.saveSettings();
         } else {
             //연장 하는 옵션 추가
@@ -53,6 +56,8 @@ export class RoutineUpdate {
         this.settings.nextdayRoutine.weight = [];
         this.settings.nextdayRoutine.reps = [];
         this.settings.nextdayRoutine.sets = [];
+        this.settings.nextdayRoutine.add = [];
+        await this.plugin.saveSettings();
         //데이터 설정
         const nextdaydata = this.settings.routinePlan.find((value) => value.date === nextday);
         console.log('nextday', nextdaydata);
@@ -64,6 +69,7 @@ export class RoutineUpdate {
             this.settings.nextdayRoutine.weight = nextdaydata.weight;
             this.settings.nextdayRoutine.reps = nextdaydata.reps;
             this.settings.nextdayRoutine.sets = nextdaydata.sets;
+            this.settings.nextdayRoutine.add = nextdaydata.add;
             await this.plugin.saveSettings();
         } else {
             //연장 하는 옵션 추가
@@ -81,11 +87,22 @@ export class RoutineUpdate {
             for (let i = 0; i < todayRoutine.workout.length; i++) {
                 for (let j = 0; j < todayRoutine.sets[i]; j++) {
                     //NOTE 부분 추가
-                    contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
-                        this.plugin,
-                    ).weightCaculator(todayRoutine.workout[i], todayRoutine.weight[i])} X ${todayRoutine.reps[i]} ${
-                        j + 1
-                    }Set \n`;
+                    if (todayRoutine.add[i].length !== 0) {
+                        contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
+                            this.plugin,
+                        ).weightCalculatorDetail(
+                            todayRoutine.workout[i],
+                            todayRoutine.weight[i],
+                            todayRoutine.add[i],
+                        )} X ${todayRoutine.reps[i]} ${j + 1}Set \n`;
+                    } else {
+                        console.log('inmin');
+                        contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
+                            this.plugin,
+                        ).weightCalculatorDetail(todayRoutine.workout[i], todayRoutine.weight[i])} X ${
+                            todayRoutine.reps[i]
+                        } ${j + 1}Set \n`;
+                    }
                 }
             }
             return contextdata;
@@ -119,6 +136,7 @@ export class RoutineUpdate {
                     weight: this.Routine.session[sessionNumber].weight,
                     reps: this.Routine.session[sessionNumber].reps,
                     sets: this.Routine.session[sessionNumber].sets,
+                    add: this.Routine.session[sessionNumber].add,
                 };
                 // this.plugin.settings.routinePlan.push(plan);
                 routinePlanArray.push(plan);
@@ -177,7 +195,7 @@ export class RoutineModelApp extends RoutineUpdate {
             const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
             try {
                 //main폴더가 존재하는지 확인후 생성하도록 수정 예정
-                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, tempdata);
+                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, tempdata, true);
             } catch (error) {
                 new Notice(error);
             }
