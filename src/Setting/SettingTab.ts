@@ -80,19 +80,33 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     routinePlan: [],
     tempWorkoutLists: {
         workoutName: '',
+        trainingWeight: 0,
         weight: 0,
         reps: 0,
         workoutTarget: [''],
     },
     workoutLists: [
-        { workoutName: 'SQUAT', weight: 0, reps: 0, workoutTarget: ['Hamstrings', 'Quadriceps', 'Glutes'] },
+        {
+            workoutName: 'SQUAT',
+            trainingWeight: 0,
+            weight: 0,
+            reps: 0,
+            workoutTarget: ['Hamstrings', 'Quadriceps', 'Glutes'],
+        },
         {
             workoutName: 'BENCH PRESS',
+            trainingWeight: 0,
             weight: 0,
             reps: 0,
             workoutTarget: ['Chest', 'Triceps'],
         },
-        { workoutName: 'DEADLIFT', weight: 0, reps: 0, workoutTarget: ['Hamstrings', 'Quadriceps', 'Back', 'Glutes'] },
+        {
+            workoutName: 'DEADLIFT',
+            trainingWeight: 0,
+            weight: 0,
+            reps: 0,
+            workoutTarget: ['Hamstrings', 'Quadriceps', 'Back', 'Glutes'],
+        },
     ],
     // mySquatWeight: '',
     // mySquatReps: '',
@@ -247,6 +261,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
                         this.plugin.settings.tempWorkoutLists = {
                             workoutName: '',
+                            trainingWeight: 0,
                             weight: 0,
                             reps: 0,
                             workoutTarget: [''],

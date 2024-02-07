@@ -134,11 +134,8 @@ export class Calculator {
         //조금 더 수정이 필요해 보임.
         //만약 데이터가 0이라면 퍼센트로 표기해주는 것이 좋아보인다.
 
-
-        
         /// ADD  부분 수정 필요
 
-        
         let wvalue = 0;
         let pvalue = 0;
         let rm = 0;
@@ -148,15 +145,14 @@ export class Calculator {
             pvalue = parseFloat(this.settings.bodyWeight);
             if (add) {
                 //처음의 경우는 어떻게 하지?
+                //다른 방식으로 구현
                 return `Body Weight + ${add[0]}`;
             }
             return 'Body Weight';
         } else {
             //Parser
             if (percent.includes('rm' || 'X')) {
-                console.log('ckceccnecn');
                 const divide = percent.replaceAll(' ', '').split('X');
-                console.log(divide);
                 rm = parseInt(divide[0].replace('rm', ''));
                 pvalue = parseInt(divide[1].replace('%', '')) / 100;
             } else {

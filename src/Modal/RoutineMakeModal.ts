@@ -8,7 +8,7 @@ export class RoutineMakeModal extends Modal {
     setting: WorkoutPluginSettings;
     startday: string;
 
-    constructor(app: App, plugin : WorkoutPlugin) {
+    constructor(app: App, plugin: WorkoutPlugin) {
         super(app);
         this.plugin = plugin;
     }
@@ -75,6 +75,7 @@ export class RoutineMakeModal extends Modal {
                     this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
                     this.plugin.settings.tempWorkoutLists = {
                         workoutName: '',
+                        trainingWeight: 0,
                         weight: 0,
                         reps: 0,
                         workoutTarget: ['Chest'],
@@ -83,12 +84,12 @@ export class RoutineMakeModal extends Modal {
                     // this.saveSettings(true);
                     //다른방법으로 모달을 띄워서 설정하는 방법
                     // console.log(this.plugin.settings.tempWorkoutLists);
-                    await this.plugin.saveSettings()
+                    await this.plugin.saveSettings();
                     this.close();
                 });
             });
 
-            new Setting(this.containerEl)
+        new Setting(this.containerEl);
     }
 
     onClose() {

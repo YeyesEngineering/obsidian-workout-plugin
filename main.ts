@@ -10,13 +10,22 @@ import { FirstWorkoutButtonModal } from 'src/Modal/FirstButtonModal';
 import { SecondWorkoutButtonModal } from 'src/Modal/SecondButtonModal';
 import { NotworkoutButtonModal } from 'src/Modal/NormalButtonModal';
 import { ThirdWorkoutButtonModal } from 'src/Modal/ThirdButtonModal';
+import { Renderer } from 'src/Renderer/Renderer';
+import { ParseWorkout } from 'src/Renderer/Parser';
+import { WeightUpdate } from 'src/Workout/Routine/WeightUpdate';
+// import { PreviewExtension } from 'src/Renderer/PreviewExtension';
 //타입 체크
 
 export default class WorkoutPlugin extends Plugin {
     settings: WorkoutPluginSettings;
+    renderer: Renderer;
 
     async onload() {
         await this.loadSettings();
+
+        // 특정 페이지에서만 작동하는 Renderer를 제작?
+        // this.renderer = new Renderer({ plugin: this });
+        // this.registerEditorExtension(PreviewExtension());
 
         const ribbonIconEl = this.addRibbonIcon('dumbbell', 'Workout Plugin', (evt: MouseEvent) => {
             if (this.settings.startday === 'None') {
@@ -102,8 +111,30 @@ export default class WorkoutPlugin extends Plugin {
 
         // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
         // Using this function will automatically remove the event listener when this plugin is disabled.
-        this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-            // console.log('click', evt);
+        this.registerDomEvent(document, 'click', (event: MouseEvent) => {
+            const { target } = event;
+            if (!target || !(target instanceof HTMLInputElement) || target.type !== 'checkbox') {
+                return false;
+            }
+            console.log(event.doc.title.startsWith('Workout'));
+            if (
+                event.doc.title.startsWith('Workout') &&
+                event.doc.activeElement?.textContent?.includes('Today Workout List')
+            ) {
+                // console.log('target', event.view);
+                // console.log('target', event);
+                // console.log('target', event.doc.title);
+                // console.log(event.doc.activeElement?.getText());
+                // console.log(event.doc.activeElement);
+                // console.log(target.labels);
+                const text = target.offsetParent?.textContent;
+                if (text) {
+                    const {workout,weight,reps} = new ParseWorkout(this).parser(text);
+                    //1rm 업데이트
+                    new WeightUpdate(this).oneRMUpdator(workout,weight,reps);
+                    new Notice('업데이트 완료');
+                }
+            }
         });
 
         // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
