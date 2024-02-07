@@ -14,6 +14,12 @@ export interface RoutineModel {
     Deadlift1rm: number;
 }
 
+export interface parseModel {
+    workout:string;
+    weight:number;
+    reps:number;
+}
+
 export interface mainModel {
     Bigthree: number;
     Wilks_Point: number;

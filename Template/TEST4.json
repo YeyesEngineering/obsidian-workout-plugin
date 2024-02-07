@@ -1,10 +1,11 @@
 {
     "name": "Base",
     "gender": "Male",
+    "type": ["Constant","Percent","Hybrid"],
     "workoutList": [
         {
             "workoutName": "SQUAT",
-            "OneRM": 0,
+            "Training Weight": 0,
             "weight": 0,
             "reps": 0,
             "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]

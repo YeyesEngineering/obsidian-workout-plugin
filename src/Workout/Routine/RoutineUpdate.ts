@@ -80,28 +80,27 @@ export class RoutineUpdate {
     }
 
     async workoutContextMaker(boolean: boolean, testdata?: todayRoutine): Promise<string> {
-        let contextdata = '# Today Workout  List\n\n';
+        let contextdata = '# Today Workout List\n\n';
         if (boolean && testdata) {
             // const todayRoutine = this.plugin.settings.todayRoutine;
             const todayRoutine = testdata;
             for (let i = 0; i < todayRoutine.workout.length; i++) {
                 for (let j = 0; j < todayRoutine.sets[i]; j++) {
                     //NOTE 부분 추가
-                    if (todayRoutine.add[i].length !== 0) {
+                    if (todayRoutine.add[i].length !== 0 || todayRoutine.add[i] === undefined) {
                         contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
                             this.plugin,
                         ).weightCalculatorDetail(
                             todayRoutine.workout[i],
                             todayRoutine.weight[i],
                             todayRoutine.add[i],
-                        )} X ${todayRoutine.reps[i]} ${j + 1}Set \n`;
+                        )} X ${todayRoutine.reps[i]} - ${j + 1}Set \n`;
                     } else {
-                        console.log('inmin');
                         contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
                             this.plugin,
                         ).weightCalculatorDetail(todayRoutine.workout[i], todayRoutine.weight[i])} X ${
                             todayRoutine.reps[i]
-                        } ${j + 1}Set \n`;
+                        } - ${j + 1}Set \n`;
                     }
                 }
             }
@@ -117,7 +116,7 @@ export class RoutineUpdate {
     async routinePlanner(): Promise<void> {
         //아까 이부분에서 왜 에러가 났을까?
 
-        //에러 체크 해보기
+        //에러 체크
         this.plugin.settings.routinePlan = [];
         await this.plugin.saveSettings();
 
