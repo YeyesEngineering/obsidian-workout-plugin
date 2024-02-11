@@ -4,7 +4,6 @@ import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 import { parseModel } from 'src/Workout/Routine/RoutineModel';
 // import { WeightUpdate } from 'src/Workout/Routine/WeightUpdate';
 
-
 export class ParseWorkout {
     plugin: WorkoutPlugin;
     settings: WorkoutPluginSettings;
@@ -14,16 +13,19 @@ export class ParseWorkout {
         this.settings = this.plugin.settings;
     }
 
-    
-    public parser(string: string): parseModel{
-        const workoutName = string.replaceAll(' ', '').split(':');
+    public parser(string: string): parseModel {
+        const workoutName = string.split(':');
+        //띄어쓰기 Parser 수정
         const weight = workoutName[1].split('X');
         const reps = weight[1].split('-');
+        const set = reps[1].replace(/[^0-9]/g, '');
         const data = {
-            workout: workoutName[0],
-            weight: parseFloat(weight[0]),
-            reps: parseInt(reps[0]),
-        }
+            workout: workoutName[0].trim(),
+            weight: parseFloat(weight[0].trim()),
+            reps: parseInt(reps[0].trim()),
+            set: parseInt(set.trim()),
+        };
+        console.log(data);
         return data;
     }
 }

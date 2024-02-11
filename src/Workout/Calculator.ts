@@ -106,35 +106,22 @@ export class Calculator {
             // new Notice('Please Choose Your Gender!');
         }
     }
+    async trainingWeightCaculator(): Promise<void> {
+        // const lists = this.settings.workoutLists;
+        for (const workout of this.settings.workoutLists) {
+            if (workout.trainingWeight === 0 || workout.trainingWeight === undefined) {
+                const onerm = await Calculator.onerm(workout.weight, workout.reps);
+                workout.trainingWeight = onerm;
+            }
+        }
+        await this.plugin.saveSettings();
+    }
 
-    // async weightCaculator(workout: string, percent: string): Promise<number | string> {
-    //     //조금 더 수정이 필요해 보임.
-    //     //만약 데이터가 0이라면 퍼센트로 표기해주는 것이 좋아보인다.
-    //     let wvalue = 0;
-    //     let pvalue = 0;
-    //     if (percent === undefined || percent === 'bodyweight') {
-    //         console.log('percent', percent);
-    //         pvalue = parseFloat(this.settings.bodyWeight);
-    //         return 'body weight';
-    //     } else {
-    //         pvalue = parseInt(percent.replace('%', '')) / 100;
-    //     }
-
-    //     for (const value of this.settings.workoutLists) {
-    //         if (value.workoutName === workout) {
-    //             wvalue = await Calculator.onerm(value.weight, value.reps);
-    //             break;
-    //         }
-    //     }
-    //     console.log(wvalue, pvalue);
-    //     return parseFloat((wvalue * pvalue).toFixed(1));
-    // }
-
-    async weightCalculatorDetail(workout: string, percent: string, add?: number[]): Promise<number | string> {
+    async weightCalculatorDetail(workout: string, percent: string): Promise<number | string> {
         //조금 더 수정이 필요해 보임.
         //만약 데이터가 0이라면 퍼센트로 표기해주는 것이 좋아보인다.
 
-        /// ADD  부분 수정 필요
+        /// ADD  부분 수정 필요 삭제 예정
 
         let wvalue = 0;
         let pvalue = 0;
@@ -143,11 +130,6 @@ export class Calculator {
         if (percent === undefined || percent === 'bodyweight') {
             console.log('percent', percent);
             pvalue = parseFloat(this.settings.bodyWeight);
-            if (add) {
-                //처음의 경우는 어떻게 하지?
-                //다른 방식으로 구현
-                return `Body Weight + ${add[0]}`;
-            }
             return 'Body Weight';
         } else {
             //Parser
@@ -156,29 +138,34 @@ export class Calculator {
                 rm = parseInt(divide[0].replace('rm', ''));
                 pvalue = parseInt(divide[1].replace('%', '')) / 100;
             } else {
+                console.log('percent', percent);
                 pvalue = parseInt(percent.replace('%', '')) / 100;
             }
         }
 
         for (const value of this.settings.workoutLists) {
             if (value.workoutName === workout) {
-                const onerm = await Calculator.onerm(value.weight, value.reps);
-                wvalue = await Calculator.whatrm(onerm, rm);
-                console.log('w,rm,one', wvalue, rm, onerm);
+                // const weight = await Calculator.onerm(value.weight, value.reps);
+                const weight = value.trainingWeight;
+                if (rm === 0) {
+                    wvalue = weight;
+                    break;
+                }
+                wvalue = await Calculator.whatrm(weight, rm);
+                console.log('w,rm,one', wvalue, rm, weight);
                 break;
             }
         }
         console.log(wvalue, pvalue);
-        if (add) {
-            return parseFloat((wvalue * pvalue + add[0]).toFixed(1));
-        }
+        console.log('answer', parseFloat((wvalue * pvalue).toFixed(1)));
         return parseFloat((wvalue * pvalue).toFixed(1));
     }
 
     async basicSetup() {
-        this.oneRmCalculator();
+        await this.oneRmCalculator();
         this.wilks2Caculator();
         this.dotsCaculator();
+        await this.trainingWeightCaculator();
     }
 
     static async onerm(weight: number, reps: number): Promise<number> {
@@ -187,6 +174,7 @@ export class Calculator {
     }
 
     static async whatrm(onerm: number, reps: number): Promise<number> {
+        //계산식 수정 예정
         const rm = Math.round((1.0278 - 0.0278 * reps) * onerm);
         return rm;
     }

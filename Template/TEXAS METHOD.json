@@ -1,47 +1,52 @@
 {
   "name": "Texas Method",
-  "type": "Constant / RM",
-  "add": 5,
   "gender": "Male",
   "workoutList": [
     {
       "workoutName": "SQUAT",
+      "trainingWeight": 0,
       "weight": 0,
       "reps": 0,
       "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
     },
     {
       "workoutName": "BENCH PRESS",
+      "trainingWeight": 0,
       "weight": 0,
       "reps": 0,
       "workoutTarget": ["Chest", "Triceps"]
     },
     {
       "workoutName": "DEADLIFT",
+      "trainingWeight": 0,
       "weight": 0,
       "reps": 0,
       "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Glutes"]
     },
     {
       "workoutName": "OHP",
+      "trainingWeight": 0,
       "weight": 0,
       "reps": 0,
       "workoutTarget": ["Shoulders"]
     },
     {
       "workoutName": "BACK EXTENSION",
+      "trainingWeight": 0,
       "weight": 0,
       "reps": 0,
       "workoutTarget": ["Back"]
     },
     {
       "workoutName": "CHIN UPS",
+      "trainingWeight": 0,
       "weight": 0,
       "reps": 0,
       "workoutTarget": ["Back"]
     },
     {
       "workoutName": "POWER CLEAN",
+      "trainingWeight": 0,
       "weight": 0,
       "reps": 0,
       "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Shoulders"]
@@ -52,7 +57,7 @@
       "sessionname": "Volume Day",
       "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
       "reps": [5, 5, 5],
-      "sets": [5, 1, 1],
+      "sets": [5, 5, 5],
       "weight": ["90%", "90%", "90%"]
     },
     {

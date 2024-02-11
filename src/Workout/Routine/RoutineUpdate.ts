@@ -20,7 +20,7 @@ export class RoutineUpdate {
         this.settings = this.plugin.settings;
     }
 
-    async todayRoutineUpdater(date: string): Promise<number[]> {
+    async todayRoutineUpdater(date: string): Promise<void> {
         const today = date;
         //이전 데이터 초기화
         this.settings.todayRoutine.workout = [];
@@ -28,6 +28,7 @@ export class RoutineUpdate {
         this.settings.todayRoutine.reps = [];
         this.settings.todayRoutine.sets = [];
         this.settings.todayRoutine.add = [];
+        this.settings.todayRoutine.check = [];
         await this.plugin.saveSettings();
         //데이터 설정
         const todaydata = this.settings.routinePlan.find((value) => value.date === today);
@@ -41,13 +42,12 @@ export class RoutineUpdate {
             this.settings.todayRoutine.reps = todaydata.reps;
             this.settings.todayRoutine.sets = todaydata.sets;
             this.settings.todayRoutine.add = todaydata.add;
+            this.settings.todayRoutine.check = todaydata.sets.map((i) => Array(i).fill(0))
             await this.plugin.saveSettings();
         } else {
             //연장 하는 옵션 추가
             new Notice('초기화 후 다시 시도해주세요');
         }
-
-        return [];
     }
     async nextdayRoutineUpdater(date: string): Promise<number[]> {
         const nextday = date;
@@ -70,6 +70,7 @@ export class RoutineUpdate {
             this.settings.nextdayRoutine.reps = nextdaydata.reps;
             this.settings.nextdayRoutine.sets = nextdaydata.sets;
             this.settings.nextdayRoutine.add = nextdaydata.add;
+            this.settings.nextdayRoutine.check = nextdaydata.sets.map((i) => Array(i).fill(0));
             await this.plugin.saveSettings();
         } else {
             //연장 하는 옵션 추가
@@ -79,29 +80,20 @@ export class RoutineUpdate {
         return [];
     }
 
-    async workoutContextMaker(boolean: boolean, testdata?: todayRoutine): Promise<string> {
+    async workoutContextMaker(boolean: boolean, todayRoutineData?: todayRoutine): Promise<string> {
         let contextdata = '# Today Workout List\n\n';
-        if (boolean && testdata) {
+        if (boolean && todayRoutineData) {
             // const todayRoutine = this.plugin.settings.todayRoutine;
-            const todayRoutine = testdata;
+            const todayRoutine = todayRoutineData;
             for (let i = 0; i < todayRoutine.workout.length; i++) {
                 for (let j = 0; j < todayRoutine.sets[i]; j++) {
                     //NOTE 부분 추가
-                    if (todayRoutine.add[i].length !== 0 || todayRoutine.add[i] === undefined) {
-                        contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
-                            this.plugin,
-                        ).weightCalculatorDetail(
-                            todayRoutine.workout[i],
-                            todayRoutine.weight[i],
-                            todayRoutine.add[i],
-                        )} X ${todayRoutine.reps[i]} - ${j + 1}Set \n`;
-                    } else {
-                        contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
-                            this.plugin,
-                        ).weightCalculatorDetail(todayRoutine.workout[i], todayRoutine.weight[i])} X ${
-                            todayRoutine.reps[i]
-                        } - ${j + 1}Set \n`;
-                    }
+                    console.log('todyaRou', todayRoutine);
+                    contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
+                        this.plugin,
+                    ).weightCalculatorDetail(todayRoutine.workout[i], todayRoutine.weight[i])} X ${
+                        todayRoutine.reps[i]
+                    } - ${j + 1}Set \n`;
                 }
             }
             return contextdata;
@@ -154,7 +146,10 @@ export class RoutineUpdate {
             routinePlanArray[i].progress = `${percent}%`;
             sessionCount++;
         }
-
+        /////TEST CODE
+        /////////////////////////////////////////////////////////////////////////////////////
+        console.log(routinePlanArray);
+        //////////////////////////////////////////////////////////////
         this.plugin.settings.routinePlan = routinePlanArray;
         await this.plugin.saveSettings();
     }

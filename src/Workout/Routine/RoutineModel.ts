@@ -15,9 +15,10 @@ export interface RoutineModel {
 }
 
 export interface parseModel {
-    workout:string;
-    weight:number;
-    reps:number;
+    workout: string;
+    weight: number;
+    reps: number;
+    set: number;
 }
 
 export interface mainModel {
@@ -27,6 +28,8 @@ export interface mainModel {
 }
 
 export type gender = 'Male' | 'Female' | 'None';
+
+export type type = 'None' | 'CONSTANT' | 'PERCENT' | 'HYBRID';
 
 export interface workoutsession {
     sessionname: string;
@@ -44,6 +47,7 @@ export interface workoutsession {
 
 export interface routineTemplate {
     name: string;
+    // type: type;
     workoutList: workout[];
     gender: string;
     session: workoutsession[];
@@ -63,4 +67,8 @@ export interface todayRoutine {
     // reps: (number | number[] | string)[];
     reps: number[];
     sets: number[];
+}
+
+export interface todayRoutineCheck extends todayRoutine {
+    check : number[][];
 }

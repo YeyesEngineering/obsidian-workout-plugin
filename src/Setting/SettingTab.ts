@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
 import WorkoutPlugin from 'main';
-import { gender, routineTemplate, todayRoutine } from 'src/Workout/Routine/RoutineModel';
+import { gender, routineTemplate, todayRoutine, todayRoutineCheck } from 'src/Workout/Routine/RoutineModel';
 import { workout } from 'src/Workout/Workout';
 import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
 // import { RoutineMakeModal } from 'src/Modal/RoutineMakeModal';
@@ -15,8 +15,8 @@ export interface WorkoutPluginSettings {
     workoutFolder: string;
     mainPageName: string;
     routineTemplate: routineTemplate;
-    todayRoutine: todayRoutine; // Routine
-    nextdayRoutine: todayRoutine;
+    todayRoutine: todayRoutineCheck; // Routine
+    nextdayRoutine: todayRoutineCheck;
     routinePlan: todayRoutine[];
     tempWorkoutLists: workout;
     workoutLists: workout[];
@@ -66,6 +66,12 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         reps: [0, 0, 0, 0],
         sets: [0, 0, 0, 0],
         add: [],
+        check: [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+        ],
     },
     nextdayRoutine: {
         date: 'None',
@@ -76,6 +82,12 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         reps: [0, 0, 0, 0],
         sets: [0, 0, 0, 0],
         add: [],
+        check: [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+        ],
     },
     routinePlan: [],
     tempWorkoutLists: {
@@ -198,83 +210,90 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         //         }),
         //     );
 
-        const workoutAdd = new Setting(containerEl)
-            .setName('Workout add')
-            .setDesc('You can add a exercise')
-            //삭제 기능 추가
-            .addText((text) =>
-                text
-                    .setPlaceholder('Workout Name')
-                    // .setValue(this.plugin.settings.tempWorkoutLists.workoutName)
-                    .onChange(async (value) => {
-                        this.plugin.settings.tempWorkoutLists.workoutName = value;
-                        await this.plugin.saveSettings();
-                    }),
-            )
-            .addText((text) =>
-                text
-                    .setPlaceholder('Weight')
-                    // .setValue(String(this.plugin.settings.tempWorkoutLists.weight))
-                    .onChange(async (value) => {
-                        this.plugin.settings.tempWorkoutLists.weight = parseFloat(value);
-                        await this.plugin.saveSettings();
-                    }),
-            )
-            .addText((text) =>
-                text
-                    .setPlaceholder('Reps')
-                    // .setValue(String(this.plugin.settings.tempWorkoutLists.reps))
-                    .onChange(async (value) => {
-                        this.plugin.settings.tempWorkoutLists.reps = parseInt(value);
-                        await this.plugin.saveSettings();
-                    }),
-            )
-            // .addDropdown((target) =>
-            //     target
-            //         .addOptions({
-            //             Chest: 'Chest',
-            //             Back: 'Back',
-            //             Shoulders: 'Shoulders',
-            //             Biceps: 'Biceps',
-            //             Tricep: 'Triceps',
-            //             Quadriceps: 'Quadriceps',
-            //             Hamstrings: 'Hamstrings',
-            //             Glutes: 'Glutes',
-            //             Calves: 'Calves',
-            //         })
-            //         // .setValue(String(this.plugin.settings.tempWorkoutLists.workoutTarget))
-            //         .onChange(async (value: workoutTarget) => {
-            //             const tempContainer: workoutTarget[] = [];
-            //             //멀티플로  선택 할 수 있도록 설정
-            //             tempContainer.push(value);
-            //             this.plugin.settings.tempWorkoutLists.workoutTarget = [...tempContainer];
-            //             await this.plugin.saveSettings();
-            //         }),
-            // )
-            .addButton((bt) => {
-                bt.setButtonText('Apply').onClick(async () => {
-                    if (
-                        !this.plugin.settings.workoutLists.some(
-                            (value) => value.workoutName === this.plugin.settings.tempWorkoutLists.workoutName,
-                        )
-                    ) {
-                        this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
-                        this.plugin.settings.tempWorkoutLists = {
-                            workoutName: '',
-                            trainingWeight: 0,
-                            weight: 0,
-                            reps: 0,
-                            workoutTarget: [''],
-                        };
-                        console.log(workoutAdd);
+        // const workoutAdd = new Setting(containerEl)
+        //     .setName('Workout add')
+        //     .setDesc('You can add a exercise')
+        //     //삭제 기능 추가
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Workout Name')
+        //             // .setValue(this.plugin.settings.tempWorkoutLists.workoutName)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.tempWorkoutLists.workoutName = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     )
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Weight')
+        //             // .setValue(String(this.plugin.settings.tempWorkoutLists.weight))
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.tempWorkoutLists.weight = parseFloat(value);
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     )
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder('Reps')
+        //             // .setValue(String(this.plugin.settings.tempWorkoutLists.reps))
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.tempWorkoutLists.reps = parseInt(value);
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     )
+        // .addDropdown((target) =>
+        //     target
+        //         .addOptions({
+        //             Chest: 'Chest',
+        //             Back: 'Back',
+        //             Shoulders: 'Shoulders',
+        //             Biceps: 'Biceps',
+        //             Tricep: 'Triceps',
+        //             Quadriceps: 'Quadriceps',
+        //             Hamstrings: 'Hamstrings',
+        //             Glutes: 'Glutes',
+        //             Calves: 'Calves',
+        //         })
+        //         // .setValue(String(this.plugin.settings.tempWorkoutLists.workoutTarget))
+        //         .onChange(async (value: workoutTarget) => {
+        //             const tempContainer: workoutTarget[] = [];
+        //             //멀티플로  선택 할 수 있도록 설정
+        //             tempContainer.push(value);
+        //             this.plugin.settings.tempWorkoutLists.workoutTarget = [...tempContainer];
+        //             await this.plugin.saveSettings();
+        //         }),
+        // )
 
-                        await this.plugin.saveSettings();
-                        this.display();
-                    } else {
-                        new Notice('Exist Workout');
-                    }
-                });
-            });
+        /////////////////////////////////////////////////////////////////////////////////
+        // 버튼
+        // /////////////////////////////////////////////
+
+        // .addButton((bt) => {
+        //     bt.setButtonText('Apply').onClick(async () => {
+        //         if (
+        //             !this.plugin.settings.workoutLists.some(
+        //                 (value) => value.workoutName === this.plugin.settings.tempWorkoutLists.workoutName,
+        //             )
+        //         ) {
+        //             this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
+        //             this.plugin.settings.tempWorkoutLists = {
+        //                 workoutName: '',
+        //                 trainingWeight: 0,
+        //                 weight: 0,
+        //                 reps: 0,
+        //                 workoutTarget: [''],
+        //             };
+        //             console.log(workoutAdd);
+
+        //             await this.plugin.saveSettings();
+        //             this.display();
+        //         } else {
+        //             new Notice('Exist Workout');
+        //         }
+        //     });
+        // });
+
+        ////////////////////////////////////////
 
         new Setting(containerEl)
             .setName('Day Changer')
@@ -290,7 +309,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         new RoutineUpdate(this.plugin).routinePlanner();
                     }),
             );
-        //Select from list of suggestions제안 모드 적용
+        //Select from list of suggestions 제안 모드 적용
         const routineInput = new Setting(containerEl)
             .setName('RoutineTemplate')
             // .setDesc('Please enter your RoutineTemplate')
@@ -383,6 +402,18 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         .setValue(String(workout.reps))
                         .onChange(async (val) => {
                             workout.reps = parseInt(val);
+                            await this.plugin.saveSettings();
+                        }),
+                );
+            new Setting(containerEl)
+                .setName(`${workout.workoutName} Training Weight`)
+                .setDesc("Enter a weight to start your workout If you don't, it will be calculated automatically.")
+                .addText((text) =>
+                    text
+                        .setPlaceholder(`${workout.workoutName} Training Weight`)
+                        .setValue(String(workout.trainingWeight))
+                        .onChange(async (val) => {
+                            workout.trainingWeight = parseInt(val);
                             await this.plugin.saveSettings();
                         }),
                 );

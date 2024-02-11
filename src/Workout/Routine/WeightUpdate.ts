@@ -19,7 +19,7 @@ export class WeightUpdate {
         this.settings = this.plugin.settings;
     }
 
-    async oneRMUpdator(workout: string, weight: number, reps: number) {
+    async oneRMUpdater(workout: string, weight: number, reps: number) {
         const tempBigthree = [...this.plugin.settings.bigThree];
         console.log(tempBigthree);
         switch (workout) {
@@ -57,6 +57,25 @@ export class WeightUpdate {
                     ];
                 }
                 break;
+        }
+    }
+
+    async trainingWeightUpdater(workouts: string, set: number) {
+        if (this.settings.todayRoutine.add) {
+            const index = this.settings.todayRoutine.workout.findIndex((val) => val === workouts);
+            console.log('index', index);
+            this.settings.todayRoutine.check[index][set - 1]++;
+            await this.plugin.saveSettings();
+            console.log(this.settings.todayRoutine.check[index]);
+
+            if (this.settings.todayRoutine.check[index].every((element) => element === 1)) {
+                const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName === workouts);
+                // console.log(this.settings.workoutLists[workoutlistsIndex]);
+                this.settings.workoutLists[workoutlistsIndex].trainingWeight =
+                    this.settings.workoutLists[workoutlistsIndex].trainingWeight +
+                    this.settings.todayRoutine.add[index][0];
+            }
+            await this.plugin.saveSettings();
         }
     }
 
