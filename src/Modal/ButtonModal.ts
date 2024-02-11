@@ -31,8 +31,8 @@ export class WorkoutButtonModal extends Modal {
                         if (today === this.plugin.settings.routinePlan[i].date) {
                             if (!(workoutInnerFile instanceof TFile)) {
                                 new RoutineModelApp(this.plugin, this.app).workoutNoteMaker(today);
-                                console.log('plannum', i, this.plugin.settings.routinePlan.length);
                             } else {
+                                //이부분에 데이터를 업데이트 하는 부분을 추가
                                 await this.app.workspace
                                     .getUnpinnedLeaf()
                                     .openFile(workoutInnerFile, { state: { mode: 'source' } });

@@ -111,6 +111,8 @@ export default class WorkoutPlugin extends Plugin {
 
         // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
         // Using this function will automatically remove the event listener when this plugin is disabled.
+
+        /// 특정페이지를 확인하고 특정 페이지면 실행 되도록 수정 예정
         this.registerDomEvent(document, 'click', (event: MouseEvent) => {
             const { target } = event;
             if (!target || !(target instanceof HTMLInputElement) || target.type !== 'checkbox') {
@@ -129,9 +131,12 @@ export default class WorkoutPlugin extends Plugin {
                 // console.log(target.labels);
                 const text = target.offsetParent?.textContent;
                 if (text) {
-                    const {workout,weight,reps} = new ParseWorkout(this).parser(text);
+                    const {workout,weight,reps,set} = new ParseWorkout(this).parser(text);
+                    console.log(set);
                     //1rm 업데이트
-                    new WeightUpdate(this).oneRMUpdator(workout,weight,reps);
+                    new WeightUpdate(this).oneRMUpdater(workout,weight,reps);
+                    //Training Weight Update
+                    new WeightUpdate(this).trainingWeightUpdater(workout,set);
                     new Notice('업데이트 완료');
                 }
             }
