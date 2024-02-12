@@ -29,11 +29,9 @@ export class FirstWorkoutButtonModal extends Modal {
                 this.startday === 'None' ? (this.startday = moment().format('YYYY-MM-DD')) : this.startday;
                 if (moment(this.startday, moment.ISO_8601, true).isValid()) {
                     this.plugin.settings.startday = this.startday;
-                    //만약에 오늘부터 스타트를 한다면 바로 폴더 만드는 기능 추가
-                    console.log(this.plugin.settings.startday);
                     await this.plugin.saveSettings();
                     const filePath = this.plugin.settings.workoutFolder ?? '/Workout';
-                    //폴더 생성
+                    //Folder Create
                     try {
                         await this.app.vault.createFolder(filePath);
                     } catch (error) {
@@ -53,7 +51,6 @@ export class FirstWorkoutButtonModal extends Modal {
                     const StringData = `---\n${stringifyYaml(
                         workoutMainProperites,
                     )}---\n# Today Workout\n\n${dataviewData}\n\n## Next Workout Day\n\n${nextWorkoutDay}\n\n## Workout Trend`;
-                    //폴더를 옮길 수 도 있으니까 현재 위치를 가져오는게 안전할듯
 
                     new Markdown(this.plugin, this.app).createNote(this.plugin.settings.mainPageName, StringData, true);
 

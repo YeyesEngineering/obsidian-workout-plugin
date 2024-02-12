@@ -22,7 +22,7 @@ export class RoutineUpdate {
 
     async todayRoutineUpdater(date: string): Promise<void> {
         const today = date;
-        //이전 데이터 초기화
+        //Wipe previous data
         this.settings.todayRoutine.workout = [];
         this.settings.todayRoutine.weight = [];
         this.settings.todayRoutine.reps = [];
@@ -30,9 +30,8 @@ export class RoutineUpdate {
         this.settings.todayRoutine.add = [];
         this.settings.todayRoutine.check = [];
         await this.plugin.saveSettings();
-        //데이터 설정
+        //data settings
         const todaydata = this.settings.routinePlan.find((value) => value.date === today);
-        console.log(todaydata);
         if (todaydata) {
             this.settings.todayRoutine.date = today;
             this.settings.todayRoutine.progress = todaydata.progress;
@@ -83,20 +82,18 @@ export class RoutineUpdate {
     async workoutContextMaker(boolean: boolean, todayRoutineData?: todayRoutine): Promise<string> {
         let contextdata = '# Today Workout List\n\n';
         if (boolean && todayRoutineData) {
-            // const todayRoutine = this.plugin.settings.todayRoutine;
             const todayRoutine = todayRoutineData;
             for (let i = 0; i < todayRoutine.workout.length; i++) {
                 for (let j = 0; j < todayRoutine.sets[i]; j++) {
-                    //NOTE 부분 추가
-                    console.log('todyaRou', todayRoutine);
                     contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
                         this.plugin,
-                    ).weightCalculatorDetail(todayRoutine.workout[i], todayRoutine.weight[i])} X ${
+                    ).weightCalculator(todayRoutine.workout[i], todayRoutine.weight[i])} X ${
                         todayRoutine.reps[i]
-                    } - ${j + 1}Set \n`;
+                    } - ${j + 1}Set \n    - Note : \n`;
                 }
             }
             return contextdata;
+
         } else {
             for (let i = 0; i < 6; i++) {
                 contextdata += ` - [ ] \n`;
@@ -106,17 +103,13 @@ export class RoutineUpdate {
     }
 
     async routinePlanner(): Promise<void> {
-        //아까 이부분에서 왜 에러가 났을까?
-
-        //에러 체크
+        const routinePlanArray = [];
         this.plugin.settings.routinePlan = [];
         await this.plugin.saveSettings();
-
-        const routinePlanArray = [];
         for (let i = 0; i < this.Routine.week.length; i++) {
             const basedate = moment(this.settings.startday).add(i, 'days').format('YYYY-MM-DD');
             for (let j = 0; j < this.Routine.week[i].length; j++) {
-                const sessionNumber = parseInt(this.Routine.week[i][j].split('_')[1]) - 1;
+                const sessionNumber = parseInt(this.Routine.week[i][j].replace(/\D/g, "")) - 1;
                 const plan = {
                     date: moment(basedate)
                         .add(j * 7, 'days')
@@ -129,7 +122,6 @@ export class RoutineUpdate {
                     sets: this.Routine.session[sessionNumber].sets,
                     add: this.Routine.session[sessionNumber].add,
                 };
-                // this.plugin.settings.routinePlan.push(plan);
                 routinePlanArray.push(plan);
             }
         }
@@ -146,10 +138,6 @@ export class RoutineUpdate {
             routinePlanArray[i].progress = `${percent}%`;
             sessionCount++;
         }
-        /////TEST CODE
-        /////////////////////////////////////////////////////////////////////////////////////
-        console.log(routinePlanArray);
-        //////////////////////////////////////////////////////////////
         this.plugin.settings.routinePlan = routinePlanArray;
         await this.plugin.saveSettings();
     }
@@ -162,7 +150,6 @@ export class RoutineModelApp extends RoutineUpdate {
         this.app = app;
     }
     async workoutNoteMaker(day: string, next?: boolean): Promise<void> {
-        // const today = moment().format('YYYY-MM-DD');
         if (!next) {
             await new RoutineUpdate(this.plugin).todayRoutineUpdater(day);
             //Propreties make
@@ -179,17 +166,15 @@ export class RoutineModelApp extends RoutineUpdate {
                 Benchpress1rm: this.plugin.settings.bigThree[1],
                 Deadlift1rm: this.plugin.settings.bigThree[2],
             };
-            //오늘 할 워크아웃 목록 가져오기
+            //Today Workout Lists
             const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(
                 true,
                 this.settings.todayRoutine,
             );
-            console.log(contextData);
 
-            const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
+            const filedata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
             try {
-                //main폴더가 존재하는지 확인후 생성하도록 수정 예정
-                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, tempdata, true);
+                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, filedata, true);
             } catch (error) {
                 new Notice(error);
             }
@@ -209,17 +194,15 @@ export class RoutineModelApp extends RoutineUpdate {
                 Benchpress1rm: this.plugin.settings.bigThree[1],
                 Deadlift1rm: this.plugin.settings.bigThree[2],
             };
-            //오늘 할 워크아웃 목록 가져오기
+            //nextday workoutLists
             const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(
                 true,
                 this.settings.nextdayRoutine,
             );
-            console.log(contextData);
 
-            const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
+            const filedata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
             try {
-                //main폴더가 존재하는지 확인후 생성하도록 수정 예정
-                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, tempdata);
+                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, filedata);
             } catch (error) {
                 new Notice(error);
             }

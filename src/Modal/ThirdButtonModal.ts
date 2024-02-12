@@ -28,8 +28,10 @@ export class ThirdWorkoutButtonModal extends Modal {
                 if (moment(this.startday, moment.ISO_8601, true).isValid()) {
                     this.plugin.settings.startday = this.startday;
                     await this.plugin.saveSettings();
+
                     //Routine Planner
                     new RoutineUpdate(this.plugin).routinePlanner();
+                    
                 } else {
                     new Notice('Wrong Date Format');
                 }

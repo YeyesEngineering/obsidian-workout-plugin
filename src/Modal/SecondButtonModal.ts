@@ -30,7 +30,7 @@ export class SecondWorkoutButtonModal extends Modal {
                 if (moment(this.startday, moment.ISO_8601, true).isValid()) {
                     this.plugin.settings.startday = this.startday;
                     await this.plugin.saveSettings();
-                    const filePath = this.plugin.settings.workoutFolder;
+                    const filePath = this.plugin.settings.workoutFolder ?? '/Workout';
 
                     const workoutMainProperites: mainModel = {
                         Bigthree: this.plugin.settings.bigThree[3],
@@ -40,11 +40,10 @@ export class SecondWorkoutButtonModal extends Modal {
 
                     const dataviewData =
                         '```dataview\n    TASK\n    FROM "' + filePath + '"\n    WHERE file.day = date(today) \n ```';
-                    const nextWorkoutDay = this.plugin.settings.nextdayRoutine.date;
+                    const nextWorkoutDay = '```dataview\n    TABLE Today as Day\n    FROM "' + filePath + '"\n    SORT Today DESC\n    LIMIT 1\n ```';
                     const StringData = `---\n${stringifyYaml(
                         workoutMainProperites,
                     )}---\n# Today Workout\n\n${dataviewData}\n\n## Next Workout Day\n\n${nextWorkoutDay}\n\n## Workout Trend`;
-                    //폴더를 옮길 수 도 있으니까 현재 위치를 가져오는게 안전할듯
 
                     new Markdown(this.plugin, this.app).createNote(this.plugin.settings.mainPageName, StringData, true);
 

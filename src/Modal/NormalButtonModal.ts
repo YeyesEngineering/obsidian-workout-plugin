@@ -37,14 +37,12 @@ export class NotworkoutButtonModal extends Modal {
                         Benchpress1rm: this.plugin.settings.bigThree[1],
                         Deadlift1rm: this.plugin.settings.bigThree[2],
                     };
-                    //오늘 할 워크아웃 목록 가져오기
                     const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(false);
-                    console.log(contextData);
 
-                    const tempdata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
+                    const filedata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
                     try {
                         //제목 형식도 변경 할수 있도록 수정 예정
-                        new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, tempdata, true);
+                        new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, filedata, true);
                     } catch (error) {
                         new Notice(error);
                     }
@@ -54,7 +52,6 @@ export class NotworkoutButtonModal extends Modal {
             )
             .addButton((btn) =>
                 btn.setButtonText('Cancel').onClick(async () => {
-                    console.log('tt');
                     this.close();
                 }),
             );

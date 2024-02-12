@@ -44,7 +44,7 @@ export class BaseModal {
             }
         } else {
             if (!(workoutFolder instanceof TFolder)) {
-                new Notice('Check Directory and Change Directory');
+                new Notice('Check Directory');
                 // this.settings.startday = 'None';
                 // this.plugin.saveSettings();
                 // console.log(this.settings.startday);

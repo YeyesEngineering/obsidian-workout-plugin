@@ -16,6 +16,7 @@ export class ParseWorkout {
     public parser(string: string): parseModel {
         const workoutName = string.split(':');
         //띄어쓰기 Parser 수정
+        //note 뒷부분 스트링 제거 예정
         const weight = workoutName[1].split('X');
         const reps = weight[1].split('-');
         const set = reps[1].replace(/[^0-9]/g, '');
