@@ -161,7 +161,7 @@ export class Calculator {
         return parseFloat((wvalue * pvalue).toFixed(1));
     }
 
-    async basicSetup() {
+    async Setup() {
         await this.oneRmCalculator();
         this.wilks2Caculator();
         this.dotsCaculator();
