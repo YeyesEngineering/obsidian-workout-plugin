@@ -3,6 +3,7 @@ import { WorkoutPluginSettings, DEFAULT_SETTINGS, WorkoutPluginSettingTab } from
 import { ParseWorkout } from 'src/Renderer/Parser';
 import { WeightUpdate } from 'src/Workout/Routine/WeightUpdate';
 import { BaseModal } from 'src/Modal/BaseModal';
+import { OneRMModal } from 'src/Modal/OneRMModal';
 
 export default class WorkoutPlugin extends Plugin {
     settings: WorkoutPluginSettings;
@@ -24,17 +25,15 @@ export default class WorkoutPlugin extends Plugin {
             },
         });
 
-        //One RM CAlCULATOR
+        //1RM Calculator
 
         this.addCommand({
-            id: 'Workout Plugin',
-            name: 'Workout Plugin',
+            id: 'Workout Plugin - 1RM Calculator',
+            name: '1RM Calculator',
             callback: () => {
-                new BaseModal(this.app, this, this.settings).onOpen();
+                new OneRMModal(this.app).open();
             },
         });
-
-        //One RM CAlCULATOR
 
         this.addSettingTab(new WorkoutPluginSettingTab(this.app, this));
 

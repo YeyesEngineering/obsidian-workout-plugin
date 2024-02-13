@@ -166,4 +166,12 @@ export class Calculator {
         const rm = Math.round((1.0278 - 0.0278 * reps) * onerm);
         return rm;
     }
+    static async tenrm(weight: number, reps: number): Promise<number[]> {
+        const rm: number[] = [];
+        const onerm = await this.onerm(weight, reps);
+        for (let i = 0; i < 10; i++) {
+            rm.push(await this.whatrm(onerm, i));
+        }
+        return rm;
+    }
 }
