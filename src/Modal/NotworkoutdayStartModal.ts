@@ -4,7 +4,7 @@ import { Markdown } from 'src/Markdown/Markdown';
 import { RoutineModel } from 'src/Workout/Routine/RoutineModel';
 import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
 
-export class NotworkoutButtonModal extends Modal {
+export class NotworkoutdayStartModal extends Modal {
     plugin: WorkoutPlugin;
     startday: string;
 

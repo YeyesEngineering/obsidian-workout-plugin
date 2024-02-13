@@ -6,7 +6,7 @@ import { RoutineModelApp } from 'src/Workout/Routine/RoutineUpdate';
 
 //this is workout day using modal
 
-export class WorkoutButtonModal extends Modal {
+export class WorkoutStartModal extends Modal {
     plugin: WorkoutPlugin;
     startday: string;
 
