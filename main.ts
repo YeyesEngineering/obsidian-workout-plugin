@@ -51,7 +51,8 @@ export default class WorkoutPlugin extends Plugin {
             ) {
                 const text = target.offsetParent?.textContent;
                 if (text) {
-                    const { workout, weight, reps, set } = new ParseWorkout(this).parser(text);
+                    const { workout, weight, reps, set } = ParseWorkout.parser(text);
+                    console.log(workout,weight,reps,set)
                     //1rm Update
                     new WeightUpdate(this).oneRMUpdater(workout, weight, reps);
                     //Training Weight Update

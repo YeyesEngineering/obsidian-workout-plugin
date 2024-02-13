@@ -33,7 +33,7 @@ export class WeightUpdate {
                     ];
                 }
                 break;
-            case 'BENCHPRESS':
+            case 'BENCH PRESS':
                 if (Bigthree[1] < (await Calculator.onerm(weight, reps))) {
                     const updateData = await Calculator.onerm(weight, reps);
                     this.plugin.settings.bigThree = [
@@ -60,15 +60,17 @@ export class WeightUpdate {
 
     async trainingWeightUpdater(workout: string, set: number) {
         if (this.settings.todayRoutine.add) {
-            const index = this.settings.todayRoutine.workout.findIndex((val) => val === workout);
+            console.log(this.settings.todayRoutine,workout,this.settings.todayRoutine.workout[0] === workout);
+            const index = this.settings.todayRoutine.workout.findIndex((val) => val.replace(/[^A-Z]/g, '') === workout);
+            console.log('index', index);
             this.settings.todayRoutine.check[index][set - 1]++;
             await this.plugin.saveSettings();
             if (this.settings.todayRoutine.check[index].every((element) => element === 1)) {
-                const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName === workout);
+                const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName.replace(/[^A-Z]/g, '') === workout);
                 this.settings.workoutLists[workoutlistsIndex].trainingWeight =
                     this.settings.workoutLists[workoutlistsIndex].trainingWeight +
                     this.settings.todayRoutine.add[index][0];
-                    await this.plugin.saveSettings();
+                await this.plugin.saveSettings();
             }
         }
     }

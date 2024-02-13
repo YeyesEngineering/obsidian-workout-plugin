@@ -68,6 +68,7 @@ export class WorkoutStartModal extends Modal {
                     } else {
                         //Data Update
                         //데이터를 유지하면서 특정 부분만 수정할 수 있도록 수정예정
+                        //중복된 파일이 존재하면 변경뒤 생성?
                         if (workoutInnerFile) {
                             await this.app.vault.delete(workoutInnerFile);
                         }
