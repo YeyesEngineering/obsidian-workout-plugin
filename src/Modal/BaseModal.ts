@@ -31,7 +31,7 @@ export class BaseModal {
         ) {
             if (
                 this.settings.gender === 'None' &&
-                this.settings.bodyWeight === '' &&
+                this.settings.bodyWeight === 0 &&
                 this.settings.workoutLists[0].weight === 0
             ) {
                 new Notice('Please Settings First');

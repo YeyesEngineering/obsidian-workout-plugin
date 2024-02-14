@@ -1,5 +1,5 @@
 import WorkoutPlugin from 'main';
-// import { Notice } from 'obsidian';
+import { Notice } from 'obsidian';
 import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 import { parseModel } from 'src/Workout/Routine/RoutineModel';
 // import { WeightUpdate } from 'src/Workout/Routine/WeightUpdate';
@@ -11,6 +11,16 @@ export class ParseWorkout {
     constructor(plugin: WorkoutPlugin) {
         this.plugin = plugin;
         this.settings = this.plugin.settings;
+    }
+    public static numberChecker(string: string){
+        const num = parseFloat(string);
+        if (isNaN(num)){
+            new Notice('enter only number');
+            return 0
+        }
+        else{
+            return num
+        }
     }
 
     public static titleParser(string: string){

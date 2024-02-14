@@ -50,12 +50,12 @@ export default class WorkoutPlugin extends Plugin {
                 event.doc.activeElement?.textContent?.includes('Today Workout List')
             ) {
                 const text = target.offsetParent?.textContent;
-                if (text) {
-
+                //text blank Check
+                if (text && text.length > 2) {
                     // Date Check
                     if (moment().format('YYYY-MM-DD') !== ParseWorkout.titleParser(event.doc.title)){
                         new Notice("It's not a workout for today");
-                        return
+                        return false
                     }
                     const { workout, weight, reps, set } = ParseWorkout.parser(text);
                     //1rm Update
@@ -63,6 +63,9 @@ export default class WorkoutPlugin extends Plugin {
                     //Training Weight Update
                     new WeightUpdate(this).trainingWeightUpdater(workout, set);
                     new Notice('Update Done');
+                }
+                else{
+                    return false;
                 }
             }
         });

@@ -16,7 +16,7 @@ export class Markdown {
         if (open){
             try {
                 const targetFile = await this.app.vault.create(filePath, fileContent);
-                await this.app.workspace.getUnpinnedLeaf().openFile(targetFile, { state: { mode: 'source' } });
+                await this.app.workspace.getLeaf().openFile(targetFile, { state: { mode: 'source' } })
             } catch (error) {
                 new Notice (error);
             }

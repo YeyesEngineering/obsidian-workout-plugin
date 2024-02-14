@@ -3,10 +3,14 @@ import WorkoutPlugin from 'main';
 import { gender, routineTemplate, todayRoutine, todayRoutineCheck } from 'src/Workout/Routine/RoutineModel';
 import { workout } from 'src/Workout/Workout';
 import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
+import { ParseWorkout } from 'src/Renderer/Parser';
 // import { RoutineMakeModal } from 'src/Modal/RoutineMakeModal';
 
+//pound kg 버튼 생성
+//날짜 형식 변경 탭 생성
+
 export interface WorkoutPluginSettings {
-    bodyWeight: string;
+    bodyWeight: number;
     startday: string;
     gender: gender;
     bigThree: number[];
@@ -20,16 +24,10 @@ export interface WorkoutPluginSettings {
     routinePlan: todayRoutine[];
     tempWorkoutLists: workout;
     workoutLists: workout[];
-    // mySquatWeight: string;
-    // mySquatReps: string;
-    // myBenchpressWeight: string;
-    // myBenchpressReps: string;
-    // myDeadliftWeight: string;
-    // myDeadliftReps: string;
 }
 
 export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
-    bodyWeight: '',
+    bodyWeight: 0,
     startday: 'None',
     gender: 'None',
     bigThree: [0, 0, 0, 0],
@@ -46,9 +44,9 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
             {
                 sessionname: 'First Session',
                 workoutname: ['SQUAT', 'BENCH PRESS', 'DEADLIFT'],
-                //[10,20] -> 1020  ,  'MAX' -> 1000000
+                //[10,20] -> 10.20  ,  'MAX' -> 1000000
                 //100 같은 3자리수 케이스 확인 및 1RM 10개 미만으로 입력하는 것으로 세팅
-                reps: [3, 1020, 1000000],
+                reps: [3, 10.2, 1000000],
                 sets: [1, 2],
                 weight: ['none', 'none', '100%'],
                 add: [],
@@ -120,12 +118,6 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
             workoutTarget: ['Hamstrings', 'Quadriceps', 'Back', 'Glutes'],
         },
     ],
-    // mySquatWeight: '',
-    // mySquatReps: '',
-    // myBenchpressWeight: '',
-    // myBenchpressReps: '',
-    // myDeadliftWeight: '',
-    // myDeadliftReps: '',
 };
 
 export class WorkoutPluginSettingTab extends PluginSettingTab {
@@ -136,13 +128,6 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         this.plugin = plugin;
     }
 
-    // public async saveSettings(update?: boolean): Promise<void> {
-    //     await this.plugin.saveSettings();
-
-    //     if (update) {
-    //         this.display();
-    //     }
-    // }
     display(): void {
         const { containerEl } = this;
 
@@ -152,12 +137,11 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
             .setName('Body Weight')
             .setDesc('Please enter your weight')
             .addText((text) =>
-                //숫자가 아닌 문자가 들어왔을떄 에러 모달을 띄우는 기능을 추가
                 text
                     .setPlaceholder('Body Weight')
-                    .setValue(this.plugin.settings.bodyWeight)
+                    .setValue(String(this.plugin.settings.bodyWeight))
                     .onChange(async (value) => {
-                        this.plugin.settings.bodyWeight = value;
+                        this.plugin.settings.bodyWeight = ParseWorkout.numberChecker(value);
                         await this.plugin.saveSettings();
                     }),
             );
@@ -175,10 +159,22 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     }),
             );
 
+        // new Setting(containerEl)
+        //     .setName('Workout Folder')
+        //     .setDesc('Please enter your Workout Folder')
+        //     .addText((text) =>
+        //         text
+        //             .setPlaceholder(DEFAULT_SETTINGS.workoutFolder)
+        //             .setValue(this.plugin.settings.workoutFolder)
+        //             .onChange(async (value) => {
+        //                 this.plugin.settings.workoutFolder = value;
+        //                 await this.plugin.saveSettings();
+        //             }),
+        //     );
         new Setting(containerEl)
             .setName('Workout Folder')
             .setDesc('Please enter your Workout Folder')
-            .addText((text) =>
+            .addSearch((text) =>
                 text
                     .setPlaceholder(DEFAULT_SETTINGS.workoutFolder)
                     .setValue(this.plugin.settings.workoutFolder)
@@ -189,7 +185,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName('Mainpage name')
+            .setName('MainPage name')
             .setDesc('Enter a name for your page')
             .addText((text) =>
                 text
@@ -304,7 +300,6 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.startday)
                     .onChange(async (val) => {
                         this.plugin.settings.startday = val;
-                        //ROutine Planner 동작
                         await this.plugin.saveSettings();
                         new RoutineUpdate(this.plugin).routinePlanner();
                     }),
@@ -351,11 +346,12 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                     }
                                 }
                                 await this.plugin.saveSettings();
+                                this.display();
                             }
                         };
                         reader.readAsText(file);
+                        this.display();
                         new Notice('Import Complete');
-                        // this.display();
                     } else {
                         new Notice('Add a JSON file.');
                     }
@@ -363,19 +359,6 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                 });
         });
 
-        // const TemplateWeightandreps = new Setting(containerEl).setName('name');
-        // for (const totalvalue of this.plugin.settings.workoutLists) {
-        //     TemplateWeightandreps.setName(totalvalue.workoutName).addText((text) =>
-        //         text
-        //             .setPlaceholder(`${totalvalue.workoutName} weight`)
-        //             // .setValue(this.plugin.settings.tempWorkoutLists.workoutName)
-        //             .onChange(async (val) => {
-        //                 totalvalue.weight = parseInt(val);
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
-        //     TemplateWeightandreps.setName(totalvalue.workoutName);
-        // }
         for (const workout of this.plugin.settings.workoutLists) {
             //실시간으로 추가 될 수 있도록 조정
 
@@ -418,81 +401,9 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         }),
                 );
         }
-        // new Setting(containerEl)
-        //     .setName('SquatWeight')
-        //     .setDesc('Please enter your maximum Squat weight')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder('Squat Weight')
-        //             .setValue(this.plugin.settings.mySquatWeight)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.mySquatWeight = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
-        // new Setting(containerEl)
-        //     .setName('SquatReps')
-        //     .setDesc('Enter the maximum number of times you can lift the weight entered above. (Squat)')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder('Squat Reps')
-        //             .setValue(this.plugin.settings.mySquatReps)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.mySquatReps = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
-        // new Setting(containerEl)
-        //     .setName('Benchpress Weight')
-        //     .setDesc('Please enter your maximum Benchpress Weight')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder('Benchpress Weight')
-        //             .setValue(this.plugin.settings.myBenchpressWeight)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.myBenchpressWeight = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
-        // new Setting(containerEl)
-        //     .setName('Benchpress Reps')
-        //     .setDesc('Enter the maximum number of times you can lift the weight entered above. (Benchpress)')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder('Benchpress Reps')
-        //             .setValue(this.plugin.settings.myBenchpressReps)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.myBenchpressReps = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
 
-        // new Setting(containerEl)
-        //     .setName('Deadlift Weight')
-        //     .setDesc('Please enter your maximum Deadlift Weight')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder('Deadlift Weight')
-        //             .setValue(this.plugin.settings.myDeadliftWeight)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.myDeadliftWeight = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
-        // new Setting(containerEl)
-        //     .setName('Deadlift Reps')
-        //     .setDesc('Enter the maximum number of times you can lift the weight entered above. (Deadlift)')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder('Deadlift Reps')
-        //             .setValue(this.plugin.settings.myDeadliftReps)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.myDeadliftReps = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
+        //Reset Button
 
-        //설정값 초기화 버튼
         new Setting(containerEl)
             .setName('RESET Setting')
             .setDesc('This will initialize the data entered in your Workout.')
@@ -504,11 +415,9 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     .onClick(async () => {
                         this.plugin.settings = Object.assign({}, DEFAULT_SETTINGS, DEFAULT_SETTINGS);
                         await this.plugin.saveSettings();
+                        await this.plugin.loadSettings();
                         this.display();
                     }),
             );
-
-        //pound kg 버튼 생성
-        //날짜 형식 변경 탭 생성
     }
 }
