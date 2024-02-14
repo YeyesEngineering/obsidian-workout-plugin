@@ -4,6 +4,7 @@ import { gender, routineTemplate, todayRoutine, todayRoutineCheck } from 'src/Wo
 import { workout } from 'src/Workout/Workout';
 import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
 import { ParseWorkout } from 'src/Renderer/Parser';
+import { FolderSuggest } from './Suggester/FolderSuggest';
 // import { RoutineMakeModal } from 'src/Modal/RoutineMakeModal';
 
 //pound kg 버튼 생성
@@ -159,30 +160,18 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     }),
             );
 
-        // new Setting(containerEl)
-        //     .setName('Workout Folder')
-        //     .setDesc('Please enter your Workout Folder')
-        //     .addText((text) =>
-        //         text
-        //             .setPlaceholder(DEFAULT_SETTINGS.workoutFolder)
-        //             .setValue(this.plugin.settings.workoutFolder)
-        //             .onChange(async (value) => {
-        //                 this.plugin.settings.workoutFolder = value;
-        //                 await this.plugin.saveSettings();
-        //             }),
-        //     );
         new Setting(containerEl)
             .setName('Workout Folder')
             .setDesc('Please enter your Workout Folder')
-            .addSearch((text) =>
-                text
-                    .setPlaceholder(DEFAULT_SETTINGS.workoutFolder)
+            .addSearch((text) => {
+                new FolderSuggest(this.app, text.inputEl);
+                text.setPlaceholder(DEFAULT_SETTINGS.workoutFolder)
                     .setValue(this.plugin.settings.workoutFolder)
                     .onChange(async (value) => {
                         this.plugin.settings.workoutFolder = value;
                         await this.plugin.saveSettings();
-                    }),
-            );
+                    });
+            });
 
         new Setting(containerEl)
             .setName('MainPage name')
@@ -196,7 +185,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     }),
             );
-        //미완성 Template Maker
+        //Template Maker 제작중
         // new Setting(containerEl)
         //     .setName('Routine Templater maker')
         //     .setDesc('YOU can make your routine')
@@ -304,13 +293,13 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         new RoutineUpdate(this.plugin).routinePlanner();
                     }),
             );
-        //Select from list of suggestions 제안 모드 적용
+
         const routineInput = new Setting(containerEl)
             .setName('RoutineTemplate')
             // .setDesc('Please enter your RoutineTemplate')
             .setDesc(`now your Template is ${this.plugin.settings.routineTemplate.name}`);
 
-        //세션이 json이 잘 작성된 json인지 확인하는 코드 추가
+        //Json Checker 추가
         const inputDataFile = routineInput.controlEl.createEl('input', {
             attr: {
                 type: 'file',
@@ -318,8 +307,8 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                 accept: '.json',
             },
         });
+
         routineInput.addButton((button) => {
-            //모바일도 체크 해봐야 할듯
             button
                 .setWarning()
                 .setButtonText('Import')
@@ -334,7 +323,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                 const fileContent = e.target.result;
                                 const jsonParseFile = JSON.parse(String(fileContent));
                                 this.plugin.settings.routineTemplate = await jsonParseFile;
-                                //Workoutlist를 등록하는 부분
+                                //Workoutlist Register
                                 for (const val of this.plugin.settings.routineTemplate.workoutList) {
                                     if (
                                         !this.plugin.settings.workoutLists.some(
@@ -356,12 +345,11 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         new Notice('Add a JSON file.');
                     }
                     //날짜 및 루틴 데이터 초기화 코드 추가 예정
+                    //만약 date data가 존재하면 초기화
                 });
         });
 
         for (const workout of this.plugin.settings.workoutLists) {
-            //실시간으로 추가 될 수 있도록 조정
-
             new Setting(containerEl)
                 .setName(`${workout.workoutName} Weight`)
                 .setDesc(`Please enter your maximum ${workout.workoutName} Weight`)
@@ -388,18 +376,20 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                             await this.plugin.saveSettings();
                         }),
                 );
-            new Setting(containerEl)
-                .setName(`${workout.workoutName} Training Weight`)
-                .setDesc("Enter a weight to start your workout If you don't, it will be calculated automatically.")
-                .addText((text) =>
-                    text
-                        .setPlaceholder(`${workout.workoutName} Training Weight`)
-                        .setValue(String(workout.trainingWeight))
-                        .onChange(async (val) => {
-                            workout.trainingWeight = parseInt(val);
-                            await this.plugin.saveSettings();
-                        }),
-                );
+            if (!(workout.trainingWeight === undefined)) {
+                new Setting(containerEl)
+                    .setName(`${workout.workoutName} Training Weight`)
+                    .setDesc("Enter a weight to start your workout If you don't, it will be calculated automatically.")
+                    .addText((text) =>
+                        text
+                            .setPlaceholder(`${workout.workoutName} Training Weight`)
+                            .setValue(String(workout.trainingWeight))
+                            .onChange(async (val) => {
+                                workout.trainingWeight = parseInt(val);
+                                await this.plugin.saveSettings();
+                            }),
+                    );
+            }
         }
 
         //Reset Button

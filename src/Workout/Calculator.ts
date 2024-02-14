@@ -101,9 +101,12 @@ export class Calculator {
     async trainingWeightCalculator(): Promise<void> {
         //Bodyweight의 경우 해결 하는 코드 작성
         for (const workout of this.settings.workoutLists) {
-            if (workout.trainingWeight === 0 || workout.trainingWeight === undefined) {
+            if (workout.trainingWeight === 0) {
                 const onerm = await Calculator.onerm(workout.weight, workout.reps);
                 workout.trainingWeight = onerm;
+            }
+            else if (workout.trainingWeight === undefined){
+                workout.trainingWeight = workout.weight;
             }
         }
         await this.plugin.saveSettings();
