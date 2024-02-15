@@ -5,7 +5,7 @@ import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 export class Calculator {
     plugin: WorkoutPlugin;
     settings: WorkoutPluginSettings;
-    BodyWeight: string;
+    BodyWeight: number;
     Gender: string;
     SquatWeight: number;
     SquatReps: number;
@@ -42,7 +42,7 @@ export class Calculator {
     }
 
     async wilks2Calculator(): Promise<void> {
-        const bd = parseFloat(this.BodyWeight);
+        const bd = this.BodyWeight;
         if (this.Gender === 'Male') {
             const wilkspoint =
                 this.plugin.settings.bigThree[3] *
@@ -72,7 +72,7 @@ export class Calculator {
     }
 
     async dotsCalculator(): Promise<void> {
-        const bd = parseFloat(this.BodyWeight);
+        const bd = this.BodyWeight;
         if (this.Gender === 'Male') {
             const dotspoint =
                 (this.plugin.settings.bigThree[3] * 500) /
@@ -101,9 +101,12 @@ export class Calculator {
     async trainingWeightCalculator(): Promise<void> {
         //Bodyweight의 경우 해결 하는 코드 작성
         for (const workout of this.settings.workoutLists) {
-            if (workout.trainingWeight === 0 || workout.trainingWeight === undefined) {
+            if (workout.trainingWeight === 0) {
                 const onerm = await Calculator.onerm(workout.weight, workout.reps);
                 workout.trainingWeight = onerm;
+            }
+            else if (workout.trainingWeight === undefined){
+                workout.trainingWeight = workout.weight;
             }
         }
         await this.plugin.saveSettings();

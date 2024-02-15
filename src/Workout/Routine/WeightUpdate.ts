@@ -59,14 +59,13 @@ export class WeightUpdate {
     }
 
     async trainingWeightUpdater(workout: string, set: number) {
+        //날짜를 확인 하는 코드 추가
         if (this.settings.todayRoutine.add) {
-            console.log(this.settings.todayRoutine,workout,this.settings.todayRoutine.workout[0] === workout);
-            const index = this.settings.todayRoutine.workout.findIndex((val) => val.replace(/[^A-Z]/g, '') === workout);
-            console.log('index', index);
+            const index = this.settings.todayRoutine.workout.findIndex((val) => val === workout);
             this.settings.todayRoutine.check[index][set - 1]++;
             await this.plugin.saveSettings();
             if (this.settings.todayRoutine.check[index].every((element) => element === 1)) {
-                const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName.replace(/[^A-Z]/g, '') === workout);
+                const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName === workout);
                 this.settings.workoutLists[workoutlistsIndex].trainingWeight =
                     this.settings.workoutLists[workoutlistsIndex].trainingWeight +
                     this.settings.todayRoutine.add[index][0];

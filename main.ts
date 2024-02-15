@@ -1,4 +1,4 @@
-import { Notice, Plugin } from 'obsidian';
+import { Notice, Plugin,moment } from 'obsidian';
 import { WorkoutPluginSettings, DEFAULT_SETTINGS, WorkoutPluginSettingTab } from 'src/Setting/SettingTab';
 import { ParseWorkout } from 'src/Renderer/Parser';
 import { WeightUpdate } from 'src/Workout/Routine/WeightUpdate';
@@ -50,14 +50,22 @@ export default class WorkoutPlugin extends Plugin {
                 event.doc.activeElement?.textContent?.includes('Today Workout List')
             ) {
                 const text = target.offsetParent?.textContent;
-                if (text) {
+                //text blank Check
+                if (text && text.length > 2) {
+                    // Date Check
+                    if (moment().format('YYYY-MM-DD') !== ParseWorkout.titleParser(event.doc.title)){
+                        new Notice("It's not a workout for today");
+                        return false
+                    }
                     const { workout, weight, reps, set } = ParseWorkout.parser(text);
-                    console.log(workout,weight,reps,set)
                     //1rm Update
                     new WeightUpdate(this).oneRMUpdater(workout, weight, reps);
                     //Training Weight Update
                     new WeightUpdate(this).trainingWeightUpdater(workout, set);
                     new Notice('Update Done');
+                }
+                else{
+                    return false;
                 }
             }
         });

@@ -155,12 +155,12 @@ export class RoutineModelApp extends RoutineUpdate {
             //Propreties make
             const workoutProperites: RoutineModel = {
                 Today: moment().format(),
-                Workout: true,
+                Workout: false,
                 Program: this.plugin.settings.routineTemplate.name,
                 Session: this.plugin.settings.todayRoutine.sessionname,
                 Progress: this.plugin.settings.todayRoutine.progress,
                 Workoutvolumn: 0,
-                Bodyweight: parseFloat(this.plugin.settings.bodyWeight),
+                Bodyweight: this.plugin.settings.bodyWeight,
                 Bigthree: this.plugin.settings.bigThree[3],
                 Squat1rm: this.plugin.settings.bigThree[0],
                 Benchpress1rm: this.plugin.settings.bigThree[1],
@@ -183,12 +183,12 @@ export class RoutineModelApp extends RoutineUpdate {
             //Propreties make
             const workoutProperites: RoutineModel = {
                 Today: day,
-                Workout: true,
+                Workout: false,
                 Program: this.plugin.settings.routineTemplate.name,
                 Session: this.plugin.settings.nextdayRoutine.sessionname,
                 Progress: this.plugin.settings.nextdayRoutine.progress,
                 Workoutvolumn: 0,
-                Bodyweight: parseFloat(this.plugin.settings.bodyWeight),
+                Bodyweight: this.plugin.settings.bodyWeight,
                 Bigthree: this.plugin.settings.bigThree[3],
                 Squat1rm: this.plugin.settings.bigThree[0],
                 Benchpress1rm: this.plugin.settings.bigThree[1],
