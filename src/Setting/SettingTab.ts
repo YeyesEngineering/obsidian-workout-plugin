@@ -185,7 +185,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     }),
             );
-        //Template Maker 제작중
+        //Template Maker
         // new Setting(containerEl)
         //     .setName('Routine Templater maker')
         //     .setDesc('YOU can make your routine')
@@ -280,20 +280,6 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
 
         ////////////////////////////////////////
 
-        new Setting(containerEl)
-            .setName('Day Changer')
-            .setDesc('You can change your Workout Startday')
-            .addText((text) =>
-                text
-                    .setPlaceholder(this.plugin.settings.startday)
-                    .setValue(this.plugin.settings.startday)
-                    .onChange(async (val) => {
-                        this.plugin.settings.startday = val;
-                        await this.plugin.saveSettings();
-                        new RoutineUpdate(this.plugin).routinePlanner();
-                    }),
-            );
-
         const routineInput = new Setting(containerEl)
             .setName('RoutineTemplate')
             // .setDesc('Please enter your RoutineTemplate')
@@ -324,17 +310,22 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                 const jsonParseFile = JSON.parse(String(fileContent));
                                 this.plugin.settings.routineTemplate = await jsonParseFile;
                                 //Workoutlist Register
+                                //초기화 하고 넣을지 고민
                                 for (const val of this.plugin.settings.routineTemplate.workoutList) {
                                     if (
                                         !this.plugin.settings.workoutLists.some(
                                             (value) => value.workoutName === val.workoutName,
                                         )
                                     ) {
+                                        //대문자로 변환해서 입력?
                                         this.plugin.settings.workoutLists.push(val);
                                         await this.plugin.saveSettings();
                                     }
                                 }
                                 await this.plugin.saveSettings();
+                                if (this.plugin.settings.startday !== 'None') {
+                                    new RoutineUpdate(this.plugin).routinePlanner();
+                                }
                                 this.display();
                             }
                         };
@@ -344,10 +335,23 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     } else {
                         new Notice('Add a JSON file.');
                     }
-                    //날짜 및 루틴 데이터 초기화 코드 추가 예정
-                    //만약 date data가 존재하면 초기화
                 });
         });
+
+        new Setting(containerEl)
+            .setName('Routine Day Changer')
+            .setDesc('You can change your Workout Startday')
+            .addText((text) =>
+                text
+                    .setPlaceholder(this.plugin.settings.startday)
+                    .setValue(this.plugin.settings.startday)
+                    .onChange(async (val) => {
+                        this.plugin.settings.startday = val;
+                        //day 형식 확인
+                        await this.plugin.saveSettings();
+                        new RoutineUpdate(this.plugin).routinePlanner();
+                    }),
+            );
 
         for (const workout of this.plugin.settings.workoutLists) {
             new Setting(containerEl)
@@ -372,7 +376,14 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         .setPlaceholder(`${workout.workoutName} Reps`)
                         .setValue(String(workout.reps))
                         .onChange(async (val) => {
-                            workout.reps = parseInt(val);
+                            //reps 최대 10보다 작은값
+                            if (parseInt(val) > 10){
+                                new Notice('input lower than 10')
+                                workout.reps = 0
+                            }
+                            else{
+                                workout.reps = parseInt(val);
+                            }
                             await this.plugin.saveSettings();
                         }),
                 );

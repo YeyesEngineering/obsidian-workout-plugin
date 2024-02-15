@@ -22,6 +22,7 @@ Priority 3 : Warmup Calculator
 Priority 3 : Template Checker
 Priority 2 : Routine 기반으로 어떤 부분의 운동이 부족한지 나타낼 수 있는 기능
 Priority 2 : Workout Trend
+Priority 2 : Timer
     - Obsidian Charts 사용?
 Priority 1 : CSS
 Priority 1 : 날짜 형식 변경 
@@ -35,3 +36,4 @@ Priority 1 : kg 파운드 변환 기능
 - Add가 빈값일때 해결되지 못하는 문제 
 - 세션 넘버를 선택할때 숫자 -1 해서 가져오는 문제
     만약에 세션 넘버를 0 로 하면 에러가 생길거 같다.
+  파일 위치를 못찾을떄 자꾸 날을 설정하려고 하는 부분   
