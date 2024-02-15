@@ -113,6 +113,9 @@ export class Calculator {
     }
 
     async weightCalculator(workout: string, weight: string): Promise<number | string> {
+        // 대문자로 바꿔서 parsing 하는 코드 작성
+        // const upperWorkout = workout.toUpperCase();
+        // const upperWeight = weight.toUpperCase();
         let wvalue = 0;
         let pvalue = 0;
         let rm = 0;
@@ -125,21 +128,35 @@ export class Calculator {
                     break;
                 }
             }
-            if (plus === 0) {
+            //임시 수정 코드
+            if (plus === 0 || isNaN(plus)) {
                 return 'Body Weight';
             }
             return `Body Weight + ${plus}KG`;
         } else {
+            console.log (weight);
             //Percent Parser
-            if (weight.includes('rm' || 'X')) {
+            if (weight.includes('X')) {
                 const divide = weight.replaceAll(' ', '').split('X');
-                rm = parseInt(divide[0].replace('rm', ''));
+                if (weight.includes('rm')){
+                    rm = parseInt(divide[0].replace('rm', ''));
+                }
+                else if (weight.includes('RM')){
+                    rm = parseInt(divide[0].replace('RM', ''));
+                }
+                else if (weight.includes('Rm')){
+                    rm = parseInt(divide[0].replace('Rm', ''));
+                }
+                else if (weight.includes('rM')){
+                    rm = parseInt(divide[0].replace('rM', ''));
+                }
                 pvalue = parseInt(divide[1].replace('%', '')) / 100;
             } else {
                 pvalue = parseInt(weight.replace('%', '')) / 100;
             }
         }
         for (const value of this.settings.workoutLists) {
+            //트레이닝 웨이트가 1RM 이 아닐때를 상정하는 코드 가 작성되어야 할듯
             if (value.workoutName === workout) {
                 const weight = value.trainingWeight;
                 if (rm === 0) {

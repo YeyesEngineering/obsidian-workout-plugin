@@ -59,17 +59,22 @@ export class WeightUpdate {
     }
 
     async trainingWeightUpdater(workout: string, set: number) {
-        //날짜를 확인 하는 코드 추가
         if (this.settings.todayRoutine.add) {
             const index = this.settings.todayRoutine.workout.findIndex((val) => val === workout);
             this.settings.todayRoutine.check[index][set - 1]++;
             await this.plugin.saveSettings();
             if (this.settings.todayRoutine.check[index].every((element) => element === 1)) {
-                const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName === workout);
-                this.settings.workoutLists[workoutlistsIndex].trainingWeight =
+
+                ////만약에 add는 존재하나 특정 운동만 증량하고 싶을때 해결하는 코드 작성
+                //실패시 적용할 코드 작성 실패를 어떻게 카운팅 할까
+                
+                if (this.settings.todayRoutine.add[index].length !== 0){
+                    const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName === workout);
+                    this.settings.workoutLists[workoutlistsIndex].trainingWeight =
                     this.settings.workoutLists[workoutlistsIndex].trainingWeight +
                     this.settings.todayRoutine.add[index][0];
-                await this.plugin.saveSettings();
+                await this.plugin.saveSettings();   
+                }
             }
         }
     }

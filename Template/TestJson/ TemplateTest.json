@@ -1,0 +1,132 @@
+{
+    "name": "Template Test",
+    "workoutList": [
+      {
+        "workoutName": "SQUAT",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
+      },
+      {
+        "workoutName": "BENCH PRESS",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Chest", "Triceps"]
+      },
+      {
+        "workoutName": "DEADLIFT",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Glutes"]
+      },
+      {
+        "workoutName": "OHP",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Shoulders"]
+      },
+      {
+        "workoutName": "BACK EXTENSION",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Back"]
+      },
+      {
+        "workoutName": "CHIN UPS",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Back"]
+      },
+      {
+        "workoutName": "POWER CLEAN",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Shoulders"]
+      }
+    ],
+    "session": [
+      {
+        "sessionname": "Volume Day",
+        "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
+        "reps": [5, 5, 5],
+        "sets": [5, 5, 1],
+        "weight": ["5RM X 90%", "1RM X 90%", "2RM X 90%"]
+      },
+      {
+        "sessionname": "Light/Recovery Day",
+        "workoutname": ["SQUAT", "OHP", "CHIN UPS", "BACK EXTENSION"],
+        "reps": [5, 5, 10, 10],
+        "sets": [2, 3, 3, 5],
+        "weight": ["72%", "72%", "bodyweight","bodyweight"],
+        "add" : [[],[0,0],[2.5,0],[2.5,0]]
+      },
+      {
+        "sessionname": "Intensity Day",
+        "workoutname": ["SQUAT", "BENCH PRESS", "POWER CLEAN"],
+        "reps": [5, 5, 5],
+        "sets": [1, 1, 3],
+        "weight": ["100%", "100%", "30%"]
+      },
+      {
+        "sessionname": "Volume Day",
+        "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
+        "reps": [5, 5, 5],
+        "sets": [5, 5, 5],
+        "weight": ["90%", "90%", "90%"]
+      },
+      {
+        "sessionname": "Light/Recovery Day",
+        "workoutname": ["SQUAT", "OHP", "CHIN UPS", "BACK EXTENSION"],
+        "reps": [5, 5, 10, 10],
+        "sets": [2, 3, 3, 5],
+        "weight": ["80% of Mondays weight", "90%", "bodyweight"]
+      },
+      {
+        "sessionname": "Intensity Day",
+        "workoutname": ["SQUAT", "BENCH PRESS", "POWER CLEAN"],
+        "reps": [5, 5, 5],
+        "sets": [1, 1, 3],
+        "weight": ["100%", "100%", "30%"]
+      }
+    ],
+  
+    "week": [
+      [
+        "SESSION_1",
+        "SESSION_1",
+        "SESSION_1",
+        "SESSION_1",
+        "SESSION_1",
+        "SESSION_1"
+      ],
+      [],
+      [
+        "SESSION_2",
+        "SESSION_2",
+        "SESSION_2",
+        "SESSION_2",
+        "SESSION_2",
+        "SESSION_2"
+      ],
+      [],
+      [
+        "SESSION_3",
+        "SESSION_3",
+        "SESSION_3",
+        "SESSION_3",
+        "SESSION_3",
+        "SESSION_3",
+        "SESSION_3"
+      ],
+      [],
+      []
+    ]
+  }
+  
