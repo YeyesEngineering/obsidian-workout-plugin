@@ -3,9 +3,10 @@ To Do List
 
 # Feature
 
-Priority 5 : import 시 Routine Planner 설정 (Starting day exist) 또는 Reset
+Priority 5 : Workout Type 생성 (Cardio, Weight, bodyweight)
 Priority 5 : Validation Checker
     - 대문자로 변환한 뒤 파싱하도록 작성
+Priority 5 : Super Set 기능? (두개의 운동을 묶어서 하나의 운동으로 만들 수 있는 기능)
 Priority 4 : Workout Check시 노트 프로퍼티 수정기능
 Priority 4 : 무게 대신 Reps를 늘릴 수 있는 기능
     - Training Reps

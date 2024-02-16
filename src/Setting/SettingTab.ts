@@ -309,16 +309,26 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                 const fileContent = e.target.result;
                                 const jsonParseFile = JSON.parse(String(fileContent));
                                 this.plugin.settings.routineTemplate = await jsonParseFile;
+
+                                //Json Checker
+
                                 //Workoutlist Register
-                                //초기화 하고 넣을지 고민
                                 for (const val of this.plugin.settings.routineTemplate.workoutList) {
                                     if (
                                         !this.plugin.settings.workoutLists.some(
-                                            (value) => value.workoutName === val.workoutName,
+                                            (value) => value.workoutName === val.workoutName.toUpperCase().trim(),
                                         )
                                     ) {
-                                        //대문자로 변환해서 입력?
-                                        this.plugin.settings.workoutLists.push(val);
+                                        const workoutCheck: workout = {
+                                            workoutName: val.workoutName.toUpperCase().trim(),
+                                            trainingWeight: val.trainingWeight,
+                                            weight: val.weight,
+                                            reps: val.reps,
+                                            //workoutTarget 추후 수정 예정
+                                            // workoutTarget: val.workoutTarget.map((value)=> value.toUpperCase().trim()),
+                                            workoutTarget: val.workoutTarget,
+                                        };
+                                        this.plugin.settings.workoutLists.push(workoutCheck);
                                         await this.plugin.saveSettings();
                                     }
                                 }
@@ -377,11 +387,10 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         .setValue(String(workout.reps))
                         .onChange(async (val) => {
                             //reps 최대 10보다 작은값
-                            if (parseInt(val) > 10){
-                                new Notice('input lower than 10')
-                                workout.reps = 0
-                            }
-                            else{
+                            if (parseInt(val) > 10) {
+                                new Notice('input lower than 10');
+                                workout.reps = 0;
+                            } else {
                                 workout.reps = parseInt(val);
                             }
                             await this.plugin.saveSettings();

@@ -1,0 +1,98 @@
+{
+    "name": "C25K",
+    "workoutList": [
+      {
+        "workoutName": "RUN",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
+      },
+      {
+        "workoutName": "WALK",
+        "trainingWeight": 0,
+        "weight": 0,
+        "reps": 0,
+        "workoutTarget": ["Chest", "Triceps"]
+      }
+    ],
+    "session": [
+      {
+        "sessionname": "WEEK1",
+        "workoutname": ["RUN", "WALK","RUN", "WALK","RUN", "WALK"],
+        "time" : [60,90,60,90,60,90],
+        "유산소의 경우는 키로미터로도 조정을 하는 게 좋을 것 같은데": ["RUNNING 파트를 따로 분리를 할까?"],
+        "sets": [1,1,1,1,1,1]
+      },
+      {
+        "sessionname": "WEEK2",
+        "workoutname": ["RUN & WALK"],
+        "time" : ["60 & 60"],
+        "sets": [1]
+      },
+      {
+        "sessionname": "Intensity Day",
+        "workoutname": ["SQUAT", "BENCH PRESS", "POWER CLEAN"],
+        "reps": [5, 5, 5],
+        "sets": [1, 1, 3],
+        "weight": ["5RM X 100%", "5RM X 100%", "5RM X 90%"],
+        "add" : [[5,0],[2.5,0],[2.5,0]]
+      },
+      {
+        "sessionname": "Volume Day",
+        "workoutname": ["SQUAT", "OHP", "DEADLIFT"],
+        "reps": [5, 5, 5],
+        "sets": [5, 5, 1],
+        "weight": ["5RM X 90%", "5RM X 90%", "5RM X 90%"],
+        "add" : [[0,0],[0,0],[5,0]]
+      },
+      {
+        "sessionname": "Light/Recovery Day",
+        "workoutname": ["SQUAT", "BENCH PRESS", "CHIN UPS", "BACK EXTENSION"],
+        "reps": [5, 5, 10, 10],
+        "sets": [2, 3, 3, 5],
+        "weight": ["5RM X 72%", "5RM X 72%", "bodyweight","bodyweight"],
+        "add" : [[0,0],[0,0],[2.5,0],[2.5,0]]
+      },
+      {
+        "sessionname": "Intensity Day",
+        "workoutname": ["SQUAT", "OHP", "POWER CLEAN"],
+        "reps": [5, 5, 5],
+        "sets": [1, 1, 3],
+        "weight": ["5RM X 100%", "5RM X 100%", "5RM X 90%"],
+        "add" : [[5,0],[2.5,0],[2.5,0]]
+      }
+    ],
+  
+    "week": [
+      [
+        "SESSION_1",
+        "SESSION_4",
+        "SESSION_1",
+        "SESSION_4",
+        "SESSION_1",
+        "SESSION_4"
+      ],
+      [],
+      [
+        "SESSION_2",
+        "SESSION_5",
+        "SESSION_2",
+        "SESSION_5",
+        "SESSION_2",
+        "SESSION_5"
+      ],
+      [],
+      [
+        "SESSION_3",
+        "SESSION_6",
+        "SESSION_3",
+        "SESSION_6",
+        "SESSION_3",
+        "SESSION_6"
+      ],
+      [],
+      []
+    ]
+  }
+  

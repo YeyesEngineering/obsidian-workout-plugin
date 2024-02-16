@@ -105,7 +105,7 @@ export class Calculator {
                 const onerm = await Calculator.onerm(workout.weight, workout.reps);
                 workout.trainingWeight = onerm;
             }
-            else if (workout.trainingWeight === undefined){
+            else if (workout.trainingWeight === undefined || isNaN(workout.trainingWeight)){
                 workout.trainingWeight = workout.weight;
             }
         }
