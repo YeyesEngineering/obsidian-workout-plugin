@@ -11,6 +11,7 @@ Priority 4 : Workout Check시 노트 프로퍼티 수정기능
 Priority 4 : 무게 대신 Reps를 늘릴 수 있는 기능
     - Training Reps
 Priority 4 : 유산소 전용 타입 제작
+Priority 4 : 유산소 페이스 적용
 Priority 4 : 사용중인 템플릿 명확하게 표현
 Priority 4 : Test Code 작성
     - Mobile Test
@@ -37,4 +38,10 @@ Priority 1 : kg 파운드 변환 기능
 - Add가 빈값일때 해결되지 못하는 문제 
 - 세션 넘버를 선택할때 숫자 -1 해서 가져오는 문제
     만약에 세션 넘버를 0 로 하면 에러가 생길거 같다.
-  파일 위치를 못찾을떄 자꾸 날을 설정하려고 하는 부분   
+  파일 위치를 못찾을떄 자꾸 날을 설정하려고 하는 부분
+  맥의 경우 윈도우와 디렉토리가 차이가 조금 나는 것 같다
+  만약 루틴을 설정하지 않고 날짜부터 설정할 경우
+  
+  
+  만약 json Checker 사용할떄는 타입을 string으로 변환해서 사용해도 될듯
+

@@ -13,6 +13,7 @@ import { FolderSuggest } from './Suggester/FolderSuggest';
 export interface WorkoutPluginSettings {
     bodyWeight: number;
     startday: string;
+    backupday: string;
     gender: gender;
     bigThree: number[];
     wilks2point: number;
@@ -30,11 +31,12 @@ export interface WorkoutPluginSettings {
 export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     bodyWeight: 0,
     startday: 'None',
+    backupday: 'None',
     gender: 'None',
     bigThree: [0, 0, 0, 0],
     wilks2point: 0,
     dotspoint: 0,
-    workoutFolder: '/Workout',
+    workoutFolder: 'Workout',
     mainPageName: 'Workout Main',
 
     routineTemplate: {
@@ -91,6 +93,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     routinePlan: [],
     tempWorkoutLists: {
         workoutName: '',
+        type: 'WEIGHT',
         trainingWeight: 0,
         weight: 0,
         reps: 0,
@@ -99,6 +102,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     workoutLists: [
         {
             workoutName: 'SQUAT',
+            type: 'WEIGHT',
             trainingWeight: 0,
             weight: 0,
             reps: 0,
@@ -106,6 +110,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         },
         {
             workoutName: 'BENCH PRESS',
+            type: 'WEIGHT',
             trainingWeight: 0,
             weight: 0,
             reps: 0,
@@ -113,6 +118,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         },
         {
             workoutName: 'DEADLIFT',
+            type: 'WEIGHT',
             trainingWeight: 0,
             weight: 0,
             reps: 0,
@@ -135,11 +141,11 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         new Setting(containerEl)
-            .setName('Body Weight')
+            .setName('BodyWeight')
             .setDesc('Please enter your weight')
             .addText((text) =>
                 text
-                    .setPlaceholder('Body Weight')
+                    .setPlaceholder('BodyWeight')
                     .setValue(String(this.plugin.settings.bodyWeight))
                     .onChange(async (value) => {
                         this.plugin.settings.bodyWeight = ParseWorkout.numberChecker(value);
@@ -175,14 +181,18 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
 
         new Setting(containerEl)
             .setName('MainPage name')
-            .setDesc('Enter a name for your page')
+            .setDesc('Enter a name for your workout page')
             .addText((text) =>
                 text
                     .setPlaceholder('Workout Main')
                     .setValue(this.plugin.settings.mainPageName)
                     .onChange(async (value) => {
-                        this.plugin.settings.mainPageName = value;
-                        await this.plugin.saveSettings();
+                        if (value === null || value === '') {
+                            new Notice('enter name');
+                        } else {
+                            this.plugin.settings.mainPageName = value;
+                            await this.plugin.saveSettings();
+                        }
                     }),
             );
         //Template Maker
@@ -283,7 +293,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         const routineInput = new Setting(containerEl)
             .setName('RoutineTemplate')
             // .setDesc('Please enter your RoutineTemplate')
-            .setDesc(`now your Template is ${this.plugin.settings.routineTemplate.name}`);
+            .setDesc(`Now your routine is ${this.plugin.settings.routineTemplate.name}`);
 
         //Json Checker 추가
         const inputDataFile = routineInput.controlEl.createEl('input', {
@@ -308,40 +318,42 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                             if (e.target) {
                                 const fileContent = e.target.result;
                                 const jsonParseFile = JSON.parse(String(fileContent));
-                                this.plugin.settings.routineTemplate = await jsonParseFile;
-
                                 //Json Checker
+                                if (ParseWorkout.jsonChecker(jsonParseFile)) {
+                                    this.plugin.settings.routineTemplate = await jsonParseFile;
 
-                                //Workoutlist Register
-                                for (const val of this.plugin.settings.routineTemplate.workoutList) {
-                                    if (
-                                        !this.plugin.settings.workoutLists.some(
-                                            (value) => value.workoutName === val.workoutName.toUpperCase().trim(),
-                                        )
-                                    ) {
-                                        const workoutCheck: workout = {
-                                            workoutName: val.workoutName.toUpperCase().trim(),
-                                            trainingWeight: val.trainingWeight,
-                                            weight: val.weight,
-                                            reps: val.reps,
-                                            //workoutTarget 추후 수정 예정
-                                            // workoutTarget: val.workoutTarget.map((value)=> value.toUpperCase().trim()),
-                                            workoutTarget: val.workoutTarget,
-                                        };
-                                        this.plugin.settings.workoutLists.push(workoutCheck);
-                                        await this.plugin.saveSettings();
+                                    //Workoutlist Register
+                                    for (const val of this.plugin.settings.routineTemplate.workoutList) {
+                                        if (
+                                            !this.plugin.settings.workoutLists.some(
+                                                (value) => value.workoutName === val.workoutName.toUpperCase().trim(),
+                                            )
+                                        ) {
+                                            const workoutCheck: workout = {
+                                                workoutName: val.workoutName.toUpperCase().trim(),
+                                                type: val.type,
+                                                trainingWeight: val.trainingWeight,
+                                                weight: val.weight,
+                                                reps: val.reps,
+                                                workoutTarget: val.workoutTarget,
+                                                //workoutTarget 추후 수정 예정
+                                                // workoutTarget: val.workoutTarget.map((value)=> value.toUpperCase().trim()),
+                                            };
+                                            this.plugin.settings.workoutLists.push(workoutCheck);
+                                            await this.plugin.saveSettings();
+                                        }
                                     }
+                                    await this.plugin.saveSettings();
+                                    if (this.plugin.settings.startday !== 'None') {
+                                        new RoutineUpdate(this.plugin).routinePlanner();
+                                    }
+                                    this.display();
                                 }
-                                await this.plugin.saveSettings();
-                                if (this.plugin.settings.startday !== 'None') {
-                                    new RoutineUpdate(this.plugin).routinePlanner();
-                                }
-                                this.display();
                             }
                         };
                         reader.readAsText(file);
                         this.display();
-                        new Notice('Import Complete');
+                        new Notice('Import complete');
                     } else {
                         new Notice('Add a JSON file.');
                     }
@@ -350,53 +362,64 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
 
         new Setting(containerEl)
             .setName('Routine Day Changer')
-            .setDesc('You can change your Workout Startday')
+            .setDesc('You can change the day the routine starts.')
             .addText((text) =>
                 text
                     .setPlaceholder(this.plugin.settings.startday)
                     .setValue(this.plugin.settings.startday)
                     .onChange(async (val) => {
-                        this.plugin.settings.startday = val;
-                        //day 형식 확인
+                        this.plugin.settings.backupday = val;
+                        await this.plugin.saveSettings();
+                    }),
+            )
+            .addButton((btn) => {
+                btn.setButtonText('Change').onClick(async () => {
+                    if (ParseWorkout.dayChecker(this.plugin.settings.backupday)) {
+                        this.plugin.settings.startday = this.plugin.settings.backupday;
                         await this.plugin.saveSettings();
                         new RoutineUpdate(this.plugin).routinePlanner();
-                    }),
-            );
+                        new Notice('Date Change');
+                    } else {
+                        new Notice('Wrong Date Format');
+                    }
+                });
+            });
 
         for (const workout of this.plugin.settings.workoutLists) {
-            new Setting(containerEl)
-                .setName(`${workout.workoutName} Weight`)
-                .setDesc(`Please enter your maximum ${workout.workoutName} Weight`)
-                .addText((text) =>
-                    text
-                        .setPlaceholder(`${workout.workoutName} Weight`)
-                        .setValue(String(workout.weight))
-                        .onChange(async (val) => {
-                            workout.weight = parseInt(val);
-                            await this.plugin.saveSettings();
-                        }),
-                );
-            new Setting(containerEl)
-                .setName(`${workout.workoutName} Reps`)
-                .setDesc(
-                    `Enter the maximum number of times you can lift the weight entered above ${workout.workoutName}`,
-                )
-                .addText((text) =>
-                    text
-                        .setPlaceholder(`${workout.workoutName} Reps`)
-                        .setValue(String(workout.reps))
-                        .onChange(async (val) => {
-                            //reps 최대 10보다 작은값
-                            if (parseInt(val) > 10) {
-                                new Notice('input lower than 10');
-                                workout.reps = 0;
-                            } else {
-                                workout.reps = parseInt(val);
-                            }
-                            await this.plugin.saveSettings();
-                        }),
-                );
-            if (!(workout.trainingWeight === undefined)) {
+            if (workout.type === 'WEIGHT') {
+                new Setting(containerEl)
+                    .setName(`${workout.workoutName} Weight`)
+                    .setDesc(`Please enter your maximum ${workout.workoutName} Weight`)
+                    .addText((text) =>
+                        text
+                            .setPlaceholder(`${workout.workoutName} Weight`)
+                            .setValue(String(workout.weight))
+                            .onChange(async (val) => {
+                                workout.weight = ParseWorkout.numberChecker(val);
+                                await this.plugin.saveSettings();
+                            }),
+                    );
+                new Setting(containerEl)
+                    .setName(`${workout.workoutName} Reps`)
+                    .setDesc(
+                        `Enter the maximum number of times you can lift the weight entered above ${workout.workoutName}`,
+                    )
+                    .addText((text) =>
+                        text
+                            .setPlaceholder(`${workout.workoutName} Reps`)
+                            .setValue(String(workout.reps))
+                            .onChange(async (val) => {
+                                //reps 최대 10보다 작은값
+                                const reps = ParseWorkout.numberChecker(val);
+                                if (reps > 10) {
+                                    new Notice('Enter a value of 10 or less for reps');
+                                    workout.reps = 0;
+                                } else {
+                                    workout.reps = reps;
+                                }
+                                await this.plugin.saveSettings();
+                            }),
+                    );
                 new Setting(containerEl)
                     .setName(`${workout.workoutName} Training Weight`)
                     .setDesc("Enter a weight to start your workout If you don't, it will be calculated automatically.")
@@ -405,11 +428,38 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                             .setPlaceholder(`${workout.workoutName} Training Weight`)
                             .setValue(String(workout.trainingWeight))
                             .onChange(async (val) => {
-                                workout.trainingWeight = parseInt(val);
+                                workout.trainingWeight = ParseWorkout.numberChecker(val);
+                                await this.plugin.saveSettings();
+                            }),
+                    );
+            } else if (workout.type === 'BODYWEIGHT') {
+                new Setting(containerEl)
+                    .setName(`${workout.workoutName} Add weight`)
+                    .setDesc(`Please enter your ${workout.workoutName} Add Weight`)
+                    .addText((text) =>
+                        text
+                            .setPlaceholder(`${workout.workoutName} Add Weight`)
+                            .setValue(String(workout.trainingWeight))
+                            .onChange(async (val) => {
+                                workout.trainingWeight = ParseWorkout.numberChecker(val);
                                 await this.plugin.saveSettings();
                             }),
                     );
             }
+            // else if (workout.type === 'CARDIO') {
+            //     new Setting(containerEl)
+            //         .setName(`THIS IS CARDIO`)
+            //         .setDesc(`Please enter your maximum ${workout.workoutName} Weight`)
+            //         .addText((text) =>
+            //             text
+            //                 .setPlaceholder(`${workout.workoutName} Weight`)
+            //                 .setValue(String(workout.weight))
+            //                 .onChange(async (val) => {
+            //                     workout.weight = parseInt(val);
+            //                     await this.plugin.saveSettings();
+            //                 }),
+            //         );
+            // }
         }
 
         //Reset Button

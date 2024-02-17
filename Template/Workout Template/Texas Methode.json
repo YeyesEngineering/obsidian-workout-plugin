@@ -3,6 +3,7 @@
     "workoutList": [
       {
         "workoutName": "SQUAT",
+        "type": "WEIGHT",
         "trainingWeight": 0,
         "weight": 0,
         "reps": 0,
@@ -10,6 +11,7 @@
       },
       {
         "workoutName": "BENCH PRESS",
+        "type": "WEIGHT",
         "trainingWeight": 0,
         "weight": 0,
         "reps": 0,
@@ -17,6 +19,7 @@
       },
       {
         "workoutName": "DEADLIFT",
+        "type": "WEIGHT",
         "trainingWeight": 0,
         "weight": 0,
         "reps": 0,
@@ -24,6 +27,7 @@
       },
       {
         "workoutName": "OHP",
+        "type": "WEIGHT",
         "trainingWeight": 0,
         "weight": 0,
         "reps": 0,
@@ -31,18 +35,23 @@
       },
       {
         "workoutName": "BACK EXTENSION",
+        "type": "BODYWEIGHT",
+        "trainingWeight": 0,
         "weight": 0,
         "reps": 0,
         "workoutTarget": ["Back"]
       },
       {
         "workoutName": "CHIN UPS",
+        "type": "BODYWEIGHT",
+        "trainingWeight": 0,
         "weight": 0,
         "reps": 0,
         "workoutTarget": ["Back"]
       },
       {
         "workoutName": "POWER CLEAN",
+        "type": "WEIGHT",
         "trainingWeight": 0,
         "weight": 0,
         "reps": 0,

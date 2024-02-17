@@ -30,12 +30,14 @@ export class BaseModal {
             !(workoutInnerFile instanceof TFile)
         ) {
             if (
+                //조건 조금더 Sturdy 하게 설정
                 this.settings.gender === 'None' &&
                 this.settings.bodyWeight === 0 &&
                 this.settings.workoutLists[0].weight === 0
             ) {
                 new Notice('Please Settings First');
             } else {
+                //맥의 경우 기본 경로가 조금 다른 문제 수정
                 new Calculator(this.plugin).Setup();
                 new WorkoutSetupModal(this.app, this.plugin).open();
             }

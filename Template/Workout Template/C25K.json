@@ -3,9 +3,7 @@
     "workoutList": [
       {
         "workoutName": "RUN",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
+        "type": "CARDIO",
         "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
       },
       {

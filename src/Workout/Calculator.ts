@@ -99,14 +99,18 @@ export class Calculator {
     }
 
     async trainingWeightCalculator(): Promise<void> {
-        //Bodyweight의 경우 해결 하는 코드 작성 (임시)
         for (const workout of this.settings.workoutLists) {
-            if (workout.trainingWeight === 0) {
+            if (
+                workout.type === 'WEIGHT' &&
+                (workout.trainingWeight === 0 || isNaN(workout.trainingWeight) || workout.trainingWeight === null)
+            ) {
                 const onerm = await Calculator.onerm(workout.weight, workout.reps);
                 workout.trainingWeight = onerm;
-            }
-            else if (workout.trainingWeight === undefined || isNaN(workout.trainingWeight)){
-                workout.trainingWeight = workout.weight;
+            } else if (
+                workout.type === 'BODYWEIGHT' &&
+                (isNaN(workout.trainingWeight) || workout.trainingWeight === null)
+            ) {
+                workout.trainingWeight = 0;
             }
         }
         await this.plugin.saveSettings();
@@ -127,7 +131,7 @@ export class Calculator {
                     break;
                 }
             }
-            if (plus === 0 || isNaN(plus)) {
+            if (plus === 0 || isNaN(plus) || plus === null) {
                 return 'Body Weight';
             }
             return `Body Weight + ${plus}KG`;
@@ -136,7 +140,7 @@ export class Calculator {
             if (weight.includes('X')) {
                 //순서가 바뀌어도 parsing 할 수 있도록 수정 예정
                 const divide = upperWeight.split('X');
-                if (upperWeight.includes('RM')){
+                if (upperWeight.includes('RM')) {
                     rm = parseInt(divide[0].replace('rm', ''));
                 }
                 pvalue = parseInt(divide[1].replace('%', '')) / 100;

@@ -44,8 +44,7 @@ export class RoutineUpdate {
             this.settings.todayRoutine.check = todaydata.sets.map((i) => Array(i).fill(0))
             await this.plugin.saveSettings();
         } else {
-            //연장 하는 옵션 추가
-            new Notice('초기화 후 다시 시도해주세요');
+            new Notice('Please reset and try again');
         }
     }
     async nextdayRoutineUpdater(date: string): Promise<number[]> {
@@ -73,7 +72,7 @@ export class RoutineUpdate {
             await this.plugin.saveSettings();
         } else {
             //연장 하는 옵션 추가
-            new Notice('초기화 후 다시 시도해주세요');
+            new Notice('Please reset and try again');
         }
 
         return [];

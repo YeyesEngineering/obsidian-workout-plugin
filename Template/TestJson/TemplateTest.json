@@ -20,7 +20,7 @@
         "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Glutes"]
       },
       {
-        "workoutName": " OHP",
+        "workoutName": 0,
 
         "workoutTarget": ["Shoulders"]
       },
