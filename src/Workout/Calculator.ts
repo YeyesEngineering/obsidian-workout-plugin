@@ -99,65 +99,57 @@ export class Calculator {
     }
 
     async trainingWeightCalculator(): Promise<void> {
-        //Bodyweight의 경우 해결 하는 코드 작성
         for (const workout of this.settings.workoutLists) {
-            if (workout.trainingWeight === 0) {
+            if (
+                workout.type === 'WEIGHT' &&
+                (workout.trainingWeight === 0 || isNaN(workout.trainingWeight) || workout.trainingWeight === null)
+            ) {
                 const onerm = await Calculator.onerm(workout.weight, workout.reps);
                 workout.trainingWeight = onerm;
-            }
-            else if (workout.trainingWeight === undefined){
-                workout.trainingWeight = workout.weight;
+            } else if (
+                workout.type === 'BODYWEIGHT' &&
+                (isNaN(workout.trainingWeight) || workout.trainingWeight === null)
+            ) {
+                workout.trainingWeight = 0;
             }
         }
         await this.plugin.saveSettings();
     }
 
     async weightCalculator(workout: string, weight: string): Promise<number | string> {
-        // 대문자로 바꿔서 parsing 하는 코드 작성
-        // const upperWorkout = workout.toUpperCase();
-        // const upperWeight = weight.toUpperCase();
+        const upperWorkout = workout.toUpperCase();
+        const upperWeight = weight.toUpperCase().trim().replaceAll(' ', '');
         let wvalue = 0;
         let pvalue = 0;
         let rm = 0;
 
-        if (weight === undefined || weight === 'bodyweight') {
+        if (upperWeight === undefined || upperWeight === 'BODYWEIGHT') {
             let plus = 0;
             for (const value of this.settings.workoutLists) {
-                if (value.workoutName === workout) {
+                if (value.workoutName === upperWorkout) {
                     plus = value.trainingWeight;
                     break;
                 }
             }
-            //임시 수정 코드
-            if (plus === 0 || isNaN(plus)) {
+            if (plus === 0 || isNaN(plus) || plus === null) {
                 return 'Body Weight';
             }
             return `Body Weight + ${plus}KG`;
         } else {
-            console.log (weight);
             //Percent Parser
             if (weight.includes('X')) {
-                const divide = weight.replaceAll(' ', '').split('X');
-                if (weight.includes('rm')){
+                //순서가 바뀌어도 parsing 할 수 있도록 수정 예정
+                const divide = upperWeight.split('X');
+                if (upperWeight.includes('RM')) {
                     rm = parseInt(divide[0].replace('rm', ''));
-                }
-                else if (weight.includes('RM')){
-                    rm = parseInt(divide[0].replace('RM', ''));
-                }
-                else if (weight.includes('Rm')){
-                    rm = parseInt(divide[0].replace('Rm', ''));
-                }
-                else if (weight.includes('rM')){
-                    rm = parseInt(divide[0].replace('rM', ''));
                 }
                 pvalue = parseInt(divide[1].replace('%', '')) / 100;
             } else {
-                pvalue = parseInt(weight.replace('%', '')) / 100;
+                pvalue = parseInt(upperWeight.replace('%', '')) / 100;
             }
         }
         for (const value of this.settings.workoutLists) {
-            //트레이닝 웨이트가 1RM 이 아닐때를 상정하는 코드 가 작성되어야 할듯
-            if (value.workoutName === workout) {
+            if (value.workoutName === upperWorkout) {
                 const weight = value.trainingWeight;
                 if (rm === 0) {
                     wvalue = weight;

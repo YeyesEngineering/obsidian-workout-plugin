@@ -75,6 +75,7 @@ export class RoutineMakeModal extends Modal {
                     this.plugin.settings.workoutLists.push(this.plugin.settings.tempWorkoutLists);
                     this.plugin.settings.tempWorkoutLists = {
                         workoutName: '',
+                        type:'BODYWEIGHT',
                         trainingWeight: 0,
                         weight: 0,
                         reps: 0,

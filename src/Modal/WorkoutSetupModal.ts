@@ -4,6 +4,7 @@ import { Markdown } from 'src/Markdown/Markdown';
 import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
 import { mainModel } from 'src/Workout/Routine/RoutineModel';
 import { RoutineModelApp } from 'src/Workout/Routine/RoutineUpdate';
+import { ParseWorkout } from 'src/Renderer/Parser';
 
 export class WorkoutSetupModal extends Modal {
     plugin: WorkoutPlugin;
@@ -28,7 +29,7 @@ export class WorkoutSetupModal extends Modal {
         new Setting(contentEl).addButton((btn) =>
             btn.setButtonText('Submit').onClick(async () => {
                 this.startday === 'None' ? (this.startday = moment().format('YYYY-MM-DD')) : this.startday;
-                if (moment(this.startday, moment.ISO_8601, true).isValid()) {
+                if (ParseWorkout.dayChecker(this.startday)) {
                     this.plugin.settings.startday = this.startday;
                     await this.plugin.saveSettings();
 
@@ -36,7 +37,12 @@ export class WorkoutSetupModal extends Modal {
                     const workoutInnerFile = this.app.vault.getAbstractFileByPath(
                         `${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`,
                     );
-                    const filePath = this.plugin.settings.workoutFolder ?? '/Workout';
+                    let filePath = this.plugin.settings.workoutFolder;
+                    if (filePath === '' || filePath === '/') {
+                        filePath = 'Workout';
+                        this.plugin.settings.workoutFolder = filePath;
+                        this.plugin.saveSettings();
+                    }
 
                     if (!(workoutFolder instanceof TFolder)) {
                         //Folder Create

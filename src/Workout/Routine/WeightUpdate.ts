@@ -64,16 +64,18 @@ export class WeightUpdate {
             this.settings.todayRoutine.check[index][set - 1]++;
             await this.plugin.saveSettings();
             if (this.settings.todayRoutine.check[index].every((element) => element === 1)) {
-
                 ////만약에 add는 존재하나 특정 운동만 증량하고 싶을때 해결하는 코드 작성
                 //실패시 적용할 코드 작성 실패를 어떻게 카운팅 할까
-                
-                if (this.settings.todayRoutine.add[index].length !== 0){
-                    const workoutlistsIndex = this.settings.workoutLists.findIndex((val) => val.workoutName === workout);
+                //checker true false  로 형식 변경
+                if (this.settings.todayRoutine.add[index].length === 2) {
+                    //코드 테스트 및 확인
+                    const workoutlistsIndex = this.settings.workoutLists.findIndex(
+                        (val) => val.workoutName === workout,
+                    );
                     this.settings.workoutLists[workoutlistsIndex].trainingWeight =
-                    this.settings.workoutLists[workoutlistsIndex].trainingWeight +
-                    this.settings.todayRoutine.add[index][0];
-                await this.plugin.saveSettings();   
+                        this.settings.workoutLists[workoutlistsIndex].trainingWeight +
+                        this.settings.todayRoutine.add[index][0];
+                    await this.plugin.saveSettings();
                 }
             }
         }

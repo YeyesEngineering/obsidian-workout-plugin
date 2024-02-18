@@ -2,52 +2,43 @@
     "name": "Template Test",
     "workoutList": [
       {
-        "workoutName": "SQUAT",
-        "trainingWeight": 0,
+        "workoutName": " SQUat ",
+        "trainingWeight": 150,
         "weight": 0,
         "reps": 0,
         "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
       },
       {
-        "workoutName": "BENCH PRESS",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
+        "workoutName": "BENch pRESS",
         "workoutTarget": ["Chest", "Triceps"]
       },
       {
-        "workoutName": "DEADLIFT",
+        "workoutName": "  DEADlIFT",
         "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
+        "weight": 200,
+        "reps": 3,
         "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Glutes"]
       },
       {
-        "workoutName": "OHP",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
+        "workoutName": 0,
+
         "workoutTarget": ["Shoulders"]
       },
       {
         "workoutName": "BACK EXTENSION",
-        "trainingWeight": 0,
         "weight": 0,
         "reps": 0,
         "workoutTarget": ["Back"]
       },
       {
-        "workoutName": "CHIN UPS",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
+        "workoutName": "      CHIN UPS   ",
+        "weight": 5,
+        "reps": 3,
         "workoutTarget": ["Back"]
       },
       {
         "workoutName": "POWER CLEAN",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
+
         "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Shoulders"]
       }
     ],
@@ -57,15 +48,15 @@
         "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
         "reps": [5, 5, 5],
         "sets": [5, 5, 1],
-        "weight": ["5RM X 90%", "1RM X 90%", "2RM X 90%"]
+        "weight": ["5RMX90%", "    1prtm X 90 p p%    ", "e 2rM X 90 w% "]
       },
       {
         "sessionname": "Light/Recovery Day",
         "workoutname": ["SQUAT", "OHP", "CHIN UPS", "BACK EXTENSION"],
         "reps": [5, 5, 10, 10],
         "sets": [2, 3, 3, 5],
-        "weight": ["72%", "72%", "bodyweight","bodyweight"],
-        "add" : [[],[0,0],[2.5,0],[2.5,0]]
+        "weight": ["72%", "72%", "bodYweight","body weight"],
+        "add" : [[],["s",0],[2.5,0],[2.5,0]]
       },
       {
         "sessionname": "Intensity Day",
@@ -100,30 +91,13 @@
     "week": [
       [
         "SESSION_1",
-        "SESSION_1",
-        "SESSION_1",
-        "SESSION_1",
-        "SESSION_1",
-        "SESSION_1"
+        "2"
       ],
       [],
       [
-        "SESSION_2",
-        "SESSION_2",
-        "SESSION_2",
-        "SESSION_2",
-        "SESSION_2",
-        "SESSION_2"
       ],
       [],
       [
-        "SESSION_3",
-        "SESSION_3",
-        "SESSION_3",
-        "SESSION_3",
-        "SESSION_3",
-        "SESSION_3",
-        "SESSION_3"
       ],
       [],
       []
