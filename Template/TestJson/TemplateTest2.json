@@ -1,17 +1,17 @@
 {
-    "name": "Texas Method",
+    "name": "test JSON",
     "workoutList": [
         {
             "workoutName": "SQUAT",
-            "type": "WEIGHT",
+            "type": "WEIGHT ",
             "trainingWeight": 0,
             "weight": 0,
             "reps": 0,
             "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
         },
         {
-            "workoutName": "BENCH PRESS",
-            "type": "WEIGHT",
+            "workoutName": "         bENCH PRESS",
+            "type": "    wEIGHT   ",
             "trainingWeight": 0,
             "weight": 0,
             "reps": 0,
@@ -35,7 +35,7 @@
         },
         {
             "workoutName": "BACK EXTENSION",
-            "type": "BODYWEIGHT",
+            "type": "BODYWEIGHt  ",
             "trainingWeight": 0,
             "weight": 0,
             "reps": 0,
@@ -51,7 +51,7 @@
         },
         {
             "workoutName": "POWER CLEAN",
-            "type": "WEIGHT",
+            "type": "WEIgHt   ",
             "trainingWeight": 0,
             "weight": 0,
             "reps": 0,
@@ -64,7 +64,12 @@
             "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
             "reps": [5, 5, 5],
             "sets": [5, 5, 1],
-            "weight": ["5RM * 90%", "5RM * 90%", "5RM * 90%"]
+            "weight": ["5RM * 90%", "5RM * 90%", "5RM * 90%"],
+            "add": [
+                [0, 0],
+                [0, 0],
+                [2.5, 0]
+            ]
         },
         {
             "sessionname": "Light/Recovery Day",
@@ -72,12 +77,7 @@
             "reps": [5, 5, 10, 10],
             "sets": [2, 3, 3, 5],
             "weight": ["5RM * 72%", "5RM * 72%", "bodyweight", "bodyweight"],
-            "add": [
-                [0, 0],
-                [0, 0],
-                [2.5, 0],
-                [2.5, 0]
-            ]
+            "add": [[], [0, 0], [2.5, 0], [2.5, 0]]
         },
         {
             "sessionname": "Intensity Day",
@@ -131,7 +131,7 @@
     ],
 
     "week": [
-        ["SESSION_1", "SESSION_4", "SESSION_1", "SESSION_4", "SESSION_1", "SESSION_4"],
+        ["SESSION_0", "SESSION_4", "SESSION_1", "SESSION_4", "SESSION_1", "SESSION_4"],
         [],
         ["SESSION_2", "SESSION_5", "SESSION_2", "SESSION_5", "SESSION_2", "SESSION_5"],
         [],

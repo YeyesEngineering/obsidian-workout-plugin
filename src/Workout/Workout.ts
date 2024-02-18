@@ -1,6 +1,6 @@
 export interface workout {
     workoutName: string;
-    type: workoutType;
+    type: string;
     weight: number;
     trainingWeight: number;
     // reps: (number | number[] | string);
@@ -25,7 +25,7 @@ export type workoutTarget =
 
 
 
-export type workoutType = 'CARDIO' | 'WEIGHT' | 'BODYWEIGHT';
+// export type workoutType = 'CARDIO' | 'WEIGHT' | 'BODYWEIGHT';
 
 // export interface workoutTest<T extends workoutType> {
 //     workoutName: string;

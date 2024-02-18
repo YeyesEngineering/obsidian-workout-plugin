@@ -13,23 +13,25 @@ export class ParseWorkout {
         this.settings = this.plugin.settings;
     }
 
-    public static jsonChecker(file: routineTemplate) {
-        console.log('file', file);
+    public static async jsonChecker(file: routineTemplate) {
         for (const workoutlist of file.workoutList) {
             if (typeof workoutlist.workoutName !== 'string') {
                 new Notice('Check Json file workout name');
                 return false;
             }
             if (
+                //아예 형식에서 스페이스를 없애는 방향도 나쁘지 않을듯
                 !(
-                    workoutlist.workoutName === 'WEIGHT' ||
-                    workoutlist.workoutName === 'BODYWEIGHT' ||
-                    workoutlist.workoutName === 'CARDIO'
+                    workoutlist.type.toUpperCase().trim() === 'WEIGHT' ||
+                    workoutlist.type.toUpperCase().trim() === 'BODYWEIGHT' ||
+                    workoutlist.type.toUpperCase().trim() === 'CARDIO'
                 )
             ) {
                 new Notice('Check Json File type');
                 return false;
             }
+            console.log('File type OK');
+            console.log(typeof workoutlist.weight !== 'number');
             if (
                 typeof workoutlist.trainingWeight !== 'number' ||
                 typeof workoutlist.reps !== 'number' ||
@@ -38,6 +40,7 @@ export class ParseWorkout {
                 new Notice('Check Json file weight series');
                 return false;
             }
+            console.log('File weight Type Check OK');
 
             for (const target of workoutlist.workoutTarget) {
                 if (
@@ -60,14 +63,35 @@ export class ParseWorkout {
                 }
             }
         }
-
+        console.log('File workout Target OK');
 
         for (const session of file.session) {
-            //개수 비교
-            if (!(session.workoutname.length === session.reps.length && session.reps.length === session.sets.length  && session.sets.length === session.weight.length && session.weight.length === session.add.length)){
-                new Notice('Check Session Number');
-                return false
+            if (session.add) {
+                if (
+                    !(
+                        session.workoutname.length === session.reps.length &&
+                        session.reps.length === session.sets.length &&
+                        session.sets.length === session.weight.length &&
+                        session.weight.length === session.add.length
+                    )
+                ) {
+                    new Notice('Check Session Number');
+                    return false;
+                }
+            } else {
+                if (
+                    !(
+                        session.workoutname.length === session.reps.length &&
+                        session.reps.length === session.sets.length &&
+                        session.sets.length === session.weight.length
+                    )
+                ) {
+                    new Notice('Check Session Number');
+                    return false;
+                }
             }
+
+            console.log('file session number');
             if (typeof session.sessionname !== 'string') {
                 new Notice('Check Session Name');
                 return false;
@@ -82,94 +106,94 @@ export class ParseWorkout {
                     return false;
                 }
             }
-            for (const rep of session.reps){
-                if (typeof rep !== "number"){
-                    new Notice('Check Session reps')
+            console.log('file session workout name number');
+            for (const rep of session.reps) {
+                if (typeof rep !== 'number') {
+                    new Notice('Check Session reps');
                     return false;
                 }
             }
-            for (const set of session.sets){
-                if (typeof set !== "number"){
-                    new Notice('Check Session sets')
+            console.log('file session reps');
+            for (const set of session.sets) {
+                if (typeof set !== 'number') {
+                    new Notice('Check Session sets');
                     return false;
                 }
             }
-            for (const weight of session.weight){
+            console.log('file session sets');
+            for (const weight of session.weight) {
                 const upperWeight = weight.toUpperCase().trim().replaceAll(' ', '');
 
-                if (upperWeight === 'BODYWEIGHT'){
-                    continue
-                }
-                else if (upperWeight.includes('X')) {
+                if (upperWeight === 'BODYWEIGHT') {
+                    continue;
+                } else if (upperWeight.includes('X')) {
                     //  X 를 * 로 변경할 까 고민중
                     const divide = upperWeight.split('X');
-                    console.log('divide',divide)
+                    console.log('divide', divide);
                     //이 부분은 달라질 수 도 있겠다
-                    if (typeof divide === undefined){
-                        new Notice('Check Session weight')
-                        return false
+                    if (typeof divide === undefined) {
+                        new Notice('Check Session weight');
+                        return false;
                     }
                     if (upperWeight.includes('RM')) {
                         const rm = parseInt(divide[0].replace('rm', ''));
-                        if (typeof rm !== "number" || rm > 10){
-                            new Notice('Check Session weight')
-                            return false
+                        if (typeof rm !== 'number' || rm > 10) {
+                            new Notice('Check Session weight');
+                            return false;
                         }
-                    }
-                    else{
-                        new Notice('Check Session weight')
-                            return false
+                    } else {
+                        new Notice('Check Session weight');
+                        return false;
                     }
                     const pvalue = parseInt(divide[1].replace('%', '')) / 100;
-                    if (typeof pvalue !== 'number' || pvalue === 0){
-                        new Notice('Check Session weight')
-                        return false
+                    if (typeof pvalue !== 'number' || pvalue === 0) {
+                        new Notice('Check Session weight');
+                        return false;
                     }
                 } else {
-                    if (upperWeight.includes('%')){
+                    if (upperWeight.includes('%')) {
                         const pvalue = parseInt(upperWeight.replace('%', '')) / 100;
-                    if (typeof pvalue !== 'number' || pvalue === 0){
-                        new Notice('Check Session weight')
-                        return false
-                    }
-                    }
-                    else{
-                        new Notice('Check Session weight')
-                        return false
+                        if (typeof pvalue !== 'number' || pvalue === 0) {
+                            new Notice('Check Session weight');
+                            return false;
+                        }
+                    } else {
+                        new Notice('Check Session weight');
+                        return false;
                     }
                 }
             }
-
-            for (const add of session.add){
-                //테스트 확인
-                if (add.length !== 2){
-                    new Notice('Check Session add')
-                    return false
-                }else{
-                    //만약 존재한다면
-                    if (typeof add[0] !== 'number' || typeof add[1] !== 'number'){
-                        new Notice('Check Session add')
-                        return false
+            if (session.add) {
+                for (const add of session.add) {
+                    //테스트 확인
+                    if (!(add.length === 0 || add.length === 2)) {
+                        console.log('addlen', add.length);
+                        new Notice('Check Session add', add.length);
+                        return false;
+                    } else if (add.length === 2) {
+                        //만약 존재한다면
+                        if (typeof add[0] !== 'number' || typeof add[1] !== 'number') {
+                            new Notice('Check Session add');
+                            return false;
+                        }
                     }
                 }
-
             }
-
         }
 
-        if (file.week.length !== 7){
-            console.log('file week length = ',file.week.length)
-            new Notice('Check Week number')
-            return false
+        if (file.week.length !== 7) {
+            console.log('file week length = ', file.week.length);
+            new Notice('Check Week number');
+            return false;
         }
-        for (const week of file.week){
-            if (week.length !== 0){
-                for (const sessionCheck of week){
-                    const sessionParse = (parseInt(sessionCheck.replace(/\D/g, "")) - 1)
-                    if (typeof sessionParse !== 'number' || sessionParse < 0){
-                        console.log('sessionParse = ',sessionParse)
-                        new Notice('Check Week session')
-                        return false
+        for (const week of file.week) {
+            if (week.length !== 0) {
+                for (const sessionCheck of week) {
+                    const sessionParse = parseInt(sessionCheck.replace(/\D/g, '')) - 1;
+                    if (typeof sessionParse !== 'number' || isNaN(sessionParse) || sessionParse < 0) {
+                        console.log('sessionParse = ', sessionParse);
+                        new Notice('Check Week session');
+                        return false;
                     }
                 }
             }
