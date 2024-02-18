@@ -118,7 +118,7 @@ export class Calculator {
 
     async weightCalculator(workout: string, weight: string): Promise<number | string> {
         const upperWorkout = workout.toUpperCase();
-        const upperWeight = weight.toUpperCase().replaceAll(' ', '');
+        const upperWeight = weight.toUpperCase().trim().replaceAll(' ', '');
         let wvalue = 0;
         let pvalue = 0;
         let rm = 0;

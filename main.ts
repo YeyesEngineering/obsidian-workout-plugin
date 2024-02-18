@@ -49,6 +49,9 @@ export default class WorkoutPlugin extends Plugin {
                 event.doc.title.startsWith('Workout') &&
                 event.doc.activeElement?.textContent?.includes('Today Workout List')
             ) {
+                //만약 사용자가 입력한 값을 핸들링 할 수 있도록 수정 예정
+
+                
                 const text = target.offsetParent?.textContent;
                 //text blank Check
                 if (text && text.length > 2) {

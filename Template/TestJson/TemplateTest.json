@@ -48,7 +48,7 @@
         "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
         "reps": [5, 5, 5],
         "sets": [5, 5, 1],
-        "weight": ["5RMX90%", "1rm X 90%", "2rM X 90%"]
+        "weight": ["5RMX90%", "    1prtm X 90 p p%    ", "e 2rM X 90 w% "]
       },
       {
         "sessionname": "Light/Recovery Day",
@@ -56,7 +56,7 @@
         "reps": [5, 5, 10, 10],
         "sets": [2, 3, 3, 5],
         "weight": ["72%", "72%", "bodYweight","body weight"],
-        "add" : [[],[0,0],[2.5,0],[2.5,0]]
+        "add" : [[],["s",0],[2.5,0],[2.5,0]]
       },
       {
         "sessionname": "Intensity Day",

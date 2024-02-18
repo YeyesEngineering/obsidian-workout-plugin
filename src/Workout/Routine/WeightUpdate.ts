@@ -67,7 +67,8 @@ export class WeightUpdate {
                 ////만약에 add는 존재하나 특정 운동만 증량하고 싶을때 해결하는 코드 작성
                 //실패시 적용할 코드 작성 실패를 어떻게 카운팅 할까
                 //checker true false  로 형식 변경
-                if (this.settings.todayRoutine.add[index].length !== 0) {
+                if (this.settings.todayRoutine.add[index].length === 2) {
+                    //코드 테스트 및 확인
                     const workoutlistsIndex = this.settings.workoutLists.findIndex(
                         (val) => val.workoutName === workout,
                     );
