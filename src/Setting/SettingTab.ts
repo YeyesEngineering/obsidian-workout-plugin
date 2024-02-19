@@ -331,7 +331,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                         ) {
                                             const workoutCheck: workout = {
                                                 workoutName: val.workoutName.toUpperCase().trim(),
-                                                type: val.type.toUpperCase().trim(),
+                                                type: val.type.replaceAll(' ','').toUpperCase().trim(),
                                                 trainingWeight: val.trainingWeight,
                                                 weight: val.weight,
                                                 reps: val.reps,
