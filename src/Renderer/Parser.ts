@@ -21,9 +21,9 @@ export class ParseWorkout {
             }
             if (
                 !(
-                    workoutlist.type.replaceAll(' ', '').toUpperCase().trim() === 'WEIGHT' ||
-                    workoutlist.type.replaceAll(' ', '').toUpperCase().trim() === 'BODYWEIGHT' ||
-                    workoutlist.type.replaceAll(' ', '').toUpperCase().trim() === 'CARDIO'
+                    workoutlist.type.replace(/\s+/g, '').toUpperCase().trim() === 'WEIGHT' ||
+                    workoutlist.type.replace(/\s+/g, '').toUpperCase().trim() === 'BODYWEIGHT' ||
+                    workoutlist.type.replace(/\s+/g, '').toUpperCase().trim() === 'CARDIO'
                 )
             ) {
                 new Notice('Check the "type" that belongs to the workoutList');
@@ -122,11 +122,10 @@ export class ParseWorkout {
                 }
             }
             for (const weight of session.weight) {
-                //숫자로만 입력해도 가능하도록 고려
-                const upperWeight = weight.toUpperCase().trim().replaceAll(' ', '');
+                const upperWeight = weight.replace(/\s+/g, '').toUpperCase().trim();
                 //*의 위치를 고려하는 코드 작성
                 if (typeof weight !== 'string') {
-                    new Notice('Check the "weight" that belongs to the session0');
+                    new Notice('Check the "weight" that belongs to the session');
                     return false;
                 }
                 if (upperWeight === 'BODYWEIGHT') {
@@ -134,11 +133,10 @@ export class ParseWorkout {
                 } else if (upperWeight.includes('*')) {
                     const divide = upperWeight.split('*');
                     if (divide.length > 2) {
-                        new Notice('Check the "weight" that belongs to the session1');
+                        new Notice('Check the "weight" that belongs to the session');
                         return false;
                     }
                     if (upperWeight.includes('RM')) {
-
                         // 체크
                         if (/\D/.test(divide[0].replaceAll('RM', ''))) {
                             new Notice('Check the "weight" that belongs to the session');
@@ -147,7 +145,7 @@ export class ParseWorkout {
 
                         const rm = parseInt(divide[0].replaceAll('RM', ''));
                         if (isNaN(rm) || rm > 10) {
-                            new Notice('Check the "weight - RM" that belongs to the session2');
+                            new Notice('Check the "weight - RM" that belongs to the session');
                             return false;
                         }
                     } else {
@@ -160,28 +158,26 @@ export class ParseWorkout {
                     }
                     const pvalue = parseInt(divide[1].replaceAll('%', '')) / 100;
                     if (isNaN(pvalue) || pvalue === 0) {
-                        new Notice('Check the "weight" that belongs to the session4');
+                        new Notice('Check the "weight" that belongs to the session');
                         return false;
                     }
                 } else {
-                    if (upperWeight.includes('%') && !upperWeight.includes('RM')) {
+                    if (!upperWeight.includes('RM')) {
                         if (weight.replace('%', '').trim().includes(' ')) {
-                            new Notice('Check the "weight" that belongs to the sessional');
+                            new Notice('Check the "weight" that belongs to the session');
                             return false;
                         }
-                        //문자열 체크
-                        console.log('etstmai',upperWeight);
                         if (/\D/.test(upperWeight.replaceAll('%', ''))) {
                             new Notice('Check the "weight" that belongs to the session');
                             return false;
                         }
                         const pvalue = parseInt(upperWeight.replaceAll('%', '')) / 100;
                         if (isNaN(pvalue) || pvalue === 0) {
-                            new Notice('Check the "weight" that belongs to the session5');
+                            new Notice('Check the "weight" that belongs to the session');
                             return false;
                         }
                     } else {
-                        new Notice('Check the "weight" that belongs to the session6');
+                        new Notice('Check the "weight" that belongs to the session');
                         return false;
                     }
                 }
@@ -190,11 +186,11 @@ export class ParseWorkout {
             if (session.add) {
                 for (const add of session.add) {
                     if (!(add.length === 0 || add.length === 2)) {
-                        new Notice('Check Session add', add.length);
+                        new Notice('Check the "add" that belongs to the session', add.length);
                         return false;
                     } else if (add.length === 2) {
                         if (typeof add[0] !== 'number' || typeof add[1] !== 'number') {
-                            new Notice('Check Session add');
+                            new Notice('Check the "add" that belongs to the session');
                             return false;
                         }
                     }
@@ -203,16 +199,14 @@ export class ParseWorkout {
         }
 
         if (file.week.length !== 7) {
-            console.log('file week length = ', file.week.length);
-            new Notice('Check Week number');
+            new Notice('The number of week elements should be 7');
             return false;
         }
         for (const week of file.week) {
             if (week.length !== 0) {
                 for (const sessionCheck of week) {
                     const sessionParse = parseInt(sessionCheck.replace(/\D/g, '')) - 1;
-                    if (typeof sessionParse !== 'number' || isNaN(sessionParse) || sessionParse < 0) {
-                        console.log('sessionParse = ', sessionParse);
+                    if (isNaN(sessionParse) || sessionParse < 0) {
                         new Notice('Check Week session');
                         return false;
                     }

@@ -6,8 +6,7 @@
             "type": "WEIGHT ",
             "trainingWeight": 0,
             "weight": 0,
-            "reps": 0,
-            "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
+            "reps": 0
         },
         {
             "workoutName": "         bENCH PRESS",
@@ -76,7 +75,7 @@
             "workoutname": ["SQUAT", "OHP", "CHIN UPS", "BACK EXTENSION"],
             "reps": [5, 5, 10, 10],
             "sets": [2, 3, 3, 5],
-            "weight": ["s5RM * 72%", "5RM * 72%", "bodyweight", "bodyweight"],
+            "weight": [" 90", "5rm * 90", "bodyweight", "bodyweight"],
             "add": [[], [0, 0], [2.5, 0], [2.5, 0]]
         },
         {

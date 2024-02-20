@@ -9,7 +9,7 @@
     "version": "node version-bump.mjs && git add manifest.json versions.json"
   },
   "keywords": [],
-  "author": "\"CHOI YEON JUN\"",
+  "author": "\"overengineering56\"",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.11.6",
@@ -139,10 +139,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/naulbaragi/obsidian-workout-plugin.git"
+    "url": "git+https://github.com/overengineering56/obsidian-workout-plugin.git"
   },
   "bugs": {
-    "url": "https://github.com/naulbaragi/obsidian-workout-plugin/issues"
+    "url": "https://github.com/overengineering56/obsidian-workout-plugin/issues"
   },
-  "homepage": "https://github.com/naulbaragi/obsidian-workout-plugin#readme"
+  "homepage": "https://github.com/overengineering56/obsidian-workout-plugin#readme"
 }
