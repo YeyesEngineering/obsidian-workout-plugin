@@ -58,7 +58,6 @@ export class RoutineUpdate {
         await this.plugin.saveSettings();
         //데이터 설정
         const nextdaydata = this.settings.routinePlan.find((value) => value.date === nextday);
-        console.log('nextday', nextdaydata);
         if (nextdaydata) {
             this.settings.nextdayRoutine.date = nextday;
             this.settings.nextdayRoutine.progress = nextdaydata.progress;

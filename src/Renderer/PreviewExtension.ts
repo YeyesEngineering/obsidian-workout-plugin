@@ -64,7 +64,6 @@ class newPreviewExtension implements PluginValue {
             state.doc.line(14).text === '# Today Workout List' &&
             line.text.endsWith('Set ')
         ) {
-            console.log('okokookk');
 
             //체크
             event.preventDefault();

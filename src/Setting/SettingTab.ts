@@ -93,7 +93,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     routinePlan: [],
     tempWorkoutLists: {
         workoutName: '',
-        type: 'WEIGHT',
+        type: '',
         trainingWeight: 0,
         weight: 0,
         reps: 0,
@@ -319,7 +319,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                 const fileContent = e.target.result;
                                 const jsonParseFile = JSON.parse(String(fileContent));
                                 //Json Checker
-                                if (ParseWorkout.jsonChecker(jsonParseFile)) {
+                                if (await ParseWorkout.jsonChecker(jsonParseFile)) {
                                     this.plugin.settings.routineTemplate = await jsonParseFile;
 
                                     //Workoutlist Register
@@ -331,7 +331,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                         ) {
                                             const workoutCheck: workout = {
                                                 workoutName: val.workoutName.toUpperCase().trim(),
-                                                type: val.type,
+                                                type: val.type.replace(/\s+/g, '').toUpperCase().trim(),
                                                 trainingWeight: val.trainingWeight,
                                                 weight: val.weight,
                                                 reps: val.reps,
@@ -348,12 +348,12 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                         new RoutineUpdate(this.plugin).routinePlanner();
                                     }
                                     this.display();
+                                    new Notice('Import complete');
                                 }
                             }
                         };
                         reader.readAsText(file);
                         this.display();
-                        new Notice('Import complete');
                     } else {
                         new Notice('Add a JSON file.');
                     }

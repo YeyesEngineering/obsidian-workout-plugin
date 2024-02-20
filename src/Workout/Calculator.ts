@@ -118,7 +118,7 @@ export class Calculator {
 
     async weightCalculator(workout: string, weight: string): Promise<number | string> {
         const upperWorkout = workout.toUpperCase();
-        const upperWeight = weight.toUpperCase().trim().replaceAll(' ', '');
+        const upperWeight = weight.replace(/\s+/g, '').toUpperCase().trim();
         let wvalue = 0;
         let pvalue = 0;
         let rm = 0;
@@ -137,15 +137,15 @@ export class Calculator {
             return `Body Weight + ${plus}KG`;
         } else {
             //Percent Parser
-            if (weight.includes('X')) {
+            if (weight.includes('*')) {
                 //순서가 바뀌어도 parsing 할 수 있도록 수정 예정
-                const divide = upperWeight.split('X');
+                const divide = upperWeight.split('*');
                 if (upperWeight.includes('RM')) {
-                    rm = parseInt(divide[0].replace('rm', ''));
+                    rm = parseInt(divide[0].replaceAll('RM', ''));
                 }
-                pvalue = parseInt(divide[1].replace('%', '')) / 100;
+                pvalue = parseInt(divide[1].replaceAll('%', '')) / 100;
             } else {
-                pvalue = parseInt(upperWeight.replace('%', '')) / 100;
+                pvalue = parseInt(upperWeight.replaceAll('%', '')) / 100;
             }
         }
         for (const value of this.settings.workoutLists) {
