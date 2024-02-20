@@ -341,6 +341,16 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                             };
                                             this.plugin.settings.workoutLists.push(workoutCheck);
                                             await this.plugin.saveSettings();
+                                        } else {
+                                            if (val.trainingWeight !== 0) {
+                                                for (const ele of this.plugin.settings.workoutLists){
+                                                    if (ele.workoutName === val.workoutName){
+                                                        ele.trainingWeight = val.trainingWeight
+                                                        break
+                                                    }
+                                                }
+                                                await this.plugin.saveSettings();
+                                            }
                                         }
                                     }
                                     await this.plugin.saveSettings();
