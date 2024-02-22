@@ -20,7 +20,7 @@ export class WeightUpdate {
     }
 
     async oneRMUpdater(workout: string, weight: number, reps: number) {
-        const Bigthree = [...this.plugin.settings.bigThree];
+        const Bigthree = [...this.bigthree];
         switch (workout) {
             case 'SQUAT':
                 if (Bigthree[0] < (await Calculator.onerm(weight, reps))) {
@@ -56,17 +56,19 @@ export class WeightUpdate {
                 }
                 break;
         }
+
+        await this.plugin.saveSettings();
+        return this.plugin.settings.bigThree;
     }
 
     async trainingWeightUpdater(workout: string, set: number) {
         if (this.settings.todayRoutine.add) {
             const index = this.settings.todayRoutine.workout.findIndex((val) => val === workout);
-            this.settings.todayRoutine.check[index][set - 1]++;
+            this.settings.todayRoutine.check[index][set - 1] = true;
             await this.plugin.saveSettings();
-            if (this.settings.todayRoutine.check[index].every((element) => element === 1)) {
+            if (this.settings.todayRoutine.check[index].every((element) => element === true)) {
                 ////만약에 add는 존재하나 특정 운동만 증량하고 싶을때 해결하는 코드 작성
                 //실패시 적용할 코드 작성 실패를 어떻게 카운팅 할까
-                //checker true false  로 형식 변경
                 if (this.settings.todayRoutine.add[index].length === 2) {
                     //코드 테스트 및 확인
                     const workoutlistsIndex = this.settings.workoutLists.findIndex(
@@ -78,6 +80,16 @@ export class WeightUpdate {
                     await this.plugin.saveSettings();
                 }
             }
+        }
+    }
+
+    async volumeUpdater(workout: string, weight: number, reps: number, set: number) {
+        const index = this.settings.todayRoutine.workout.findIndex((val) => val === workout);
+        if (this.settings.todayRoutine.check[index][set - 1] === false) {
+            let volume = this.settings.volume;
+            volume += (weight * reps);
+            this.settings.volume = volume;
+            await this.plugin.saveSettings();
         }
     }
 }

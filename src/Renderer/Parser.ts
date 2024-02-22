@@ -238,15 +238,30 @@ export class ParseWorkout {
         }
     }
 
-    public static parser(string: string): parseModel {
+    public static parser(string: string, bodyWeight: number): parseModel {
         const zerowidth = string.replace(/\u200B/g, '');
         const workoutName = zerowidth.split(':');
         const weight = workoutName[1].split('X');
+        
+        // Body Weight Parser
+        let fweight = 0;
+        if (weight[0].trim().includes('Body Weight')) {
+            const convert = weight[0].replace('Body Weight', String(bodyWeight));
+            const spliter = convert.split('+');
+            console.log(spliter);
+            if (spliter.length === 1){
+                fweight = parseFloat(spliter[0]);
+            }
+            else{
+                fweight = parseFloat(spliter[0]) + parseFloat(spliter[1]);
+            }
+        }
         const reps = weight[1].split('-');
         const set = reps[1].replace(/[^0-9]/g, '');
         const data = {
             workout: workoutName[0].trim(),
-            weight: parseFloat(weight[0].trim()),
+            weight: weight[0].trim().includes('Body Weight') ? fweight : parseFloat(weight[0].trim()),
+            // weight: parseFloat(weight[0].trim()),
             reps: parseInt(reps[0].trim()),
             set: parseInt(set.trim()),
         };

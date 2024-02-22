@@ -41,7 +41,7 @@ export class RoutineUpdate {
             this.settings.todayRoutine.reps = todaydata.reps;
             this.settings.todayRoutine.sets = todaydata.sets;
             this.settings.todayRoutine.add = todaydata.add;
-            this.settings.todayRoutine.check = todaydata.sets.map((i) => Array(i).fill(0))
+            this.settings.todayRoutine.check = todaydata.sets.map((i) => Array(i).fill(false));
             await this.plugin.saveSettings();
         } else {
             new Notice('Please reset and try again');
@@ -67,7 +67,7 @@ export class RoutineUpdate {
             this.settings.nextdayRoutine.reps = nextdaydata.reps;
             this.settings.nextdayRoutine.sets = nextdaydata.sets;
             this.settings.nextdayRoutine.add = nextdaydata.add;
-            this.settings.nextdayRoutine.check = nextdaydata.sets.map((i) => Array(i).fill(0));
+            this.settings.nextdayRoutine.check = nextdaydata.sets.map((i) => Array(i).fill(false));
             await this.plugin.saveSettings();
         } else {
             //연장 하는 옵션 추가
@@ -85,13 +85,12 @@ export class RoutineUpdate {
                 for (let j = 0; j < todayRoutine.sets[i]; j++) {
                     contextdata += ` - [ ] ${todayRoutine.workout[i]} : ${await new Calculator(
                         this.plugin,
-                    ).weightCalculator(todayRoutine.workout[i], todayRoutine.weight[i])} X ${
-                        todayRoutine.reps[i]
-                    } - ${j + 1}Set \n    - Note : \n`;
+                    ).weightCalculator(todayRoutine.workout[i], todayRoutine.weight[i])} X ${todayRoutine.reps[i]} - ${
+                        j + 1
+                    }Set \n    - Note : \n`;
                 }
             }
             return contextdata;
-
         } else {
             for (let i = 0; i < 6; i++) {
                 contextdata += ` - [ ] \n`;
@@ -107,7 +106,7 @@ export class RoutineUpdate {
         for (let i = 0; i < this.Routine.week.length; i++) {
             const basedate = moment(this.settings.startday).add(i, 'days').format('YYYY-MM-DD');
             for (let j = 0; j < this.Routine.week[i].length; j++) {
-                const sessionNumber = parseInt(this.Routine.week[i][j].replace(/\D/g, "")) - 1;
+                const sessionNumber = parseInt(this.Routine.week[i][j].replace(/\D/g, '')) - 1;
                 const plan = {
                     date: moment(basedate)
                         .add(j * 7, 'days')
@@ -148,6 +147,8 @@ export class RoutineModelApp extends RoutineUpdate {
         this.app = app;
     }
     async workoutNoteMaker(day: string, next?: boolean): Promise<void> {
+        this.settings.volume = 0;
+        this.plugin.saveSettings();
         if (!next) {
             await new RoutineUpdate(this.plugin).todayRoutineUpdater(day);
             //Propreties make
@@ -157,12 +158,12 @@ export class RoutineModelApp extends RoutineUpdate {
                 Program: this.plugin.settings.routineTemplate.name,
                 Session: this.plugin.settings.todayRoutine.sessionname,
                 Progress: this.plugin.settings.todayRoutine.progress,
-                Workoutvolumn: 0,
+                Workout_Volume: 0,
                 Bodyweight: this.plugin.settings.bodyWeight,
                 Bigthree: this.plugin.settings.bigThree[3],
-                Squat1rm: this.plugin.settings.bigThree[0],
-                Benchpress1rm: this.plugin.settings.bigThree[1],
-                Deadlift1rm: this.plugin.settings.bigThree[2],
+                Squat_1rm: this.plugin.settings.bigThree[0],
+                Benchpress_1rm: this.plugin.settings.bigThree[1],
+                Deadlift_1rm: this.plugin.settings.bigThree[2],
             };
             //Today Workout Lists
             const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(
@@ -185,12 +186,12 @@ export class RoutineModelApp extends RoutineUpdate {
                 Program: this.plugin.settings.routineTemplate.name,
                 Session: this.plugin.settings.nextdayRoutine.sessionname,
                 Progress: this.plugin.settings.nextdayRoutine.progress,
-                Workoutvolumn: 0,
+                Workout_Volume: 0,
                 Bodyweight: this.plugin.settings.bodyWeight,
                 Bigthree: this.plugin.settings.bigThree[3],
-                Squat1rm: this.plugin.settings.bigThree[0],
-                Benchpress1rm: this.plugin.settings.bigThree[1],
-                Deadlift1rm: this.plugin.settings.bigThree[2],
+                Squat_1rm: this.plugin.settings.bigThree[0],
+                Benchpress_1rm: this.plugin.settings.bigThree[1],
+                Deadlift_1rm: this.plugin.settings.bigThree[2],
             };
             //nextday workoutLists
             const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(

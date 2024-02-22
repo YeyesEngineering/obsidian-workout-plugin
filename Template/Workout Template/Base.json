@@ -1,134 +1,62 @@
 {
-    "name": "Texas Method",
-    "workoutList": [
+  "name": "BASE",
+  "workoutList": [
       {
-        "workoutName": "SQUAT",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
-        "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
+          "workoutName": "TEMP1",
+          "type": "WEIGHT",
+          "trainingWeight": 0,
+          "weight": 0,
+          "reps": 0
       },
       {
-        "workoutName": "BENCH PRESS",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
-        "workoutTarget": ["Chest", "Triceps"]
+          "workoutName": "TEMP2",
+          "type": "BODYWEIGHT",
+          "trainingWeight": 0,
+          "weight": 0,
+          "reps": 0
       },
       {
-        "workoutName": "DEADLIFT",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
-        "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Glutes"]
-      },
-      {
-        "workoutName": "OHP",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
-        "workoutTarget": ["Shoulders"]
-      },
-      {
-        "workoutName": "BACK EXTENSION",
-        "weight": 0,
-        "reps": 0,
-        "workoutTarget": ["Back"]
-      },
-      {
-        "workoutName": "CHIN UPS",
-        "weight": 0,
-        "reps": 0,
-        "workoutTarget": ["Back"]
-      },
-      {
-        "workoutName": "POWER CLEAN",
-        "trainingWeight": 0,
-        "weight": 0,
-        "reps": 0,
-        "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Shoulders"]
+          "workoutName": "TEMP3",
+          "type": "WEIGHT",
+          "trainingWeight": 0,
+          "weight": 0,
+          "reps": 0
       }
-    ],
-    "session": [
+  ],
+  "session": [
       {
-        "sessionname": "Volume Day",
-        "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
+          "sessionname": "Workout A",
+          "workoutname": ["TEMP1", "TEMP2", "TEMP3"],
+          "reps": [5, 5, 5],
+          "sets": [5, 5, 5],
+          "weight": ["50%", "BODYWEIGHT", "5RM * 50%"],
+          "add": [
+              [2.5, 0],
+              [2.5, 0],
+              [2.5, 0]
+          ]
+      },
+      {
+        "sessionname": "Workout B",
+        "workoutname": ["TEMP1", "TEMP2", "TEMP3"],
         "reps": [5, 5, 5],
-        "sets": [5, 5, 1],
-        "weight": ["5RM X 90%", "5RM X 90%", "5RM X 90%"],
-        "add" : [[0,0],[0,0],[5,0]]
-      },
-      {
-        "sessionname": "Light/Recovery Day",
-        "workoutname": ["SQUAT", "OHP", "CHIN UPS", "BACK EXTENSION"],
-        "reps": [5, 5, 10, 10],
-        "sets": [2, 3, 3, 5],
-        "weight": ["5RM X 72%", "5RM X 72%", "bodyweight","bodyweight"],
-        "add" : [[0,0],[0,0],[2.5,0],[2.5,0]]
-      },
-      {
-        "sessionname": "Intensity Day",
-        "workoutname": ["SQUAT", "BENCH PRESS", "POWER CLEAN"],
-        "reps": [5, 5, 5],
-        "sets": [1, 1, 3],
-        "weight": ["5RM X 100%", "5RM X 100%", "5RM X 90%"],
-        "add" : [[5,0],[2.5,0],[2.5,0]]
-      },
-      {
-        "sessionname": "Volume Day",
-        "workoutname": ["SQUAT", "OHP", "DEADLIFT"],
-        "reps": [5, 5, 5],
-        "sets": [5, 5, 1],
-        "weight": ["5RM X 90%", "5RM X 90%", "5RM X 90%"],
-        "add" : [[0,0],[0,0],[5,0]]
-      },
-      {
-        "sessionname": "Light/Recovery Day",
-        "workoutname": ["SQUAT", "BENCH PRESS", "CHIN UPS", "BACK EXTENSION"],
-        "reps": [5, 5, 10, 10],
-        "sets": [2, 3, 3, 5],
-        "weight": ["5RM X 72%", "5RM X 72%", "bodyweight","bodyweight"],
-        "add" : [[0,0],[0,0],[2.5,0],[2.5,0]]
-      },
-      {
-        "sessionname": "Intensity Day",
-        "workoutname": ["SQUAT", "OHP", "POWER CLEAN"],
-        "reps": [5, 5, 5],
-        "sets": [1, 1, 3],
-        "weight": ["5RM X 100%", "5RM X 100%", "5RM X 90%"],
-        "add" : [[5,0],[2.5,0],[2.5,0]]
-      }
-    ],
-  
-    "week": [
-      [
-        "SESSION_1",
-        "SESSION_4",
-        "SESSION_1",
-        "SESSION_4",
-        "SESSION_1",
-        "SESSION_4"
-      ],
+        "sets": [5, 5, 5],
+        "weight": ["50%", "BODYWEIGHT", "5RM * 50%"],
+        "add": [
+            [2.5, 0],
+            [2.5, 0],
+            [2.5, 0]
+        ]
+    }
+  ],
+
+  "week": [
+      ["1","2","1","2","1","2"],
       [],
-      [
-        "SESSION_2",
-        "SESSION_5",
-        "SESSION_2",
-        "SESSION_5",
-        "SESSION_2",
-        "SESSION_5"
-      ],
+      ["2","1","2","1","2","1"],
       [],
-      [
-        "SESSION_3",
-        "SESSION_6",
-        "SESSION_3",
-        "SESSION_6",
-        "SESSION_3",
-        "SESSION_6"
-      ],
+      ["1","2","1","2","1","2"],
       [],
       []
-    ]
-  }
-  
+  ]
+}

@@ -16,6 +16,7 @@ export interface WorkoutPluginSettings {
     backupday: string;
     gender: gender;
     bigThree: number[];
+    volume: number;
     wilks2point: number;
     dotspoint: number;
     workoutFolder: string;
@@ -34,6 +35,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     backupday: 'None',
     gender: 'None',
     bigThree: [0, 0, 0, 0],
+    volume: 0,
     wilks2point: 0,
     dotspoint: 0,
     workoutFolder: 'Workout',
@@ -67,12 +69,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         reps: [0, 0, 0, 0],
         sets: [0, 0, 0, 0],
         add: [],
-        check: [
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-        ],
+        check: [],
     },
     nextdayRoutine: {
         date: 'None',
@@ -83,12 +80,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         reps: [0, 0, 0, 0],
         sets: [0, 0, 0, 0],
         add: [],
-        check: [
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-        ],
+        check: [],
     },
     routinePlan: [],
     tempWorkoutLists: {
@@ -341,6 +333,16 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                                             };
                                             this.plugin.settings.workoutLists.push(workoutCheck);
                                             await this.plugin.saveSettings();
+                                        } else {
+                                            if (val.trainingWeight !== 0) {
+                                                for (const ele of this.plugin.settings.workoutLists) {
+                                                    if (ele.workoutName === val.workoutName) {
+                                                        ele.trainingWeight = val.trainingWeight;
+                                                        break;
+                                                    }
+                                                }
+                                                await this.plugin.saveSettings();
+                                            }
                                         }
                                     }
                                     await this.plugin.saveSettings();
