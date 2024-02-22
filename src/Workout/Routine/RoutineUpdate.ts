@@ -157,12 +157,12 @@ export class RoutineModelApp extends RoutineUpdate {
                 Program: this.plugin.settings.routineTemplate.name,
                 Session: this.plugin.settings.todayRoutine.sessionname,
                 Progress: this.plugin.settings.todayRoutine.progress,
-                Workoutvolumn: 0,
+                Workout_Volume: 0,
                 Bodyweight: this.plugin.settings.bodyWeight,
                 Bigthree: this.plugin.settings.bigThree[3],
-                Squat1rm: this.plugin.settings.bigThree[0],
-                Benchpress1rm: this.plugin.settings.bigThree[1],
-                Deadlift1rm: this.plugin.settings.bigThree[2],
+                Squat_1rm: this.plugin.settings.bigThree[0],
+                Benchpress_1rm: this.plugin.settings.bigThree[1],
+                Deadlift_1rm: this.plugin.settings.bigThree[2],
             };
             //Today Workout Lists
             const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(
@@ -185,12 +185,12 @@ export class RoutineModelApp extends RoutineUpdate {
                 Program: this.plugin.settings.routineTemplate.name,
                 Session: this.plugin.settings.nextdayRoutine.sessionname,
                 Progress: this.plugin.settings.nextdayRoutine.progress,
-                Workoutvolumn: 0,
+                Workout_Volume: 0,
                 Bodyweight: this.plugin.settings.bodyWeight,
                 Bigthree: this.plugin.settings.bigThree[3],
-                Squat1rm: this.plugin.settings.bigThree[0],
-                Benchpress1rm: this.plugin.settings.bigThree[1],
-                Deadlift1rm: this.plugin.settings.bigThree[2],
+                Squat_1rm: this.plugin.settings.bigThree[0],
+                Benchpress_1rm: this.plugin.settings.bigThree[1],
+                Deadlift_1rm: this.plugin.settings.bigThree[2],
             };
             //nextday workoutLists
             const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(

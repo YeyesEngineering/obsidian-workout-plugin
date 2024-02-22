@@ -11,12 +11,12 @@ export interface RoutineModel {
     Program: string;
     Session: string;
     Progress: string;
-    Workoutvolumn: number;
+    Workout_Volume: number;
     Bodyweight: number;
     Bigthree: number;
-    Squat1rm: number;
-    Benchpress1rm: number;
-    Deadlift1rm: number;
+    Squat_1rm: number;
+    Benchpress_1rm: number;
+    Deadlift_1rm: number;
 }
 
 export interface parseModel {

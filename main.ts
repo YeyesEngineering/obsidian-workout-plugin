@@ -4,6 +4,8 @@ import { ParseWorkout } from 'src/Renderer/Parser';
 import { WeightUpdate } from 'src/Workout/Routine/WeightUpdate';
 import { BaseModal } from 'src/Modal/BaseModal';
 import { OneRMModal } from 'src/Modal/OneRMModal';
+// import { NoteUpdate } from 'src/Markdown/Noteupdate';
+import { CheckUpdate } from 'src/Renderer/CheckUpdate';
 
 export default class WorkoutPlugin extends Plugin {
     settings: WorkoutPluginSettings;
@@ -51,7 +53,6 @@ export default class WorkoutPlugin extends Plugin {
             ) {
                 //사용자가 입력한 값을 핸들링 할 수 있도록 수정 예정
 
-            
                 const text = target.offsetParent?.textContent;
                 //text blank Check
                 if (text && text.length > 2) {
@@ -60,12 +61,7 @@ export default class WorkoutPlugin extends Plugin {
                         new Notice("It's not a workout for today");
                         return false;
                     }
-                    const { workout, weight, reps, set } = ParseWorkout.parser(text);
-                    //1rm Update
-                    new WeightUpdate(this).oneRMUpdater(workout, weight, reps);
-                    //Training Weight Update
-                    new WeightUpdate(this).trainingWeightUpdater(workout, set);
-                    new Notice('Update done');
+                    new CheckUpdate(this).CheckUpdater(text);
                 } else {
                     return false;
                 }
@@ -78,7 +74,9 @@ export default class WorkoutPlugin extends Plugin {
     async loadSettings() {
         this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
     }
-
+    async pi(workout: string, weight: number, reps: number) {
+        await new WeightUpdate(this).oneRMUpdater(workout, weight, reps);
+    }
     async saveSettings() {
         await this.saveData(this.settings);
     }

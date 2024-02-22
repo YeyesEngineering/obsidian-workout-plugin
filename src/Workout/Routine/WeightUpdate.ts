@@ -20,7 +20,7 @@ export class WeightUpdate {
     }
 
     async oneRMUpdater(workout: string, weight: number, reps: number) {
-        const Bigthree = [...this.plugin.settings.bigThree];
+        const Bigthree = [...this.bigthree];
         switch (workout) {
             case 'SQUAT':
                 if (Bigthree[0] < (await Calculator.onerm(weight, reps))) {
@@ -56,6 +56,9 @@ export class WeightUpdate {
                 }
                 break;
         }
+
+        await this.plugin.saveSettings()
+        return this.plugin.settings.bigThree
     }
 
     async trainingWeightUpdater(workout: string, set: number) {

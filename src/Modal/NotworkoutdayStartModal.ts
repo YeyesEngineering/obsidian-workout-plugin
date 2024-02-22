@@ -30,12 +30,12 @@ export class NotworkoutdayStartModal extends Modal {
                         Program: '',
                         Progress: '',
                         Session: 'Training',
-                        Workoutvolumn: 0,
+                        Workout_Volume: 0,
                         Bodyweight: this.plugin.settings.bodyWeight,
                         Bigthree: this.plugin.settings.bigThree[3],
-                        Squat1rm: this.plugin.settings.bigThree[0],
-                        Benchpress1rm: this.plugin.settings.bigThree[1],
-                        Deadlift1rm: this.plugin.settings.bigThree[2],
+                        Squat_1rm: this.plugin.settings.bigThree[0],
+                        Benchpress_1rm: this.plugin.settings.bigThree[1],
+                        Deadlift_1rm: this.plugin.settings.bigThree[2],
                     };
                     const contextData = await new RoutineUpdate(this.plugin).workoutContextMaker(false);
 
