@@ -1,7 +1,6 @@
 import { Notice, Plugin, moment } from 'obsidian';
 import { WorkoutPluginSettings, DEFAULT_SETTINGS, WorkoutPluginSettingTab } from 'src/Setting/SettingTab';
 import { ParseWorkout } from 'src/Renderer/Parser';
-import { WeightUpdate } from 'src/Workout/Routine/WeightUpdate';
 import { BaseModal } from 'src/Modal/BaseModal';
 import { OneRMModal } from 'src/Modal/OneRMModal';
 // import { NoteUpdate } from 'src/Markdown/Noteupdate';
@@ -73,9 +72,6 @@ export default class WorkoutPlugin extends Plugin {
 
     async loadSettings() {
         this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-    }
-    async pi(workout: string, weight: number, reps: number) {
-        await new WeightUpdate(this).oneRMUpdater(workout, weight, reps);
     }
     async saveSettings() {
         await this.saveData(this.settings);

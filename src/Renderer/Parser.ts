@@ -242,8 +242,7 @@ export class ParseWorkout {
         const zerowidth = string.replace(/\u200B/g, '');
         const workoutName = zerowidth.split(':');
         const weight = workoutName[1].split('X');
-
-        //간소화 할 수 있는 방법 생각해보기
+        
         // Body Weight Parser
         let fweight = 0;
         if (weight[0].trim().includes('Body Weight')) {

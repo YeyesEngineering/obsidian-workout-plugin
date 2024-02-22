@@ -66,5 +66,5 @@ export interface todayRoutine {
 }
 
 export interface todayRoutineCheck extends todayRoutine {
-    check: number[][];
+    check: boolean[][];
 }

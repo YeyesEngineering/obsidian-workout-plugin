@@ -32,15 +32,9 @@ export class NoteUpdate {
         const Deadlift1rm_regex = /Deadlift_1rm:\s*(\d+)/;
 
         return this.app.vault.process(file, (data) => {
-            let volume = 0;
-            const match = data.match(Workoutvolume_regex);
-            if (match) {
-                volume = parseInt(match[1]);
-            }
-            //만약 몸무게면 다르게 계산하는 방식으로 설정
-            console.log(weight);
-            volume += weight * reps;
-            console.log(volume);
+            //volume 
+            //이부분에는 그냥 로딩하는 식으로 가져가면 될것 같은데
+            const volume = this.settings.volume;
 
             return data
                 .replace(Bigthree_regex, `Bigthree: ${this.settings.bigThree[3]}`)

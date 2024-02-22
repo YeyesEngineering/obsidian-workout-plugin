@@ -21,6 +21,9 @@ export class CheckUpdate {
     async CheckUpdater(text: string) {
         const { workout, weight, reps, set } = ParseWorkout.parser(text,this.settings.bodyWeight);
 
+        //Volumn Update
+        await new WeightUpdate(this.plugin).volumeUpdater(workout,weight,reps,set);
+
         //Training Weight Update
         new WeightUpdate(this.plugin).trainingWeightUpdater(workout, set);
 
