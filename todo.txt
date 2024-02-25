@@ -9,6 +9,7 @@ O Priority 5 : Validation Checker
     - 대문자로 변환한 뒤 파싱하도록 작성
 Priority 5 : CSS
     - Sentence Case ()
+    - 사용중인 템플릿 명확하게 표현
 O Priority 4 : Workout Check시 노트 프로퍼티 수정기능
 
 
@@ -19,7 +20,6 @@ Priority 4 : 무게 대신 Reps를 늘릴 수 있는 기능
     - Training Reps
 Priority 4 : 유산소 전용 타입 제작
 Priority 4 : 유산소 페이스 적용
-Priority 4 : 사용중인 템플릿 명확하게 표현
 Priority 4 : Test Code 작성
     - Mobile Test
 Priority 3 :  실패시 적용할 코드 작성
@@ -36,6 +36,7 @@ Priority 2 : Timer
 Priority 1 : CSS
 Priority 1 : 날짜 형식 변경 
 Priority 1 : kg 파운드 변환 기능
+Priority 1 : Status Worktout Timer
 
 
 # Bug
@@ -55,3 +56,7 @@ Priority 1 : kg 파운드 변환 기능
   만약 json Checker 사용할떄는 타입을 string으로 변환해서 사용해도 될듯
 
 모바일 json 파일 인풋 확인
+
+
+git build : main.js 생성 위치 변경
+Obsidian Vault 외부의 파일에 액세스합니다. 이것이 왜 필요한지 명확하게 설명하십시오.

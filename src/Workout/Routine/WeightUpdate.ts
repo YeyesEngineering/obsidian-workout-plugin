@@ -84,6 +84,7 @@ export class WeightUpdate {
     }
 
     async volumeUpdater(workout: string, weight: number, reps: number, set: number) {
+        //모든 요소가 체크되면 무게 초기화 하는 코드 작성
         const index = this.settings.todayRoutine.workout.findIndex((val) => val === workout);
         if (this.settings.todayRoutine.check[index][set - 1] === false) {
             let volume = this.settings.volume;

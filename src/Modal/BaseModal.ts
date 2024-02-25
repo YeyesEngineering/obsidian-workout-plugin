@@ -6,17 +6,16 @@ import { NotworkoutdayStartModal } from 'src/Modal/NotworkoutdayStartModal';
 import { WorkoutSetupModal } from 'src/Modal/WorkoutSetupModal';
 import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 
-
 export class BaseModal {
     plugin: WorkoutPlugin;
     app: App;
     settings: WorkoutPluginSettings;
     startday: string;
 
-    constructor(app: App, plugin: WorkoutPlugin, settings: WorkoutPluginSettings) {
+    constructor(app: App, plugin: WorkoutPlugin) {
         this.app = app;
         this.plugin = plugin;
-        this.settings = settings;
+        this.settings = this.plugin.settings;
     }
 
     onOpen(): void {
@@ -29,21 +28,21 @@ export class BaseModal {
             !(workoutFolder instanceof TFolder) ||
             !(workoutInnerFile instanceof TFile)
         ) {
+            //Setting Check
             if (
-                //조건 조금더 Sturdy 하게 설정
                 this.settings.gender === 'None' &&
                 this.settings.bodyWeight === 0 &&
-                this.settings.workoutLists[0].weight === 0
+                this.settings.workoutLists[0].weight === 0 &&
+                this.settings.routineTemplate.name === 'None'
             ) {
                 new Notice('Please Settings First');
             } else {
-                //맥의 경우 기본 경로가 조금 다른 문제 수정
                 new Calculator(this.plugin).Setup();
                 new WorkoutSetupModal(this.app, this.plugin).open();
             }
         } else {
             const today = moment().format('YYYY-MM-DD');
-            
+
             if (this.settings.routinePlan.some((value) => value.date === today)) {
                 new WorkoutStartModal(this.app, this.plugin).open();
             } else {

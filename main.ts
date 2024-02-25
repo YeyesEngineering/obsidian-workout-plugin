@@ -13,7 +13,7 @@ export default class WorkoutPlugin extends Plugin {
         await this.loadSettings();
 
         const ribbonIconEl = this.addRibbonIcon('dumbbell', 'Workout Plugin', (evt: MouseEvent) => {
-            new BaseModal(this.app, this, this.settings).onOpen();
+            new BaseModal(this.app, this).onOpen();
         });
 
         ribbonIconEl.addClass('obsidian-workout-ribbon-class');
@@ -22,7 +22,7 @@ export default class WorkoutPlugin extends Plugin {
             id: 'Workout Plugin',
             name: 'Workout Plugin',
             callback: () => {
-                new BaseModal(this.app, this, this.settings).onOpen();
+                new BaseModal(this.app, this).onOpen();
             },
         });
 
@@ -50,7 +50,6 @@ export default class WorkoutPlugin extends Plugin {
                 event.doc.title.startsWith('Workout') &&
                 event.doc.activeElement?.textContent?.includes('Today Workout List')
             ) {
-                //사용자가 입력한 값을 핸들링 할 수 있도록 수정 예정
 
                 const text = target.offsetParent?.textContent;
                 //text blank Check
@@ -60,6 +59,8 @@ export default class WorkoutPlugin extends Plugin {
                         new Notice("It's not a workout for today");
                         return false;
                     }
+                    // Add Error Handler //
+                    //
                     new CheckUpdate(this).CheckUpdater(text);
                 } else {
                     return false;

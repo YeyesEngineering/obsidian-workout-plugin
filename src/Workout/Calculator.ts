@@ -138,7 +138,6 @@ export class Calculator {
         } else {
             //Percent Parser
             if (weight.includes('*')) {
-                //순서가 바뀌어도 parsing 할 수 있도록 수정 예정
                 const divide = upperWeight.split('*');
                 if (upperWeight.includes('RM')) {
                     rm = parseInt(divide[0].replaceAll('RM', ''));

@@ -38,6 +38,7 @@ export class WorkoutSetupModal extends Modal {
                         `${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`,
                     );
                     let filePath = this.plugin.settings.workoutFolder;
+                    // Mac Check
                     if (filePath === '' || filePath === '/') {
                         filePath = 'Workout';
                         this.plugin.settings.workoutFolder = filePath;
