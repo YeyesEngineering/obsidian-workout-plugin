@@ -10,6 +10,14 @@
             "workoutTarget": ["Hamstrings", "Quadriceps", "Glutes"]
         },
         {
+            "workoutName": "LEG PRESS",
+            "type": "WEIGHT",
+            "trainingWeight": 0,
+            "weight": 0,
+            "reps": 0,
+            "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Shoulders"]
+        },
+        {
             "workoutName": "BENCH PRESS",
             "type": "WEIGHT",
             "trainingWeight": 0,
@@ -18,12 +26,12 @@
             "workoutTarget": ["Chest", "Triceps"]
         },
         {
-            "workoutName": "DEADLIFT",
+            "workoutName": "CLOSE CHEST PRESS",
             "type": "WEIGHT",
             "trainingWeight": 0,
             "weight": 0,
             "reps": 0,
-            "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Glutes"]
+            "workoutTarget": ["Chest", "Triceps"]
         },
         {
             "workoutName": "OHP",
@@ -32,6 +40,14 @@
             "weight": 0,
             "reps": 0,
             "workoutTarget": ["Shoulders"]
+        },
+        {
+            "workoutName": "DEADLIFT",
+            "type": "WEIGHT",
+            "trainingWeight": 0,
+            "weight": 0,
+            "reps": 0,
+            "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Glutes"]
         },
         {
             "workoutName": "BACK EXTENSION",
@@ -50,15 +66,15 @@
             "workoutTarget": ["Back"]
         },
         {
-            "workoutName": "LEG PRESS",
-            "type": "WEIGHT",
+            "workoutName": "PENDLAY ROW",
+            "type": "BODYWEIGHT",
             "trainingWeight": 0,
             "weight": 0,
             "reps": 0,
             "workoutTarget": ["Hamstrings", "Quadriceps", "Back", "Shoulders"]
         },
         {
-            "workoutName": "LEG PRESS",
+            "workoutName": "CHEST SUPPORTED ROW",
             "type": "WEIGHT",
             "trainingWeight": 0,
             "weight": 0,
@@ -68,17 +84,17 @@
     ],
     "session": [
         {
-            "sessionname": "Volume Day",
-            "workoutname": ["SQUAT", "BENCH PRESS", "DEADLIFT"],
-            "reps": [5, 5, 5],
-            "sets": [5, 5, 1],
-            "weight": ["5RM * 90%", "5RM * 90%", "5RM * 90%"]
+            "sessionname": "Hypertrophy Day",
+            "workoutname": ["BENCH PRESS","CLOSE CHEST PRESS" ,"CHEST SUPPORTED ROW", "SQUAT","LEG PRESS"],
+            "reps": [4, 10, 8, 8, 10],
+            "sets": [3, 3, 3, 3, 2],
+            "weight": ["90%", "80%", "80%", "80%", "85%"]
         },
         {
-            "sessionname": "Light/Recovery Day",
-            "workoutname": ["SQUAT", "OHP", "CHIN UPS", "BACK EXTENSION"],
-            "reps": [5, 5, 10, 10],
-            "sets": [2, 3, 3, 5],
+            "sessionname": "Recovery Day",
+            "workoutname": ["", "OHP", "CHIN UPS", "BACK EXTENSION","PULL UP"],
+            "reps": [5, 5, 10, 10,10],
+            "sets": [2, 3, 3, 5,10],
             "weight": ["5RM * 72%", "5RM * 72%", "bodyweight", "bodyweight"],
             "add": [
                 [0, 0],
@@ -100,7 +116,7 @@
             ]
         },
         {
-            "sessionname": "Volume Day",
+            "sessionname": "Strength Day",
             "workoutname": ["SQUAT", "OHP", "DEADLIFT"],
             "reps": [5, 5, 5],
             "sets": [5, 5, 1],
@@ -109,31 +125,6 @@
                 [0, 0],
                 [0, 0],
                 [5, 0]
-            ]
-        },
-        {
-            "sessionname": "Light/Recovery Day",
-            "workoutname": ["SQUAT", "BENCH PRESS", "CHIN UPS", "BACK EXTENSION"],
-            "reps": [5, 5, 10, 10],
-            "sets": [2, 3, 3, 5],
-            "weight": ["5RM * 72%", "5RM * 72%", "bodyweight", "bodyweight"],
-            "add": [
-                [0, 0],
-                [0, 0],
-                [2.5, 0],
-                [2.5, 0]
-            ]
-        },
-        {
-            "sessionname": "Intensity Day",
-            "workoutname": ["SQUAT", "OHP", "POWER CLEAN"],
-            "reps": [5, 5, 5],
-            "sets": [1, 1, 3],
-            "weight": ["5RM * 100%", "5RM * 100%", "5RM * 90%"],
-            "add": [
-                [5, 0],
-                [2.5, 0],
-                [2.5, 0]
             ]
         }
     ],
