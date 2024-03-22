@@ -180,7 +180,7 @@ export class Calculator {
     static async tenrm(weight: number, reps: number): Promise<number[]> {
         const rm: number[] = [];
         const onerm = await this.onerm(weight, reps);
-        for (let i = 0; i < 10; i++) {
+        for (let i = 1; i < 11; i++) {
             rm.push(await this.whatrm(onerm, i));
         }
         return rm;
