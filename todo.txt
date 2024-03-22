@@ -41,6 +41,7 @@ Priority 1 : Status Worktout Timer
 
 # Bug
 
+    1RM Calculator 계산 오류
   만약 루틴을 설정하지 않고 날짜부터 설정할 경우
   운동을 계속 추가하면 문제가 될 수 있으니 초기화 하는 코드 작성
   계속해서 추가가 되는 부분 수정
