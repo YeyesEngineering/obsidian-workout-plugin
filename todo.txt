@@ -3,6 +3,10 @@ To Do List
 
 # Feature
 
+
+volume를 today 루틴에 두는게 좋을것 같다.
+
+
 O Priority 5 : Workout Type 생성 (Cardio, Weight, bodyweight)
 
 O Priority 5 : Validation Checker
@@ -41,7 +45,6 @@ Priority 1 : Status Worktout Timer
 
 # Bug
 
-    1RM Calculator 계산 오류
   만약 루틴을 설정하지 않고 날짜부터 설정할 경우
   운동을 계속 추가하면 문제가 될 수 있으니 초기화 하는 코드 작성
   계속해서 추가가 되는 부분 수정

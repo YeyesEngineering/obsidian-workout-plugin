@@ -39,17 +39,40 @@ export default class WorkoutPlugin extends Plugin {
 
         // CheckBOX Update
 
-        this.registerDomEvent(document, 'click', (event: MouseEvent) => {
+        this.registerDomEvent(document, 'mousedown', (event: MouseEvent) => {
             const { target } = event;
 
             if (!target || !(target instanceof HTMLInputElement) || target.type !== 'checkbox') {
                 return false;
             }
+
             if (
                 event.doc.title.startsWith('Workout') &&
                 event.doc.activeElement?.textContent?.includes('Today Workout List')
             ) {
+                const text = target.offsetParent?.textContent;
+                //text blank Check
+                if (text && text.length > 2) {
+                    // Date Check
+                    if (moment().format('YYYY-MM-DD') !== ParseWorkout.titleParser(event.doc.title)) {
+                        target.disabled = true;
+                        return false;
+                    }
+                }
+            }
+        });
 
+        this.registerDomEvent(document, 'mouseup', (event: MouseEvent) => {
+            const { target } = event;
+
+            if (!target || !(target instanceof HTMLInputElement) || target.type !== 'checkbox') {
+                return false;
+            }
+
+            if (
+                event.doc.title.startsWith('Workout') &&
+                event.doc.activeElement?.textContent?.includes('Today Workout List')
+            ) {
                 const text = target.offsetParent?.textContent;
                 //text blank Check
                 if (text && text.length > 2) {
