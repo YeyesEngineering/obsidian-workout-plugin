@@ -3,7 +3,6 @@ import { WorkoutPluginSettings, DEFAULT_SETTINGS, WorkoutPluginSettingTab } from
 import { ParseWorkout } from 'src/Renderer/Parser';
 import { BaseModal } from 'src/Modal/BaseModal';
 import { OneRMModal } from 'src/Modal/OneRMModal';
-// import { NoteUpdate } from 'src/Markdown/Noteupdate';
 import { CheckUpdate } from 'src/Renderer/CheckUpdate';
 
 export default class WorkoutPlugin extends Plugin {

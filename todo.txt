@@ -12,7 +12,7 @@ Priority 5 : CSS
     - 사용중인 템플릿 명확하게 표현
 O Priority 4 : Workout Check시 노트 프로퍼티 수정기능
 
-
+Priority 5 : Workout Main 이름 변경 기능
 Priority 5 : CSS
     - Sentence Case ()
 Priority 5 : Super Set 기능? (두개의 운동을 묶어서 하나의 운동으로 만들 수 있는 기능)
@@ -44,5 +44,5 @@ Priority 1 : Status Worktout Timer
     1RM Calculator 계산 오류
   만약 루틴을 설정하지 않고 날짜부터 설정할 경우
   운동을 계속 추가하면 문제가 될 수 있으니 초기화 하는 코드 작성
-  add 부분 logic 확인
+  계속해서 추가가 되는 부분 수정
   모바일 json 파일 인풋 확인
