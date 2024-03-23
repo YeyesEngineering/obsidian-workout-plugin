@@ -1,6 +1,6 @@
 {
   "name": "obsidian-workout-plugin",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "workout management for obsidian",
   "main": "main.js",
   "scripts": {

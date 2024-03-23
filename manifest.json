@@ -1,11 +1,11 @@
 {
 	"id": "obsidian-workout-plugin",
 	"name": "Workout",
-	"version": "0.9.0",
+	"version": "0.9.1",
 	"minAppVersion": "0.15.0",
 	"description": "workout management for obsidian",
 	"author": "YeyesEngineering",
-	"authorUrl": "https://github.com/overengineerinYeyesEngineeringg56",
+	"authorUrl": "https://github.com/overengineerinYeyesEngineering56",
 	"fundingUrl": "",
 	"isDesktopOnly": false
 }
