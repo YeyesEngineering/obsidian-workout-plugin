@@ -63,6 +63,7 @@ export interface todayRoutine {
     add: number[][];
     reps: number[];
     sets: number[];
+    volume: number;
 }
 
 export interface todayRoutineCheck extends todayRoutine {

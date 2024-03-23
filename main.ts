@@ -14,6 +14,7 @@ export default class WorkoutPlugin extends Plugin {
         const ribbonIconEl = this.addRibbonIcon('dumbbell', 'Workout Plugin', (evt: MouseEvent) => {
             new BaseModal(this.app, this).onOpen();
         });
+        const checkEvent = new CheckUpdate(this);
 
         ribbonIconEl.addClass('obsidian-workout-ribbon-class');
 
@@ -46,10 +47,8 @@ export default class WorkoutPlugin extends Plugin {
                 return false;
             }
 
-            if (
-                event.doc.title.startsWith('Workout') &&
-                event.doc.activeElement?.textContent?.includes('Today Workout List')
-            ) {
+            const regex = /Workout \d{4}-\d{2}-\d{2}/;
+            if (event.doc.title.match(regex)) {
                 const text = target.offsetParent?.textContent;
                 //text blank Check
                 if (text && text.length > 2) {
@@ -68,11 +67,8 @@ export default class WorkoutPlugin extends Plugin {
             if (!target || !(target instanceof HTMLInputElement) || target.type !== 'checkbox') {
                 return false;
             }
-
-            if (
-                event.doc.title.startsWith('Workout') &&
-                event.doc.activeElement?.textContent?.includes('Today Workout List')
-            ) {
+            const regex = /Workout \d{4}-\d{2}-\d{2}/;
+            if (event.doc.title.match(regex)) {
                 const text = target.offsetParent?.textContent;
                 //text blank Check
                 if (text && text.length > 2) {
@@ -83,7 +79,7 @@ export default class WorkoutPlugin extends Plugin {
                     }
                     // Add Error Handler //
                     //
-                    new CheckUpdate(this).CheckUpdater(text);
+                    checkEvent.CheckUpdater(text);
                 } else {
                     return false;
                 }

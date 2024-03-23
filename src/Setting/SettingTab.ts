@@ -16,7 +16,7 @@ export interface WorkoutPluginSettings {
     backupday: string;
     gender: gender;
     bigThree: number[];
-    volume: number;
+    // volume: number;
     wilks2point: number;
     dotspoint: number;
     workoutFolder: string;
@@ -35,7 +35,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     backupday: 'None',
     gender: 'None',
     bigThree: [0, 0, 0, 0],
-    volume: 0,
+    // volume: 0,
     wilks2point: 0,
     dotspoint: 0,
     workoutFolder: 'Workout',
@@ -64,6 +64,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
         date: 'None',
         sessionname: 'None',
         progress: '0',
+        volume: 0,
         workout: ['', '', '', ''],
         weight: ['', '', '', ''],
         reps: [0, 0, 0, 0],
@@ -74,6 +75,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     nextdayRoutine: {
         date: 'None',
         sessionname: 'None',
+        volume:0,
         progress: '0',
         workout: ['', '', '', ''],
         weight: ['', '', '', ''],
@@ -131,36 +133,11 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         const { containerEl } = this;
 
         containerEl.empty();
+        this.containerEl.createEl('h2', { text: 'Workout plugin' });
 
         new Setting(containerEl)
-            .setName('BodyWeight')
-            .setDesc('Please enter your weight')
-            .addText((text) =>
-                text
-                    .setPlaceholder('BodyWeight')
-                    .setValue(String(this.plugin.settings.bodyWeight))
-                    .onChange(async (value) => {
-                        this.plugin.settings.bodyWeight = ParseWorkout.numberChecker(value);
-                        await this.plugin.saveSettings();
-                    }),
-            );
-
-        new Setting(containerEl)
-            .setName('Gender')
-            .setDesc('Please enter your Gender')
-            .addDropdown((gender) =>
-                gender
-                    .addOptions({ Male: 'Male', Female: 'Female' })
-                    .setValue(this.plugin.settings.gender)
-                    .onChange(async (value: gender) => {
-                        this.plugin.settings.gender = value;
-                        await this.plugin.saveSettings();
-                    }),
-            );
-
-        new Setting(containerEl)
-            .setName('Workout Folder')
-            .setDesc('Please enter your Workout Folder')
+            .setName('Workout folder')
+            .setDesc('Please enter your workout folder')
             .addSearch((text) => {
                 new FolderSuggest(this.app, text.inputEl);
                 text.setPlaceholder(DEFAULT_SETTINGS.workoutFolder)
@@ -172,11 +149,11 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName('MainPage name')
+            .setName('Mainpage name')
             .setDesc('Enter a name for your workout page')
             .addText((text) =>
                 text
-                    .setPlaceholder('Workout Main')
+                    .setPlaceholder('Workout main')
                     .setValue(this.plugin.settings.mainPageName)
                     .onChange(async (value) => {
                         if (value === null || value === '') {
@@ -187,6 +164,35 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         }
                     }),
             );
+
+        this.containerEl.createEl('h2', { text: 'Workout information' });
+
+        new Setting(containerEl)
+            .setName('Bodyweight')
+            .setDesc('Please enter your weight')
+            .addText((text) =>
+                text
+                    .setPlaceholder('Bodyweight')
+                    .setValue(String(this.plugin.settings.bodyWeight))
+                    .onChange(async (value) => {
+                        this.plugin.settings.bodyWeight = ParseWorkout.numberChecker(value);
+                        await this.plugin.saveSettings();
+                    }),
+            );
+
+        new Setting(containerEl)
+            .setName('Gender')
+            .setDesc('Please enter your gender')
+            .addDropdown((gender) =>
+                gender
+                    .addOptions({ Male: 'Male', Female: 'Female' })
+                    .setValue(this.plugin.settings.gender)
+                    .onChange(async (value: gender) => {
+                        this.plugin.settings.gender = value;
+                        await this.plugin.saveSettings();
+                    }),
+            );
+
         //Template Maker
         // new Setting(containerEl)
         //     .setName('Routine Templater maker')
@@ -283,7 +289,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         ////////////////////////////////////////
 
         const routineInput = new Setting(containerEl)
-            .setName('RoutineTemplate')
+            .setName('Routine template')
             // .setDesc('Please enter your RoutineTemplate')
             .setDesc(`Now your routine is ${this.plugin.settings.routineTemplate.name}`);
 
@@ -357,13 +363,13 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         reader.readAsText(file);
                         this.display();
                     } else {
-                        new Notice('Add a JSON file.');
+                        new Notice('Add a json file.');
                     }
                 });
         });
 
         new Setting(containerEl)
-            .setName('Routine Day Changer')
+            .setName('Routine day changer')
             .setDesc('You can change the day the routine starts.')
             .addText((text) =>
                 text
@@ -380,9 +386,9 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                         this.plugin.settings.startday = this.plugin.settings.backupday;
                         await this.plugin.saveSettings();
                         new RoutineUpdate(this.plugin).routinePlanner();
-                        new Notice('Date Change');
+                        new Notice('Date change');
                     } else {
-                        new Notice('Wrong Date Format');
+                        new Notice('Wrong date format');
                     }
                 });
             });
@@ -391,7 +397,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
             if (workout.type === 'WEIGHT') {
                 new Setting(containerEl)
                     .setName(`${workout.workoutName} Weight`)
-                    .setDesc(`Please enter your maximum ${workout.workoutName} Weight`)
+                    .setDesc(`Please enter your max ${workout.workoutName} Weight`)
                     .addText((text) =>
                         text
                             .setPlaceholder(`${workout.workoutName} Weight`)
@@ -404,7 +410,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                 new Setting(containerEl)
                     .setName(`${workout.workoutName} Reps`)
                     .setDesc(
-                        `Enter the maximum number of times you can lift the weight entered above ${workout.workoutName}`,
+                        `Enter the max number of times you can lift the weight entered above ${workout.workoutName}`,
                     )
                     .addText((text) =>
                         text
@@ -423,11 +429,11 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                             }),
                     );
                 new Setting(containerEl)
-                    .setName(`${workout.workoutName} Training Weight`)
+                    .setName(`${workout.workoutName} Training weight`)
                     .setDesc("Enter a weight to start your workout If you don't, it will be calculated automatically.")
                     .addText((text) =>
                         text
-                            .setPlaceholder(`${workout.workoutName} Training Weight`)
+                            .setPlaceholder(`${workout.workoutName} Training weight`)
                             .setValue(String(workout.trainingWeight))
                             .onChange(async (val) => {
                                 workout.trainingWeight = ParseWorkout.numberChecker(val);
@@ -451,7 +457,7 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
             // else if (workout.type === 'CARDIO') {
             //     new Setting(containerEl)
             //         .setName(`THIS IS CARDIO`)
-            //         .setDesc(`Please enter your maximum ${workout.workoutName} Weight`)
+            //         .setDesc(`Please enter your max ${workout.workoutName} Weight`)
             //         .addText((text) =>
             //             text
             //                 .setPlaceholder(`${workout.workoutName} Weight`)
@@ -467,13 +473,13 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
         //Reset Button
 
         new Setting(containerEl)
-            .setName('RESET Setting')
+            .setName('RESET setting')
             .setDesc('This will initialize the data entered in your Workout.')
             .addButton((button) =>
                 button
                     .setWarning()
                     .setTooltip('This will initialize the data entered in your Workout.')
-                    .setButtonText('Reset Settings Button')
+                    .setButtonText('Reset settings button')
                     .onClick(async () => {
                         this.plugin.settings = Object.assign({}, DEFAULT_SETTINGS, DEFAULT_SETTINGS);
                         await this.plugin.saveSettings();

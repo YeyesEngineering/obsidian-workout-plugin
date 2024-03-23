@@ -1,4 +1,4 @@
-import { App, Notice, TFile, TFolder, moment } from 'obsidian';
+import { App, Notice, TFile, TFolder, moment, normalizePath } from 'obsidian';
 import WorkoutPlugin from 'main';
 import { Calculator } from 'src/Workout/Calculator';
 import { WorkoutStartModal } from 'src/Modal/WorkoutStartModal';
@@ -21,7 +21,7 @@ export class BaseModal {
     onOpen(): void {
         const workoutFolder = this.app.vault.getAbstractFileByPath(this.settings.workoutFolder);
         const workoutInnerFile = this.app.vault.getAbstractFileByPath(
-            `${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`,
+            normalizePath(`${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`),
         );
         if (
             this.settings.startday === 'None' ||

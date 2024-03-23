@@ -84,19 +84,15 @@ export class WeightUpdate {
     }
 
     async volumeUpdater(workout: string, weight: number, reps: number, set: number) {
-
         const index = this.settings.todayRoutine.workout.findIndex((val) => val === workout);
         if (this.settings.todayRoutine.check[index][set - 1] === false) {
-            let volume = this.settings.volume;
+            let volume = this.settings.todayRoutine.volume;
             volume += weight * reps;
-            this.settings.volume = volume;
+            this.settings.todayRoutine.volume = volume;
             //add가 없을때 체크 반영
             if (!this.settings.todayRoutine.add) {
                 this.settings.todayRoutine.check[index][set - 1] = true;
                 await this.plugin.saveSettings();
-            }
-            if (this.settings.todayRoutine.check.flat().every((element) => element === true)) {
-                this.settings.volume = 0;
             }
             await this.plugin.saveSettings();
         }

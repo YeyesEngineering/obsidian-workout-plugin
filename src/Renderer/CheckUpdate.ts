@@ -1,4 +1,4 @@
-import { Notice, TFile, App, moment } from 'obsidian';
+import { Notice, TFile, App, moment, normalizePath } from 'obsidian';
 import WorkoutPlugin from 'main';
 import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 import { ParseWorkout } from 'src/Renderer/Parser';
@@ -19,39 +19,42 @@ export class CheckUpdate {
     }
 
     async CheckUpdater(text: string) {
-        const { workout, weight, reps, set } = ParseWorkout.parser(text,this.settings.bodyWeight);
+        const { workout, weight, reps, set } = ParseWorkout.parser(text, this.settings.bodyWeight);
+        const Weight_Update = new WeightUpdate(this.plugin);
+        const Cal = new Calculator(this.plugin);
+        const Note = new NoteUpdate(this.app, this.settings);
 
         //Volume Update
-        await new WeightUpdate(this.plugin).volumeUpdater(workout,weight,reps,set);
+        await Weight_Update.volumeUpdater(workout, weight, reps, set);
 
         //Training Weight Update
-        new WeightUpdate(this.plugin).trainingWeightUpdater(workout, set);
+        Weight_Update.trainingWeightUpdater(workout, set);
 
         //1rm Update
-        await new WeightUpdate(this.plugin).oneRMUpdater(workout, weight, reps);
+        await Weight_Update.oneRMUpdater(workout, weight, reps);
 
         //Wilks Update
-        await new Calculator(this.plugin).wilks2Calculator();
+        await Cal.wilks2Calculator();
 
         //Dots Update
-        await new Calculator(this.plugin).dotsCalculator();
+        await Cal.dotsCalculator();
 
         //Main Note Update
         const mainPage = this.app.vault.getAbstractFileByPath(
-            `${this.settings.workoutFolder}/${this.settings.mainPageName}.md`,
+            normalizePath(`${this.settings.workoutFolder}/${this.settings.mainPageName}.md`),
         );
         if (mainPage instanceof TFile) {
-            new NoteUpdate(this.app, this.settings).MainNoteUpdate(mainPage);
+            Note.MainNoteUpdate(mainPage);
         }
 
         //Individual Note Update
         const today = moment().format('YYYY-MM-DD');
         const todayPage = this.app.vault.getAbstractFileByPath(
-            `${this.plugin.settings.workoutFolder}/Workout ${today}.md`,
+            normalizePath(`${this.plugin.settings.workoutFolder}/Workout ${today}.md`),
         );
 
         if (todayPage instanceof TFile) {
-            new NoteUpdate(this.app, this.settings).IndividualNoteUpdate(todayPage,weight,reps);
+            Note.IndividualNoteUpdate(todayPage, weight, reps);
         }
 
         new Notice('Update done');

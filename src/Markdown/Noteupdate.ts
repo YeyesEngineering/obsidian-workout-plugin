@@ -32,9 +32,8 @@ export class NoteUpdate {
         const Deadlift1rm_regex = /Deadlift_1rm:\s*(\d+)/;
 
         return this.app.vault.process(file, (data) => {
-            //volume 
-            //이부분에는 그냥 로딩하는 식으로 가져가면 될것 같은데
-            const volume = this.settings.volume;
+            //volume
+            const volume = this.settings.todayRoutine.volume;
 
             return data
                 .replace(Bigthree_regex, `Bigthree: ${this.settings.bigThree[3]}`)

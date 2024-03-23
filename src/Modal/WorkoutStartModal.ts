@@ -1,4 +1,4 @@
-import { Modal, App, Setting, moment, Notice, TFile } from 'obsidian';
+import { Modal, App, Setting, moment, Notice, TFile, normalizePath } from 'obsidian';
 import WorkoutPlugin from 'main';
 import { RoutineModelApp } from 'src/Workout/Routine/RoutineUpdate';
 
@@ -20,7 +20,7 @@ export class WorkoutStartModal extends Modal {
                 btn.setButtonText('OK').onClick(async () => {
                     const today = moment().format('YYYY-MM-DD');
                     const workoutInnerFile = this.app.vault.getAbstractFileByPath(
-                        `${this.plugin.settings.workoutFolder}/Workout ${today}.md`,
+                        normalizePath(`${this.plugin.settings.workoutFolder}/Workout ${today}.md`),
                     );
                     const todayIndex = this.plugin.settings.routinePlan.findIndex((value) => value.date === today);
                     if (!(workoutInnerFile instanceof TFile)) {
@@ -31,7 +31,7 @@ export class WorkoutStartModal extends Modal {
                         //중복된 파일이 존재하면 변경뒤 생성?
                         if (workoutInnerFile) {
                             // await this.app.vault.delete(workoutInnerFile);
-                            await this.app.vault.trash(workoutInnerFile,false);
+                            await this.app.vault.trash(workoutInnerFile, false);
                         }
                         new RoutineModelApp(this.plugin, this.app).workoutNoteMaker(today);
                     }
