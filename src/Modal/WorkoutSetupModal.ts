@@ -1,4 +1,4 @@
-import { Modal, App, Setting, Notice, moment, stringifyYaml, TFolder, TFile } from 'obsidian';
+import { Modal, App, Setting, Notice, moment, stringifyYaml, TFolder, TFile, normalizePath } from 'obsidian';
 import WorkoutPlugin from 'main';
 import { Markdown } from 'src/Markdown/Markdown';
 import { RoutineUpdate } from 'src/Workout/Routine/RoutineUpdate';
@@ -35,7 +35,7 @@ export class WorkoutSetupModal extends Modal {
 
                     const workoutFolder = this.app.vault.getAbstractFileByPath(this.plugin.settings.workoutFolder);
                     const workoutInnerFile = this.app.vault.getAbstractFileByPath(
-                        `${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`,
+                        normalizePath(`${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`),
                     );
                     let filePath = this.plugin.settings.workoutFolder;
                     // Mac Check
@@ -88,7 +88,7 @@ export class WorkoutSetupModal extends Modal {
 
                     const today = moment().format('YYYY-MM-DD');
                     const firstCheck = this.app.vault.getAbstractFileByPath(
-                        `${this.plugin.settings.workoutFolder}/Workout ${this.plugin.settings.routinePlan[0].date}.md`,
+                        normalizePath(`${this.plugin.settings.workoutFolder}/Workout ${this.plugin.settings.routinePlan[0].date}.md`),
                     );
                     if (moment(this.plugin.settings.routinePlan[0].date).isAfter(today) && !firstCheck) {
                         new RoutineModelApp(this.plugin, this.app).workoutNoteMaker(

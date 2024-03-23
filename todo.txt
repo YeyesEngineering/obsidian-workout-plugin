@@ -11,14 +11,16 @@ O Priority 5 : Workout Type 생성 (Cardio, Weight, bodyweight)
 
 O Priority 5 : Validation Checker
     - 대문자로 변환한 뒤 파싱하도록 작성
+O Priority 4 : Workout Check시 노트 프로퍼티 수정기능
+
+
 Priority 5 : CSS
     - Sentence Case ()
     - 사용중인 템플릿 명확하게 표현
-O Priority 4 : Workout Check시 노트 프로퍼티 수정기능
+
 
 Priority 5 : Workout Main 이름 변경 기능
-Priority 5 : CSS
-    - Sentence Case ()
+
 Priority 5 : Super Set 기능? (두개의 운동을 묶어서 하나의 운동으로 만들 수 있는 기능)
 Priority 4 : 무게 대신 Reps를 늘릴 수 있는 기능
     - Training Reps
@@ -29,9 +31,10 @@ Priority 4 : Test Code 작성
 Priority 3 :  실패시 적용할 코드 작성
 Priority 3 : Routine Maker
 - Workout Add 기능 추가
+Priority 3 : Condition Checker
+Priority 3 : Warmup Calculator
 Priority 3 : RPE 기반 무게 산정 기능
 Priority 3 : 노트 위치 변경시 핸들링?
-Priority 3 : Warmup Calculator
 Priority 3 : Template Checker
 Priority 2 : Routine 기반으로 어떤 부분의 운동이 부족한지 나타낼 수 있는 기능
 Priority 2 : Workout Trend
@@ -43,7 +46,10 @@ Priority 1 : kg 파운드 변환 기능
 Priority 1 : Status Worktout Timer
 
 
+
+
 # Bug
+  [O] 간헐적으로 체크가 실행되지 않는 문제 해결
 
   만약 루틴을 설정하지 않고 날짜부터 설정할 경우
   운동을 계속 추가하면 문제가 될 수 있으니 초기화 하는 코드 작성

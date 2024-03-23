@@ -118,6 +118,7 @@ export class RoutineUpdate {
                     reps: this.Routine.session[sessionNumber].reps,
                     sets: this.Routine.session[sessionNumber].sets,
                     add: this.Routine.session[sessionNumber].add,
+                    volume: 0,
                 };
                 routinePlanArray.push(plan);
             }
@@ -147,7 +148,7 @@ export class RoutineModelApp extends RoutineUpdate {
         this.app = app;
     }
     async workoutNoteMaker(day: string, next?: boolean): Promise<void> {
-        this.settings.volume = 0;
+        this.settings.todayRoutine.volume = 0;
         this.plugin.saveSettings();
         if (!next) {
             await new RoutineUpdate(this.plugin).todayRoutineUpdater(day);

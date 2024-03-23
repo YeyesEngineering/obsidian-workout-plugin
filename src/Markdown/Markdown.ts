@@ -1,4 +1,4 @@
-import { App,Notice } from 'obsidian';
+import { App, Notice, normalizePath } from 'obsidian';
 import WorkoutPlugin from 'main';
 
 export class Markdown {
@@ -11,21 +11,20 @@ export class Markdown {
     }
 
     async createNote(fileName: string, fileContent: string, open?: boolean): Promise<void> {
-        const filePath = `${this.plugin.settings.workoutFolder}/${fileName}.md`;
+        const filePath = normalizePath(`${this.plugin.settings.workoutFolder}/${fileName}.md`);
 
-        if (open){
+        if (open) {
             try {
                 const targetFile = await this.app.vault.create(filePath, fileContent);
-                await this.app.workspace.getLeaf().openFile(targetFile, { state: { mode: 'source' } })
+                await this.app.workspace.getLeaf().openFile(targetFile, { state: { mode: 'source' } });
             } catch (error) {
-                new Notice (error);
+                new Notice(error);
             }
-        }
-        else{
+        } else {
             try {
                 await this.app.vault.create(filePath, fileContent);
             } catch (error) {
-                new Notice (error);
+                new Notice(error);
             }
         }
     }
