@@ -41,7 +41,7 @@ export class WorkoutStartModal extends Modal {
                         if (
                             !(
                                 this.app.vault.getAbstractFileByPath(
-                                    `${this.plugin.settings.workoutFolder}/Workout ${nextday}.md`,
+                                    `${normalizePath(this.plugin.settings.workoutFolder)}/Workout ${nextday}.md`,
                                 ) instanceof TFile
                             )
                         ) {

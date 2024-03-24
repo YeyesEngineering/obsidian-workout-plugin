@@ -19,7 +19,8 @@ Priority 5 : CSS
     - 사용중인 템플릿 명확하게 표현
 
 
-Priority 5 : Workout Main 이름 변경 기능
+O Priority 5 : Workout Main 이름 변경 기능
+Priority 5 : Workout Main 경로 변경 기능
 
 Priority 5 : Super Set 기능? (두개의 운동을 묶어서 하나의 운동으로 만들 수 있는 기능)
 Priority 4 : 무게 대신 Reps를 늘릴 수 있는 기능

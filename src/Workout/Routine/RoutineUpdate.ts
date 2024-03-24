@@ -1,5 +1,5 @@
 import WorkoutPlugin from 'main';
-import { App, Notice, moment, stringifyYaml } from 'obsidian';
+import { App, Notice, moment, stringifyYaml,normalizePath } from 'obsidian';
 import { WorkoutPluginSettings } from 'src/Setting/SettingTab';
 import { routineTemplate, RoutineModel, todayRoutine } from './RoutineModel';
 import { Calculator } from '../Calculator';
@@ -174,7 +174,7 @@ export class RoutineModelApp extends RoutineUpdate {
 
             const filedata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
             try {
-                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, filedata, true);
+                new Markdown(this.plugin, this.app).createNote(normalizePath(this.plugin.settings.workoutFolder),`Workout ${day}`, filedata, true);
             } catch (error) {
                 new Notice(error);
             }
@@ -202,7 +202,7 @@ export class RoutineModelApp extends RoutineUpdate {
 
             const filedata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
             try {
-                new Markdown(this.plugin, this.app).createNote(`Workout ${day}`, filedata);
+                new Markdown(this.plugin, this.app).createNote(normalizePath(this.plugin.settings.workoutFolder),`Workout ${day}`, filedata);
             } catch (error) {
                 new Notice(error);
             }

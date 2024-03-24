@@ -19,14 +19,16 @@ export class BaseModal {
     }
 
     onOpen(): void {
-        const workoutFolder = this.app.vault.getAbstractFileByPath(this.settings.workoutFolder);
+        const workoutFolder = this.app.vault.getAbstractFileByPath(normalizePath(this.settings.workoutFolder));
         const workoutInnerFile = this.app.vault.getAbstractFileByPath(
-            normalizePath(`${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`),
+            normalizePath(`${this.plugin.settings.mainPageFolder}/${this.plugin.settings.mainPageName}.md`),
         );
+        const workoutInnerFolder = this.app.vault.getAbstractFileByPath(normalizePath(this.plugin.settings.mainPageFolder));
         if (
             this.settings.startday === 'None' ||
             !(workoutFolder instanceof TFolder) ||
-            !(workoutInnerFile instanceof TFile)
+            !(workoutInnerFile instanceof TFile) ||
+            !(workoutInnerFolder instanceof TFolder)
         ) {
             //Setting Check
             if (

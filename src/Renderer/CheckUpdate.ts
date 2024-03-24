@@ -41,7 +41,7 @@ export class CheckUpdate {
 
         //Main Note Update
         const mainPage = this.app.vault.getAbstractFileByPath(
-            normalizePath(`${this.settings.workoutFolder}/${this.settings.mainPageName}.md`),
+            normalizePath(`${this.settings.mainPageFolder}/${this.settings.mainPageName}.md`),
         );
         if (mainPage instanceof TFile) {
             Note.MainNoteUpdate(mainPage);
