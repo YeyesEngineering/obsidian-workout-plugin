@@ -16,11 +16,11 @@ export interface WorkoutPluginSettings {
     backupday: string;
     gender: gender;
     bigThree: number[];
-    // volume: number;
     wilks2point: number;
     dotspoint: number;
     workoutFolder: string;
     mainPageName: string;
+    mainPageFolder: string;
     routineTemplate: routineTemplate;
     todayRoutine: todayRoutineCheck; // Routine
     nextdayRoutine: todayRoutineCheck;
@@ -35,10 +35,10 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     backupday: 'None',
     gender: 'None',
     bigThree: [0, 0, 0, 0],
-    // volume: 0,
     wilks2point: 0,
     dotspoint: 0,
     workoutFolder: 'Workout',
+    mainPageFolder: 'Workout',
     mainPageName: 'Workout Main',
 
     routineTemplate: {
@@ -75,7 +75,7 @@ export const DEFAULT_SETTINGS: WorkoutPluginSettings = {
     nextdayRoutine: {
         date: 'None',
         sessionname: 'None',
-        volume:0,
+        volume: 0,
         progress: '0',
         workout: ['', '', '', ''],
         weight: ['', '', '', ''],
@@ -144,6 +144,20 @@ export class WorkoutPluginSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.workoutFolder)
                     .onChange(async (value) => {
                         this.plugin.settings.workoutFolder = value;
+                        this.plugin.settings.mainPageFolder = value;
+                        await this.plugin.saveSettings();
+                    });
+            });
+
+        new Setting(containerEl)
+            .setName('Mainpage folder')
+            .setDesc('Please enter your Mainpage folder')
+            .addSearch((text) => {
+                new FolderSuggest(this.app, text.inputEl);
+                text.setPlaceholder(DEFAULT_SETTINGS.mainPageFolder)
+                    .setValue(this.plugin.settings.mainPageFolder)
+                    .onChange(async (value) => {
+                        this.plugin.settings.mainPageFolder = value;
                         await this.plugin.saveSettings();
                     });
             });

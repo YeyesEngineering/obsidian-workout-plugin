@@ -33,15 +33,27 @@ export class WorkoutSetupModal extends Modal {
                     this.plugin.settings.startday = this.startday;
                     await this.plugin.saveSettings();
 
-                    const workoutFolder = this.app.vault.getAbstractFileByPath(this.plugin.settings.workoutFolder);
-                    const workoutInnerFile = this.app.vault.getAbstractFileByPath(
-                        normalizePath(`${this.plugin.settings.workoutFolder}/${this.plugin.settings.mainPageName}.md`),
+                    const workoutFolder = this.app.vault.getAbstractFileByPath(
+                        normalizePath(this.plugin.settings.workoutFolder),
                     );
-                    let filePath = this.plugin.settings.workoutFolder;
+                    const workoutInnerFile = this.app.vault.getAbstractFileByPath(
+                        normalizePath(`${this.plugin.settings.mainPageFolder}/${this.plugin.settings.mainPageName}.md`),
+                    );
+                    const workoutInnerFolder = this.app.vault.getAbstractFileByPath(
+                        normalizePath(this.plugin.settings.mainPageFolder),
+                    );
+                    let filePath = normalizePath(this.plugin.settings.workoutFolder);
                     // Mac Check
                     if (filePath === '' || filePath === '/') {
                         filePath = 'Workout';
                         this.plugin.settings.workoutFolder = filePath;
+                        this.plugin.saveSettings();
+                    }
+                    if (
+                        normalizePath(this.plugin.settings.mainPageFolder) === '' ||
+                        normalizePath(this.plugin.settings.mainPageFolder) === '/'
+                    ) {
+                        this.plugin.settings.mainPageFolder = filePath;
                         this.plugin.saveSettings();
                     }
 
@@ -49,6 +61,21 @@ export class WorkoutSetupModal extends Modal {
                         //Folder Create
                         try {
                             await this.app.vault.createFolder(filePath);
+                        } catch (error) {
+                            new Notice(error);
+                            this.plugin.settings.startday = 'None';
+                            await this.plugin.saveSettings();
+                        }
+                    }
+                    //만약에 두 폴더가 같다면 생성하지 않는 코드 작성
+
+                    if (
+                        normalizePath(this.plugin.settings.mainPageFolder) !== filePath &&
+                        !(workoutInnerFolder instanceof TFolder)
+                    ) {
+                        //Folder Create
+                        try {
+                            await this.app.vault.createFolder(normalizePath(this.plugin.settings.mainPageFolder));
                         } catch (error) {
                             new Notice(error);
                             this.plugin.settings.startday = 'None';
@@ -76,6 +103,7 @@ export class WorkoutSetupModal extends Modal {
                         )}---\n# Today Workout\n\n${dataviewData}\n\n## Next Workout Day\n\n${nextWorkoutDay}\n\n## Workout Trend`;
 
                         new Markdown(this.plugin, this.app).createNote(
+                            this.plugin.settings.mainPageFolder,
                             this.plugin.settings.mainPageName,
                             StringData,
                             true,
@@ -88,7 +116,9 @@ export class WorkoutSetupModal extends Modal {
 
                     const today = moment().format('YYYY-MM-DD');
                     const firstCheck = this.app.vault.getAbstractFileByPath(
-                        normalizePath(`${this.plugin.settings.workoutFolder}/Workout ${this.plugin.settings.routinePlan[0].date}.md`),
+                        normalizePath(
+                            `${this.plugin.settings.workoutFolder}/Workout ${this.plugin.settings.routinePlan[0].date}.md`,
+                        ),
                     );
                     if (moment(this.plugin.settings.routinePlan[0].date).isAfter(today) && !firstCheck) {
                         new RoutineModelApp(this.plugin, this.app).workoutNoteMaker(

@@ -1,4 +1,4 @@
-import { Modal, App, Setting, moment, Notice, stringifyYaml } from 'obsidian';
+import { Modal, App, Setting, moment, Notice, stringifyYaml,normalizePath } from 'obsidian';
 import WorkoutPlugin from 'main';
 import { Markdown } from 'src/Markdown/Markdown';
 import { RoutineModel } from 'src/Workout/Routine/RoutineModel';
@@ -42,7 +42,7 @@ export class NotworkoutdayStartModal extends Modal {
                     const filedata = `---\n${stringifyYaml(workoutProperites)}---\n` + contextData;
                     try {
                         //제목 형식도 변경 할수 있도록 수정 예정
-                        new Markdown(this.plugin, this.app).createNote(`Workout ${today}`, filedata, true);
+                        new Markdown(this.plugin, this.app).createNote(normalizePath(this.plugin.settings.workoutFolder),`Workout ${today}`, filedata, true);
                     } catch (error) {
                         new Notice(error);
                     }

@@ -10,19 +10,19 @@ export class Markdown {
         this.app = app;
     }
 
-    async createNote(fileName: string, fileContent: string, open?: boolean): Promise<void> {
-        const filePath = normalizePath(`${this.plugin.settings.workoutFolder}/${fileName}.md`);
+    async createNote(filePath: string, fileName: string, fileContent: string, open?: boolean): Promise<void> {
+        const file_path = normalizePath(`${filePath}/${fileName}.md`);
 
         if (open) {
             try {
-                const targetFile = await this.app.vault.create(filePath, fileContent);
+                const targetFile = await this.app.vault.create(file_path, fileContent);
                 await this.app.workspace.getLeaf().openFile(targetFile, { state: { mode: 'source' } });
             } catch (error) {
                 new Notice(error);
             }
         } else {
             try {
-                await this.app.vault.create(filePath, fileContent);
+                await this.app.vault.create(file_path, fileContent);
             } catch (error) {
                 new Notice(error);
             }
